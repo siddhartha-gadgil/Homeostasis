@@ -114,3 +114,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.isHurwitz_fin_three
 #print axioms LeanTheory.CRN.Design.aifNet_isHurwitz
 #print axioms LeanTheory.CRN.Design.aifNet_hasRPALinear
+#print axioms LeanTheory.CRN.lyapunov_local_exp_stable
+#print axioms LeanTheory.CRN.ReactionNetwork.locallyExpStable_of_ldl
+#print axioms LeanTheory.CRN.Design.aifNet_locallyExpStable_one
+#print axioms LeanTheory.CRN.Sanity.isoNet_no_lyapunov

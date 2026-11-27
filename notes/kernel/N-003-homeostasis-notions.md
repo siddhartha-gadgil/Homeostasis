@@ -101,6 +101,15 @@ Implication map (compiled):
 | Perfect adaptation over `∅` vacuous | finding F-4 → `U.Nonempty` in the definition; regression `not_hasPerfectAdaptation_empty` |
 | Input following | `lin_not_perfectAdaptation`, `lin_adaptationError` (`ẋ = I − x`) |
 
+Linearization principle (added 2026-11-27, `Theory/CRN/Linearization.lean`): a Lyapunov
+certificate (`P` positive definite, `JᵀP + PJ` negative definite) at an equilibrium of a field
+differentiable there gives **local exponential stability** of the nonlinear ODE
+(`lyapunov_local_exp_stable`; squared-distance decay `C e^{−ct}` for solutions starting within `δ`,
+finite horizon). Mass-action version `ReactionNetwork.locallyExpStable_of_ldl`. Limits: needs a
+Lyapunov certificate, not merely `IsHurwitz` (converse Lyapunov theorem not formalized); not
+class-relative — for conservative networks the Jacobian is singular and no full-space certificate
+exists (`quad_lyapunov_eq_zero_of_mulVec_eq_zero`, regression `Sanity.isoNet_no_lyapunov`).
+
 Still open: "ACR ⇏ linear stability" (needs an ACR network with an unstable positive steady
 state — search); linearization principle. Deterministic ACR ⇏ stochastic homeostasis is compiled
 for the toy network (N-015, `acrNet_extinction`).

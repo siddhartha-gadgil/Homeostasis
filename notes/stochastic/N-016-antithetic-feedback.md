@@ -57,6 +57,12 @@ state of the motif is linearly stable** (`Design.aifNet_isHurwitz`, Routh–Hurw
 (`Sanity.aifNet_hasRPALinear_one`) is kept as a cross-check. Oracle observation (sympy):
 `a₂a₁ − a₀` is a sum of positive monomials for all positive parameters.
 
+Nonlinear stability (added 2026-11-27): at unit rates the steady state `(1, 1, 1)` is **locally
+exponentially stable** for the nonlinear ODE (`Design.aifNet_locallyExpStable_one`, Lyapunov
+certificate + `lyapunov_local_exp_stable`). For general parameters only linear stability is
+proved; sympy gives a symbolic `P(γ)` (unit other rates) whose `LDLᵀ` pivots are positive rational
+functions of `γ` — the next step for a family-wide nonlinear statement.
+
 ## Claims and evidence
 
 | Claim | Status |

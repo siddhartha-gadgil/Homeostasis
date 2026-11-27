@@ -7,6 +7,7 @@ module
 
 public import LeanTheory.Certificates.RouthHurwitz
 public import LeanTheory.Design.AntitheticMotif
+public import LeanTheory.Theory.CRN.Linearization
 
 /-!
 # Case study: linear stability of the antithetic motif for all parameters (notes N-016, N-003)
@@ -25,8 +26,13 @@ For the motif of `Design/AntitheticMotif` (`ż₁ = μ − η z₁ z₂`, `ż₂
   `μ, θ, η, a`, over all degradation rates `γ > 0`, the output adapts to `μ/θ` and every positive
   equilibrium is linearly stable.
 
-Label: exact, idealized (deterministic mass action, no dilution). Linear stability only; the
-linearization principle (⇒ local asymptotic stability) is not formalized.
+* `aifNet_locallyExpStable_one`: at unit rate constants the steady state `(1, 1, 1)` is **locally
+  exponentially stable** for the nonlinear ODE (Lyapunov certificate + `lyapunov_local_exp_stable`):
+  trajectories starting within `δ` satisfy `‖x(t) − x⋆‖² ≤ C e^{−ct} ‖x(0) − x⋆‖²`.
+
+Label: exact, idealized (deterministic mass action, no dilution). Nonlinear local stability is
+proved at unit rates; for general parameters only linear stability is proved (a parametric
+Lyapunov certificate is the missing step).
 -/
 
 @[expose] public section
@@ -79,5 +85,30 @@ theorem aifNet_hasRPALinear {μ θ η a : ℝ} (hμ : 0 < μ) (hθ : 0 < θ) (h�
     aifNet.HasRPALinear (fun γ => aifK μ θ η a γ) (Ioi 0) 2 (μ / θ) :=
   ⟨aifNet_hasPerfectAdaptation hμ hθ hη ha, fun _ hγ _ hx =>
     ⟨hx, (aifNet_isHurwitz hθ hη ha hγ hx).isHurwitzOn _⟩⟩
+
+/-- **Local exponential stability of the motif at unit rates** (nonlinear): solutions starting near
+`(1, 1, 1)` converge to it exponentially, by the Lyapunov certificate
+`P = L₁ᵀ D₁ L₁`, `JᵀP + PJ = −I`. -/
+theorem aifNet_locallyExpStable_one :
+    ∃ δ > 0, ∃ c > 0, ∃ C > 0, ∀ (x : ℝ → Fin 3 → ℝ) (T : ℝ),
+      aifNet.MassActionTrajectoryOn (aifK 1 1 1 1 1) x T → ‖x 0 - ![1, 1, 1]‖ < δ →
+        ∀ t ∈ Ico 0 T, ‖x t - ![1, 1, 1]‖ ^ 2 ≤
+          C * Real.exp (-c * t) * ‖x 0 - ![1, 1, 1]‖ ^ 2 := by
+  have hJ : aifNet.massActionJacobian (aifK 1 1 1 1 1) ![1, 1, 1] =
+      !![-1, -1, 0; -1, -1, 1; 1, 0, -1] := by
+    rw [aifNet_jacobian]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
+  refine aifNet.locallyExpStable_of_ldl (k := aifK 1 1 1 1 1) (xs := ![1, 1, 1]) ?_
+    (L₁ := !![1, -3 / 4, -1 / 6; 0, 1, 26 / 29; 0, 0, 1])
+    (d₁ := ![6 / 5, 29 / 40, 119 / 174]) (L₂ := 1) (d₂ := fun _ => 1)
+    (fun i => by fin_cases i <;> norm_num) (fun _ => one_pos)
+    (by rw [det_fin_three]; norm_num) (by simp) ?_
+  · rw [aifNet_field]
+    funext i; fin_cases i <;> simp
+  · rw [hJ]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Matrix.mul_apply, Fin.sum_univ_three, Matrix.diagonal] <;> norm_num
 
 end LeanTheory.CRN.Design

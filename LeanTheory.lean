@@ -81,6 +81,7 @@ public import LeanTheory.Theory.CRN.AntitheticCME
 public import LeanTheory.Theory.CRN.AntitheticFeedback
 public import LeanTheory.Theory.CRN.FiniteCME
 public import LeanTheory.Theory.CRN.FosterLyapunov
+public import LeanTheory.Theory.CRN.Linearization
 public import LeanTheory.Theory.Fields.FieldLineExistence
 public import LeanTheory.Theory.Homeostasis.DeterminantFormula
 public import LeanTheory.Theory.Fields.InvariantBarrier

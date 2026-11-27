@@ -7,6 +7,7 @@ module
 
 public import LeanTheory.Certificates.LyapunovCert
 public import LeanTheory.Certificates.RouthHurwitz
+public import LeanTheory.Theory.CRN.Linearization
 public import LeanTheory.Design.AntitheticMotif
 public import LeanTheory.Sanity.CRNMassAction
 
@@ -84,6 +85,22 @@ theorem isoNet_jacobian_not_isHurwitz {k : Fin 2 → ℝ} (h1 : 0 < k 1) (x : Fi
     funext i; fin_cases i <;> simp [mulVec, dotProduct, Fin.sum_univ_two, toComplex_apply] <;>
       ring)
   norm_num at this
+
+/-- **Regression**: for `A ⇌ B` (with `k₁ > 0`) no full-space Lyapunov certificate exists, since the
+Jacobian kills `(k₁, k₀)`; local stability of conservative networks needs a class-relative
+argument. -/
+theorem isoNet_no_lyapunov {k : Fin 2 → ℝ} (h1 : 0 < k 1) (x : Fin 2 → ℝ)
+    (P : Matrix (Fin 2) (Fin 2) ℝ) :
+    ¬ ∀ e : Fin 2 → ℝ, e ≠ 0 →
+      quad ((isoNet.massActionJacobian k x)ᵀ * P + P * isoNet.massActionJacobian k x) e < 0 := by
+  intro h
+  have hv : (![k 1, k 0] : Fin 2 → ℝ) ≠ 0 := fun h0 => h1.ne' (by simpa using congrFun h0 0)
+  have hJv : isoNet.massActionJacobian k x *ᵥ ![k 1, k 0] = 0 := by
+    rw [isoNet_jacobian]
+    funext i; fin_cases i <;> simp [mulVec, dotProduct, Fin.sum_univ_two] <;> ring
+  have := h _ hv
+  rw [quad_lyapunov_eq_zero_of_mulVec_eq_zero hJv] at this
+  exact lt_irrefl 0 this
 
 /-- Vectors in the complexified stoichiometric subspace of `A ⇌ B` satisfy `v₀ + v₁ = 0`. -/
 theorem isoNet_complexification {v : Fin 2 → ℂ} (hv : InComplexification isoNet.stoichSubspace v) :
