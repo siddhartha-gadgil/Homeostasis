@@ -183,3 +183,10 @@ run_cmd do
 #print axioms LeanTheory.CRN.Sanity.abNet_no_posSteadyState_dz
 #print axioms LeanTheory.CRN.Sanity.isoNet_classStable_dz
 #print axioms LeanTheory.CRN.Sanity.acrNet_not_isComplexBalanced
+#print axioms LeanTheory.CRN.mem_of_forall_dot_eq_zero
+#print axioms LeanTheory.CRN.birch
+#print axioms LeanTheory.CRN.ReactionNetwork.isComplexBalanced_of_log_perp
+#print axioms LeanTheory.CRN.ReactionNetwork.exists_posSteadyState_of_isComplexBalanced
+#print axioms LeanTheory.CRN.ReactionNetwork.eq_of_isComplexBalanced
+#print axioms LeanTheory.CRN.ReactionNetwork.existsUnique_of_deficiency_zero
+#print axioms LeanTheory.CRN.Sanity.isoNet_existsUnique_in_class

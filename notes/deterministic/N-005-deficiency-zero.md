@@ -12,8 +12,8 @@
 | Dependency requirement | deficiency, weak reversibility, compatibility classes, mass-action field compiled and audited |
 | Produces | `LeanTheory/Theory/CRN/DeficiencyZero.lean`, `LeanTheory/Sanity/CRNDeficiencyZero.lean` |
 | Difficulty | hard — part (b) needs existence of a complex-balanced equilibrium for every `k` (a Birch-type / strictly convex minimization argument) and part (a) the uniqueness-per-class argument; both are substantial but classical |
-| Status | **verified except existence** (2026-11-27): parts (i)–(iv) compiled; Birch existence open |
-| Implementation status | partial (existence of a positive steady state in every class not formalized) |
+| Status | **verified** (2026-11-27) except the first steady state: parts (i)–(iv), Birch's theorem and existence + uniqueness in every class given one positive steady state |
+| Implementation status | nearly complete (open: a first positive steady state for every weakly reversible deficiency-zero network — Horn) |
 | Implementation evidence | `Theory/CRN/DeficiencyZero.lean`, `Sanity/CRNDeficiencyZero.lean` |
 | Lean evidence | `not_isPosSteadyState_of_deficiency_zero`, `isWeaklyReversible_of_deficiency_zero`, `isComplexBalanced_of_deficiency_zero`, `eq_of_deficiency_zero`, `isLinearlyStable_of_deficiency_zero`, `classLocallyExpStable_of_deficiency_zero`; general `exists_coordinates` |
 | Audit evidence | axiom audit passed (7301 declarations); sanity triad in `Sanity/CRNDeficiencyZero` |
@@ -94,3 +94,26 @@ Open: **existence** of a positive steady state in every positive class (Birch's 
 the strictly convex `Σ x_i(ln x_i − ln x*_i − 1)` over the class; also needs one complex-balanced
 state, i.e. the matrix-tree theorem or a Perron–Frobenius argument on each linkage class), and the
 absence of periodic orbits. Global stability remains `C-GAC` (N-017).
+
+## Birch's theorem and existence per class (2026-11-27, `LeanTheory/Theory/CRN/Birch.lean`)
+
+- `birch`: for positive `x*, x⁰` and any subspace `S`, a positive `x ∈ x⁰ + S` with
+  `ln x − ln x* ⊥ S`. Proof through the **dual convex problem**: minimize
+  `H(μ) = Σ_i (x*_i e^{μ_i} − x⁰_i μ_i)` over `W = S^⊥` (`dotAnnihilator`) — unconstrained, so no
+  boundary analysis. Coercivity per coordinate (`exp_sub_mul_ge`: `p e^t − q t ≥ (q/2)|t| −
+  9q²/(8p)`), extreme value theorem on `W`, first-order condition
+  `⟨x* e^{μ̂} − x⁰, w⟩ = 0` for `w ∈ W`, and `(S^⊥)^⊥ ⊆ S` (`mem_of_forall_dot_eq_zero`, separating
+  functional).
+- `isComplexBalanced_of_log_perp`: complex balance spreads along `ln x* + S^⊥` (the factor
+  `e^{⟨y, μ⟩}` is constant along every reaction).
+- `exists_posSteadyState_of_isComplexBalanced`, `eq_of_isComplexBalanced`: for **any** network with
+  one positive complex-balanced state, every positive class contains exactly one positive steady
+  state (Horn–Jackson for complex-balanced systems).
+- `existsUnique_of_deficiency_zero`: **DZT existence and uniqueness** — a deficiency-zero network
+  with one positive steady state has exactly one in every positive class.
+- Sanity: `isoNet_existsUnique_in_class` (`A ⇌ B`).
+
+Remaining gap: for a weakly reversible deficiency-zero network, **some** positive steady state
+exists (Horn). Route: a positive vector in `ker A_k` (Perron–Frobenius / Markov-chain stationary
+law on each terminal class), and `ln` of it lies in `im Yᵀ + span{1_L}` — which needs the graph
+identity `dim Im ∂ = m − ℓ` (so far only `≤` is compiled).

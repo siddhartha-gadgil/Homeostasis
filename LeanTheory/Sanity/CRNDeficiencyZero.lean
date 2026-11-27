@@ -6,7 +6,8 @@ Authors: LeanTheory contributors
 module
 
 public import LeanTheory.Theory.CRN.DeficiencyZero
-public import LeanTheory.Sanity.CRNNetwork
+public import LeanTheory.Theory.CRN.Birch
+public import LeanTheory.Sanity.CRNMassAction
 
 /-!
 # Sanity checks for the Deficiency Zero Theorem (note N-005, N-004)
@@ -16,6 +17,9 @@ public import LeanTheory.Sanity.CRNNetwork
 * **Instance** (`isoNet_eq_of_same_class`, `isoNet_classStable_dz`): `A ⇌ B` has deficiency zero;
   two positive steady states with the same total coincide, and every positive steady state is
   locally exponentially stable within its class — now as a consequence of the general theorem.
+* **Existence and uniqueness per class** (`isoNet_existsUnique_in_class`): for `A ⇌ B`, every
+  positive compatibility class contains exactly one positive steady state (Birch + Deficiency
+  Zero, from the single steady state `(k₁, k₀)`).
 * **The deficiency hypothesis matters** (`acrNet_not_isComplexBalanced`): the toy ACR network
   `A + B → 2B`, `B → A` has deficiency one, and **no** positive state is complex balanced (the
   complex `A + B` has an outflow but no inflow), although it has positive steady states; so part
@@ -52,6 +56,18 @@ theorem isoNet_classStable_dz {k : Fin 2 → ℝ} (hk : ∀ r, 0 < k r) {xs : Fi
         ‖x 0 - xs‖ < δ →
           ∀ t ∈ Set.Ico 0 T, ‖x t - xs‖ ^ 2 ≤ K * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2 :=
   isoNet.classLocallyExpStable_of_deficiency_zero hk isoNet_deficiency hxs
+
+/-- **Instance (existence and uniqueness)**: for `A ⇌ B` with positive rates, every positive
+compatibility class contains exactly one positive steady state. -/
+theorem isoNet_existsUnique_in_class {k : Fin 2 → ℝ} (hk : ∀ r, 0 < k r) {x0 : Fin 2 → ℝ}
+    (hx0 : IsPos x0) : ∃! x, isoNet.IsPosSteadyState k x ∧ x - x0 ∈ isoNet.stoichSubspace := by
+  have hxs : isoNet.IsPosSteadyState k ![k 1, k 0] := by
+    rw [isoNet_isPosSteadyState_iff]
+    refine ⟨fun i => ?_, by simp [mul_comm]⟩
+    fin_cases i
+    · simpa using hk 1
+    · simpa using hk 0
+  exact isoNet.existsUnique_of_deficiency_zero hk isoNet_deficiency hxs hx0
 
 /-- **The deficiency hypothesis matters**: in the toy ACR network (deficiency one) no positive
 state is complex balanced — at the complex `A + B` the outflow `k₀ x_A x_B` has no inflow. -/
