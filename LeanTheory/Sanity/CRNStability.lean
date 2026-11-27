@@ -6,6 +6,7 @@ Authors: LeanTheory contributors
 module
 
 public import LeanTheory.Certificates.LyapunovCert
+public import LeanTheory.Certificates.RouthHurwitz
 public import LeanTheory.Design.AntitheticMotif
 public import LeanTheory.Sanity.CRNMassAction
 
@@ -15,6 +16,7 @@ public import LeanTheory.Sanity.CRNMassAction
 * **Accepted Lyapunov certificate**: `J = [[-1, 0], [1, -1]]` is Hurwitz, with `P = I` and
   `Jᵀ + J = −Lᵀ D L`, `L = [[1, −1/2], [0, 1]]`, `D = diag(2, 3/2)` (`cascade_isHurwitz`).
 * **Counterexample**: `[[1, 0], [0, -1]]` has the eigenvalue `1` (`unstable_not_isHurwitz`).
+* **Rejected Routh–Hurwitz boundary**: `z³ + z² + z + 1` has the root `i` (`routh_boundary_root`).
 * **Adversarial check (conservation laws)**: for `A ⇌ B` the Jacobian `[[-k₀, k₁], [k₀, -k₁]]`
   has the eigenvalue `0` with eigenvector `(k₁, k₀)`, so it is **never Hurwitz**
   (`isoNet_jacobian_not_isHurwitz`), although every positive steady state is linearly stable
@@ -50,6 +52,15 @@ theorem unstable_not_isHurwitz : ¬ IsHurwitz !![(1 : ℝ), 0; 0, -1] := by
   have := h 1 ![1, 0] (fun h0 => by simpa using congrFun h0 0) (by
     funext i; fin_cases i <;> simp [mulVec, dotProduct, Fin.sum_univ_two, toComplex_apply])
   norm_num at this
+
+/-- **Rejected Routh–Hurwitz fixture (format 7)**: at the boundary `a₂ a₁ = a₀` the conclusion
+fails — `z³ + z² + z + 1` has the root `i`, with real part `0`. So the strict inequality
+`a₂ a₁ > a₀` in `re_neg_of_cubic` cannot be weakened. -/
+theorem routh_boundary_root :
+    Complex.I ^ 3 + 1 * Complex.I ^ 2 + 1 * Complex.I + 1 = 0 ∧ ¬ Complex.I.re < 0 := by
+  constructor
+  · simp [pow_succ]
+  · simp
 
 /-! ### `A ⇌ B`: never Hurwitz, but stable on the compatibility class -/
 

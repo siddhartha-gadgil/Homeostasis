@@ -43,6 +43,7 @@ public import LeanTheory.Certificates.Kronecker2D
 public import LeanTheory.Certificates.Kronecker2DWeighted
 public import LeanTheory.Certificates.PolyCert
 public import LeanTheory.Certificates.PolyInterval
+public import LeanTheory.Certificates.RouthHurwitz
 public import LeanTheory.Certificates.RadiiPolynomial
 public import LeanTheory.Certificates.RationalIntervals
 public import LeanTheory.Certificates.SBP
@@ -53,6 +54,7 @@ public import LeanTheory.Certificates.ValidatedTrig
 public import LeanTheory.Certificates.ValidatedTrigFast
 public import LeanTheory.Certificates.WeightedEll1
 public import LeanTheory.Design.AntitheticMotif
+public import LeanTheory.Design.AntitheticStability
 public import LeanTheory.Elaborate
 public import LeanTheory.Kernel.CME
 public import LeanTheory.Kernel.Example

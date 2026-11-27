@@ -41,7 +41,9 @@ As of 2026-11-27 (seeded from the user's prompt):
   network** on every level set (`Sanity.acrNet_extinction`, discrete-time uniformized chain).
   Stability contract: Jacobian of the mass-action field (proved derivative), Hurwitz and
   class-relative Hurwitz, linear stability, `HasRPALinear`; Lyapunov-equation certificates
-  (format 6); the antithetic motif satisfies RPA with linear stability at unit rates. The audited template library
+  (format 6) and Routh–Hurwitz for 3×3 matrices (format 7). **The antithetic motif satisfies RPA
+  with linear stability for all positive parameters, over all `γ > 0`**
+  (`Design.aifNet_hasRPALinear`). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -102,7 +104,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | **verified** (algebraic layer: `LeanTheory.Kernel.CME`) | Prove `IsStationaryDistribution ⇒ IsGenStationaryFor` for finite support; process layer (Q-8) |
 | `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | **verified** at generator level (drift certificate, moment bound) | Process-level consequences (Q-8); drift oracle | Drift checker; moment bound from generator stationarity |
 | `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | **verified** for `F-acr` in the uniformized chain | Continuous-time version (uniformization identity); read `S-AEJ14`; Q-4 exploration |
-| `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | **verified** (deterministic; stochastic mean at generator level) | Quantify dilution error (Q-3); stability | Formalize after N-002/N-013 |
+| `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | **verified** (deterministic RPA with linear stability for all parameters; stochastic mean at generator level) | Quantify dilution error (Q-3); stochastic ergodicity | Formalize after N-002/N-013 |
 | `N-017` | [deterministic/N-017-global-stability](deterministic/N-017-global-stability.md) | G-2, Q-2, Q-5 | N-005, N-012 | research | exploratory; blocked | Check publication status of `S-CRA15` |
 | `N-018` | [deterministic/N-018-rpa-topology](deterministic/N-018-rpa-topology.md) | G-2, Q-7 | N-003, N-007 | moderate–hard | exploratory; **Lean prerequisites verified**, source reading ready | Read `S-AL18`; compare with `C-GSF` |
 | `N-019` | [deterministic/N-019-acr-higher-deficiency](deterministic/N-019-acr-higher-deficiency.md) | Q-1, G-2 | N-006, N-003 | research | exploratory; cofactor sufficient condition **compiled**; exploration ready | `explore` Q-1 conditional on `C-SF` |
@@ -135,7 +137,7 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of the stability contract (`Kernel/Stability.lean`, `Certificates/LyapunovCert.lean`, `Sanity/CRNStability.lean`, `Sanity/CRNBlowUp.lean`, refactored `Kernel/MassAction.lean`; F-2 and F-8 resolved), of the finite-chain layer (`Theory/Markov/FiniteChain.lean`, `Theory/CRN/FiniteCME.lean`, `Sanity/CRNExtinction.lean`; no findings), of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of parametric motif stability (`Certificates/RouthHurwitz.lean`, `Design/AntitheticStability.lean`; no findings), of the stability contract (`Kernel/Stability.lean`, `Certificates/LyapunovCert.lean`, `Sanity/CRNStability.lean`, `Sanity/CRNBlowUp.lean`, refactored `Kernel/MassAction.lean`; F-2 and F-8 resolved), of the finite-chain layer (`Theory/Markov/FiniteChain.lean`, `Theory/CRN/FiniteCME.lean`, `Sanity/CRNExtinction.lean`; no findings), of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
@@ -196,9 +198,10 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **Parametric stability of the antithetic motif** — Routh–Hurwitz certificate for the cubic
-   characteristic polynomial over a range of `γ` (and other rates), upgrading `HasRPALinear` from
-   `γ = 1` to an interval; or the linearization principle (linear ⇒ local asymptotic stability).
+1. **Linearization principle** — linear stability ⇒ local asymptotic stability for the
+   mass-action ODE (within the compatibility class), so `HasRPALinear` gives genuine RPA; or
+   **antithetic motif with dilution** (N-009/Q-3 analogue): quantify the set-point error, which
+   now has a stable baseline.
 2. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
    N-007, block factorization), Anderson–Enciso–Johnston (N-015). Needs the PDFs or permission to
    fetch them.
@@ -326,6 +329,13 @@ the physical model.
   `Sanity/CRNStability.lean` (accepted/rejected Hurwitz fixtures; `A ⇌ B` never Hurwitz but stable
   on its class — finding F-8; motif linearly stable at unit rates and `HasRPALinear` at `γ = 1`).
   Build clean, axiom audit passed for 6518 declarations.
+
+- **2026-11-27 — Parametric motif stability (work unit).** New `LeanTheory/Certificates/RouthHurwitz.lean`
+  (Routh–Hurwitz for cubics by an elementary real/imaginary-part argument; characteristic polynomial
+  of 3×3 matrices; format 7) and `LeanTheory/Design/AntitheticStability.lean` (motif Jacobian;
+  Hurwitz at every positive steady state for all positive parameters; `HasRPALinear` over all
+  `γ > 0`). Rejected fixture `routh_boundary_root`. Build clean, axiom audit passed for 6528
+  declarations.
 
 ## 12. Implementation and workstation log
 

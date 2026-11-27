@@ -110,3 +110,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.Sanity.isoNet_isLinearlyStable
 #print axioms LeanTheory.CRN.Sanity.aifNet_hasRPALinear_one
 #print axioms LeanTheory.CRN.Sanity.blowUp_trajectoryOn
+#print axioms LeanTheory.CRN.re_neg_of_cubic
+#print axioms LeanTheory.CRN.isHurwitz_fin_three
+#print axioms LeanTheory.CRN.Design.aifNet_isHurwitz
+#print axioms LeanTheory.CRN.Design.aifNet_hasRPALinear

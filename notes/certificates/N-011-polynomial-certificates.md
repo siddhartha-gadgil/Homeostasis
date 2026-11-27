@@ -76,6 +76,12 @@ Hurwitz matrices — `P = L₁ᵀD₁L₁`, `JᵀP + PJ = −L₂ᵀD₂L₂` wi
 `Lᵢ` (`isHurwitz_of_ldl`); accepted `cascade_isHurwitz`, antithetic motif Jacobian at unit rates
 (`aifNet_jacobian_one_isHurwitz`, data from sympy); rejected `unstable_not_isHurwitz`.
 
+Format 7 (added 2026-11-27, `Certificates/RouthHurwitz.lean`): Routh–Hurwitz for cubics
+(`re_neg_of_cubic`, elementary real/imaginary-part proof) and `3 × 3` matrices
+(`isHurwitz_fin_three`: `tr J < 0`, `det J < 0`, `tr J · m(J) < det J`); conditions are polynomial
+inequalities, so they certify **families**. Accepted: antithetic motif for all parameters; rejected:
+boundary `z³ + z² + z + 1` has the root `i` (`routh_boundary_root`).
+
 Open: Jacobian-sign / injectivity certificates (need the injectivity theorem, source not supplied);
 SOS and Psatz oracles (SDP solver + rational rounding); larger certificates (sparse checker).
 

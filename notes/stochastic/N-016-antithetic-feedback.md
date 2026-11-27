@@ -15,7 +15,7 @@
 | Status | (1) verified; (2) verified at generator level (stationarity and integrability as hypotheses); (3) dilution: loss of exact set-point verified on an example, quantitative error open |
 | Implementation status | deterministic part complete |
 | Implementation evidence | `LeanTheory/Theory/CRN/AntitheticFeedback.lean`, `LeanTheory/Theory/CRN/AntitheticCME.lean`, `LeanTheory/Design/AntitheticMotif.lean` |
-| Lean evidence | `ReactionNetwork.IsAntitheticController` (structural condition); `IsAntitheticController.dotProduct_field`, `.hasDerivWithinAt`, `.steadyState_output`, `.hasPerfectAdaptation`; motif `Design.aifNet`, `aifNet_isAntitheticController`, `aifNet_field`, `aifNet_isPosSteadyState`, `aifNet_hasPerfectAdaptation`, `aifNet_no_steadyState_without_actuation`, `aifNet_dilution_breaks_setpoint`; stochastic: `IsAntitheticController.generator_dot`, `.stationary_mean`, `aifNet_stationary_mean` |
+| Lean evidence | `Design.aifNet_isHurwitz`, `Design.aifNet_hasRPALinear` (stability for all parameters); `ReactionNetwork.IsAntitheticController` (structural condition); `IsAntitheticController.dotProduct_field`, `.hasDerivWithinAt`, `.steadyState_output`, `.hasPerfectAdaptation`; motif `Design.aifNet`, `aifNet_isAntitheticController`, `aifNet_field`, `aifNet_isPosSteadyState`, `aifNet_hasPerfectAdaptation`, `aifNet_no_steadyState_without_actuation`, `aifNet_dilution_breaks_setpoint`; stochastic: `IsAntitheticController.generator_dot`, `.stationary_mean`, `aifNet_stationary_mean` |
 | Audit evidence | strict audit 2026-11-27 (implementation plan §4); no findings |
 | Last updated | 2026-11-27 — deterministic part formalized |
 
@@ -49,10 +49,13 @@ there is no positive steady state (the existence hypothesis is needed); with dil
 The motif's reaction list is the standard one as recalled; transcription against `S-BGK16` is still
 pending (Q-10).
 
-Linear stability (added 2026-11-27): at unit rate constants the motif's unique positive steady
-state `(1, 1, 1)` is linearly stable by an exact Lyapunov certificate, so
-`HasRPALinear` holds at `γ = 1` (`Sanity.aifNet_hasRPALinear_one`). Stability over a whole range of
-`γ` (parametric certificate, e.g. Routh–Hurwitz for the cubic) is open.
+Linear stability (added 2026-11-27): **for all positive `μ, θ, η, a, γ` every positive steady
+state of the motif is linearly stable** (`Design.aifNet_isHurwitz`, Routh–Hurwitz format 7: with
+`p = η z₂`, `q = η z₁` the steady-state equations give `aθ = γp`, and
+`tr J · m(J) − det J = −γ((p+q)(p+q+γ) − pq) < 0`). Hence `HasRPALinear` holds over all `γ > 0`
+(`Design.aifNet_hasRPALinear`). The earlier single-point Lyapunov certificate at unit rates
+(`Sanity.aifNet_hasRPALinear_one`) is kept as a cross-check. Oracle observation (sympy):
+`a₂a₁ − a₀` is a sum of positive monomials for all positive parameters.
 
 ## Claims and evidence
 
