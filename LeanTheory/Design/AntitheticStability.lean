@@ -8,6 +8,7 @@ module
 public import LeanTheory.Certificates.RouthHurwitz
 public import LeanTheory.Design.AntitheticMotif
 public import LeanTheory.Theory.CRN.Linearization
+public import LeanTheory.Theory.CRN.ConverseLyapunovPD
 
 /-!
 # Case study: linear stability of the antithetic motif for all parameters (notes N-016, N-003)
@@ -257,5 +258,28 @@ theorem aifNet_rpa_locallyExpStable :
     field_simp
     linarith
   funext i; fin_cases i <;> simp [hx0, hx1, hx2]
+
+/-- **Nonlinear local stability for all parameters**: for all positive `μ, θ, η, a, γ`, every
+positive steady state of the motif is locally exponentially stable (Hurwitz Jacobian +
+converse Lyapunov theorem). -/
+theorem aifNet_locallyExpStable_all {μ θ η a γ : ℝ} (hθ : 0 < θ) (hη : 0 < η) (ha : 0 < a)
+    (hγ : 0 < γ) {xs : Fin 3 → ℝ} (hxs : aifNet.IsPosSteadyState (aifK μ θ η a γ) xs) :
+    ∃ δ > 0, ∃ c > 0, ∃ C > 0, ∀ (x : ℝ → Fin 3 → ℝ) (T : ℝ),
+      aifNet.MassActionTrajectoryOn (aifK μ θ η a γ) x T → ‖x 0 - xs‖ < δ →
+        ∀ t ∈ Ico 0 T, ‖x t - xs‖ ^ 2 ≤ C * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2 :=
+  aifNet.locallyExpStable_of_isHurwitz hxs.2 (aifNet_isHurwitz hθ hη ha hγ hxs)
+
+/-- **Robust perfect adaptation with nonlinear local stability, all parameters.** For positive
+`μ, θ, η, a` and every `γ > 0`: the output adapts perfectly to `μ/θ`, and every positive steady
+state is locally exponentially stable. -/
+theorem aifNet_rpa_locallyExpStable_all {μ θ η a : ℝ} (hμ : 0 < μ) (hθ : 0 < θ) (hη : 0 < η)
+    (ha : 0 < a) :
+    HasPerfectAdaptation (aifNet.massActionFamily fun γ => aifK μ θ η a γ) (Ioi 0) 2 (μ / θ) ∧
+      ∀ γ > 0, ∀ xs, aifNet.IsPosSteadyState (aifK μ θ η a γ) xs →
+        ∃ δ > 0, ∃ c > 0, ∃ C > 0, ∀ (x : ℝ → Fin 3 → ℝ) (T : ℝ),
+          aifNet.MassActionTrajectoryOn (aifK μ θ η a γ) x T → ‖x 0 - xs‖ < δ →
+            ∀ t ∈ Ico 0 T, ‖x t - xs‖ ^ 2 ≤ C * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2 :=
+  ⟨aifNet_hasPerfectAdaptation hμ hθ hη ha, fun _ hγ _ hxs =>
+    aifNet_locallyExpStable_all hθ hη ha hγ hxs⟩
 
 end LeanTheory.CRN.Design

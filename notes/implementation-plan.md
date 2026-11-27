@@ -48,8 +48,10 @@ As of 2026-11-27 (seeded from the user's prompt):
   exponentially stable at unit rates (`Design.aifNet_locallyExpStable_one`) and, with unit
   `μ, θ, η, a`, **for every `γ > 0` — RPA with nonlinear local exponential stability for the whole
   family** (`Design.aifNet_rpa_locallyExpStable`, polynomial Lyapunov + SOS certificate).
-  Converse Lyapunov (partial): for Hurwitz `J`, `JᵀP + PJ = −I` has a unique symmetric,
-  nonsingular solution (`exists_lyapunov_solution`); positive definiteness still open. The audited template library
+  **Converse Lyapunov theorem** (`converse_lyapunov`) and the **principle of linearized
+  stability** (`hurwitz_local_exp_stable`): Hurwitz Jacobian ⇒ local exponential stability. The
+  antithetic motif has RPA with nonlinear local stability **for all positive parameters**
+  (`Design.aifNet_rpa_locallyExpStable_all`). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -143,7 +145,7 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of the converse-Lyapunov unit (`Theory/CRN/ConverseLyapunov.lean`; no findings), of family-wide motif stability (additions to `Design/AntitheticStability.lean`, oracle `scripts/oracles/motif_lyapunov.py`; no findings), of the linearization unit (`Theory/CRN/Linearization.lean`, additions to `Design/AntitheticStability.lean`, `Sanity/CRNStability.lean`; scope limit recorded: full-space certificates only, regression `isoNet_no_lyapunov`), of parametric motif stability (`Certificates/RouthHurwitz.lean`, `Design/AntitheticStability.lean`; no findings), of the stability contract (`Kernel/Stability.lean`, `Certificates/LyapunovCert.lean`, `Sanity/CRNStability.lean`, `Sanity/CRNBlowUp.lean`, refactored `Kernel/MassAction.lean`; F-2 and F-8 resolved), of the finite-chain layer (`Theory/Markov/FiniteChain.lean`, `Theory/CRN/FiniteCME.lean`, `Sanity/CRNExtinction.lean`; no findings), of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of converse Lyapunov part 2 (`Theory/CRN/ConverseLyapunovPD.lean`, additions to `Design/AntitheticStability.lean`; no findings), of the converse-Lyapunov unit (`Theory/CRN/ConverseLyapunov.lean`; no findings), of family-wide motif stability (additions to `Design/AntitheticStability.lean`, oracle `scripts/oracles/motif_lyapunov.py`; no findings), of the linearization unit (`Theory/CRN/Linearization.lean`, additions to `Design/AntitheticStability.lean`, `Sanity/CRNStability.lean`; scope limit recorded: full-space certificates only, regression `isoNet_no_lyapunov`), of parametric motif stability (`Certificates/RouthHurwitz.lean`, `Design/AntitheticStability.lean`; no findings), of the stability contract (`Kernel/Stability.lean`, `Certificates/LyapunovCert.lean`, `Sanity/CRNStability.lean`, `Sanity/CRNBlowUp.lean`, refactored `Kernel/MassAction.lean`; F-2 and F-8 resolved), of the finite-chain layer (`Theory/Markov/FiniteChain.lean`, `Theory/CRN/FiniteCME.lean`, `Sanity/CRNExtinction.lean`; no findings), of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
@@ -204,19 +206,17 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **Converse Lyapunov, positive definiteness** — `exists_lyapunov_solution` gives the unique
-   symmetric nonsingular `P`; prove `P ≻ 0` by the homotopy `J − sI` (continuity of
-   `s ↦ (L₀ − 2s)⁻¹(−I)` + intermediate value on the minimal Rayleigh quotient). Then `HasRPALinear`
-   ⇒ nonlinear local stability for all parameters.
+1. **Class-relative linearization** — conservative networks have singular Jacobians; restrict the
+   Lyapunov / converse-Lyapunov machinery to the stoichiometric subspace (needs `IsHurwitzOn` ⇒
+   stability within the compatibility class). This is what ACR networks (EnvZ/OmpR) need.
 2. **Antithetic motif with dilution** (N-009/Q-3 analogue): quantify the set-point error, now with a
    stable baseline.
-3. **Class-relative linearization** for conservative networks (Jacobian singular).
-4. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
+3. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
    N-007, block factorization), Anderson–Enciso–Johnston (N-015). Needs the PDFs or permission to
    fetch them.
-5. **N-009 / Q-3 model choice** — a user decision (synthesis model and input); cheap, and it turns
+4. **N-009 / Q-3 model choice** — a user decision (synthesis model and input); cheap, and it turns
    an ill-posed question into a precise one.
-6. **Continuous-time CME laws** — the uniformization identity `e^{tQ} = Σ Poisson(Λt)ₙ Pⁿ`, turning
+5. **Continuous-time CME laws** — the uniformization identity `e^{tQ} = Σ Poisson(Λt)ₙ Pⁿ`, turning
    the discrete-time absorption theorem into a statement about the CTMC.
 
 ## 8. Running a work unit
@@ -365,6 +365,13 @@ the physical model.
   the characteristic polynomial over `ℂ`), `lyapOp_injective` for Hurwitz `J`, and
   `exists_lyapunov_solution` (existence, uniqueness, symmetry, nonsingularity). Positive
   definiteness deferred (homotopy argument). Build clean, axiom audit passed for 6581 declarations.
+
+- **2026-11-27 — Converse Lyapunov, part 2 (work unit).** New `LeanTheory/Theory/CRN/ConverseLyapunovPD.lean`:
+  homotopy `(1−t)J − tI` stays Hurwitz; semidefinite-kernel lemma; Lyapunov operator as a
+  continuous linear map on `ι → ι → ℝ` (affine in `t`, a unit for Hurwitz `J`); continuity of the
+  solution via `NormedRing.inverse_continuousAt`; `converse_lyapunov`; `hurwitz_local_exp_stable`;
+  mass-action corollary. Motif: nonlinear local stability for all positive parameters. Build clean,
+  axiom audit passed for 6616 declarations.
 
 ## 12. Implementation and workstation log
 

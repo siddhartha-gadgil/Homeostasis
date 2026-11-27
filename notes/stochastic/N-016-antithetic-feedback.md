@@ -62,8 +62,10 @@ exponentially stable** for the nonlinear ODE (`Design.aifNet_locallyExpStable_on
 certificate + `lyapunov_local_exp_stable`). **Family-wide (added 2026-11-27)**: with unit `μ, θ, η, a`, for every `γ > 0` the
 unique positive steady state `(γ, 1/γ, 1)` is locally exponentially stable and the output adapts
 to `1` (`Design.aifNet_rpa_locallyExpStable`), via a polynomial Lyapunov certificate `P̃(γ)` and a
-polynomial SOS identity (oracle `scripts/oracles/motif_lyapunov.py`). For fully general
-`μ, θ, η, a` only linear stability is proved.
+polynomial SOS identity (oracle `scripts/oracles/motif_lyapunov.py`). **All parameters (2026-11-27)**: by the converse Lyapunov theorem, for all positive
+`μ, θ, η, a, γ` every positive steady state is locally exponentially stable
+(`Design.aifNet_locallyExpStable_all`), so the motif has RPA with nonlinear local stability for
+all parameters (`Design.aifNet_rpa_locallyExpStable_all`).
 
 ## Claims and evidence
 

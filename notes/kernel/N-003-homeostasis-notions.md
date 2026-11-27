@@ -114,10 +114,14 @@ Converse Lyapunov theorem (partial, 2026-11-27, `Theory/CRN/ConverseLyapunov.lea
 `J` the Lyapunov operator `X ↦ JᵀX + XJ` is injective (`lyapOp_injective`: intertwining over `ℂ`,
 Cayley–Hamilton, factorization of the characteristic polynomial over its roots), so
 `JᵀP + PJ = −I` has a unique solution, which is symmetric and nonsingular
-(`exists_lyapunov_solution`). **Missing**: positive definiteness of `P` — planned via the homotopy
-`J − sI` (`s ≥ 0`): solutions `P_s` stay nonsingular, are positive definite for large `s`, so a
-continuity / intermediate-value argument on `min_{‖v‖=1} vᵀP_s v` forces `P_0 ≻ 0`. Needs continuity
-of `s ↦ P_s` (inverse of `L₀ − 2s` on matrices). With it, `HasRPALinear` ⇒ nonlinear local stability.
+(`exists_lyapunov_solution`). **Completed 2026-11-27** (`Theory/CRN/ConverseLyapunovPD.lean`):
+`converse_lyapunov` — the solution is positive definite — by the homotopy `J_t = (1−t)J − tI`
+(Hurwitz on `[0,1]`), continuity of `t ↦ P_t` (inversion is continuous at units of the normed
+ring of operators on `ι → ι → ℝ`), `P_1 = I/2`, and a compactness / intermediate-value argument on
+unit vectors with the semidefinite-kernel lemma `mulVec_eq_zero_of_psd`. Hence the **principle of
+linearized stability** `hurwitz_local_exp_stable` (Hurwitz Jacobian ⇒ local exponential
+stability) and its mass-action form `ReactionNetwork.locallyExpStable_of_isHurwitz`; so
+`HasRPALinear` with a full-space Hurwitz Jacobian implies nonlinear local stability.
 
 Still open: "ACR ⇏ linear stability" (needs an ACR network with an unstable positive steady
 state — search); linearization principle. Deterministic ACR ⇏ stochastic homeostasis is compiled
