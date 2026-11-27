@@ -1,0 +1,4 @@
+interface:
+  display_name: "Formalize sourced mathematics"
+  short_description: "Turn a ready research note or precise source into checked Lean theory"
+  default_prompt: "Use $formalize-theory to formalize a lean-ready result and update its note."

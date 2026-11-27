@@ -1,0 +1,40 @@
+name = "LeanTheory"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["LeanTheory"]
+
+[leanOptions]
+pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+
+# TauCeti (an AI-built Lean library downstream of Mathlib); Mathlib comes in through it, at the
+# commit pinned by TauCeti's own lake-manifest.json.
+[[require]]
+name = "TauCeti"
+git = "https://github.com/TauCetiProject/TauCeti"
+rev = "v4.36.0"
+
+[[lean_lib]]
+name = "LeanTheory"
+
+# `meta` code of the certificate builders, compiled to native code (`eval_cert` runs ≈ 10×
+# faster than in the interpreter). Only depends on Lean; imported by `LeanTheory.Certificates`.
+# Reads tasks as JSON lines and answers them with the `@[response]` handlers of `LeanTheory`
+# (`LeanTheory/ResponseExt.lean`, `LeanTheory/Elaborate.lean`): `lake exe theory_loop`.
+[[lean_exe]]
+name = "theory_loop"
+root = "theory_loop"
+supportInterpreter = true
+
+# The same tasks over HTTP, with a web page for trying them: `lake exe theory_server [port]`.
+[[lean_exe]]
+name = "theory_server"
+root = "theory_server"
+supportInterpreter = true
+
+[[lean_lib]]
+name = "LeanTheoryMeta"
+roots = ["LeanTheoryMeta.EvalCert"]
+precompileModules = true
