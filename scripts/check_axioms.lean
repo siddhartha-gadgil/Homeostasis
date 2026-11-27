@@ -118,3 +118,6 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.locallyExpStable_of_ldl
 #print axioms LeanTheory.CRN.Design.aifNet_locallyExpStable_one
 #print axioms LeanTheory.CRN.Sanity.isoNet_no_lyapunov
+#print axioms LeanTheory.CRN.Design.motif_quad_pos
+#print axioms LeanTheory.CRN.Design.aifNet_locallyExpStable
+#print axioms LeanTheory.CRN.Design.aifNet_rpa_locallyExpStable

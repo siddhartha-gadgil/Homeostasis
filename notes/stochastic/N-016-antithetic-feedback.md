@@ -59,9 +59,11 @@ state of the motif is linearly stable** (`Design.aifNet_isHurwitz`, Routh–Hurw
 
 Nonlinear stability (added 2026-11-27): at unit rates the steady state `(1, 1, 1)` is **locally
 exponentially stable** for the nonlinear ODE (`Design.aifNet_locallyExpStable_one`, Lyapunov
-certificate + `lyapunov_local_exp_stable`). For general parameters only linear stability is
-proved; sympy gives a symbolic `P(γ)` (unit other rates) whose `LDLᵀ` pivots are positive rational
-functions of `γ` — the next step for a family-wide nonlinear statement.
+certificate + `lyapunov_local_exp_stable`). **Family-wide (added 2026-11-27)**: with unit `μ, θ, η, a`, for every `γ > 0` the
+unique positive steady state `(γ, 1/γ, 1)` is locally exponentially stable and the output adapts
+to `1` (`Design.aifNet_rpa_locallyExpStable`), via a polynomial Lyapunov certificate `P̃(γ)` and a
+polynomial SOS identity (oracle `scripts/oracles/motif_lyapunov.py`). For fully general
+`μ, θ, η, a` only linear stability is proved.
 
 ## Claims and evidence
 
