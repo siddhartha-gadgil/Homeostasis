@@ -10,14 +10,14 @@
 | Addresses | `G-1`, `Q-7` |
 | Depends on | `N-002` (compiled), `N-004` fixtures for the separating examples |
 | Dependency requirement | `massActionField`, `IsPosSteadyState`, compatibility classes as compiled declarations |
-| Produces | `LeanTheory/Kernel/Homeostasis.lean` (planned): `HasACR`, `HasACRNonvacuous`, `InfinitesimalHomeostasis`, `HasRPA`, `AdaptationError`; Sanity theorems separating them |
+| Produces | `LeanTheory/Kernel/Homeostasis.lean`, `LeanTheory/Sanity/CRNHomeostasis.lean` |
 | Difficulty | moderate — quantifier design is the whole difficulty |
-| Status | exploratory |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Status | verified (equilibrium-level predicates and implication map); stability contracts not yet defined |
+| Implementation status | complete for equilibrium-level notions |
+| Implementation evidence | modules above, in `lake build` |
+| Lean evidence | defs `ReactionNetwork.HasACR`, `HasACRNonvacuous`, `HasACRNontrivial`, `IsPosEquilibrium`, `InfinitesimalHomeostasis`, `HasPerfectAdaptation`, `HasAdaptationError`, `ReactionNetwork.massActionFamily`; theorems `hasACR_iff_eq_value`, `HasACR.hasDerivAt_zero`, `HasPerfectAdaptation.infinitesimalHomeostasis`, `HasPerfectAdaptation.adaptationError_zero`, `hasPerfectAdaptation_iff_error_zero`, `isPosEquilibrium_massActionFamily_iff` |
+| Audit evidence | strict audit 2026-11-27 (implementation plan §4); findings F-3, F-4 resolved by regression checks |
+| Last updated | 2026-11-27 — Q-7 answered at the equilibrium level; formalized with separating examples |
 
 ## Purpose and scope
 
@@ -63,6 +63,41 @@ Readiness: the definitions can be drafted as soon as N-002 compiles. The open de
 robustness is with respect to conserved totals, RPA (Araujo–Liotta, Briat et al.) uses a
 disturbance or input rate. A common interface `ParametrizedSystem (P : Type) (n)` with
 `F : P → (ι → ℝ) → (ι → ℝ)` may serve all three; test it on N-004's examples before committing.
+
+## Compiled results and decisions (2026-11-27, Q-7)
+
+Two families of predicates, deliberately separate:
+
+- **Fixed rate constants, robustness to conserved totals** (Shinar–Feinberg): `HasACR`,
+  `HasACRNonvacuous` (adds existence), `HasACRNontrivial` (adds two distinct positive steady states).
+  Headline ACR claims (N-006, N-008) must use `HasACRNontrivial`.
+- **Input-parametrized family `F : ℝ → (ι → ℝ) → (ι → ℝ)`** (Golubitsky–Stewart, RPA):
+  `InfinitesimalHomeostasis F X o I₀` (branch of equilibria near `I₀`, zero derivative of the output;
+  no hyperbolicity built in), `HasPerfectAdaptation F U o c` (`U` nonempty; equilibria exist for every
+  input; every positive equilibrium has output `c`), `HasAdaptationError F U o ε`. Inputs acting on
+  rate constants enter through `massActionFamily N kfam`.
+- **Stability is not part of any predicate.** "Robust perfect adaptation" in the literature =
+  `HasPerfectAdaptation` + a stability contract; the stability contract (linear or Lyapunov) is
+  still to be defined (N-012/N-017, and N-016 for the antithetic motif).
+
+Implication map (compiled):
+
+| Implication | Declaration |
+| --- | --- |
+| Nonvacuous ACR ⇔ a common value attained at a steady state | `hasACR_iff_eq_value` |
+| ACR ⇒ zero derivative of the ACR species along any branch of positive steady states (no differentiability needed) | `HasACR.hasDerivAt_zero`; instance `acrNet_branch_derivative_zero` (branch parametrized by the total) |
+| Perfect adaptation ⇒ infinitesimal homeostasis at interior inputs | `HasPerfectAdaptation.infinitesimalHomeostasis` |
+| Perfect adaptation ⇔ adaptation error 0 (given existence, nonempty `U`) | `hasPerfectAdaptation_iff_error_zero` |
+| Infinitesimal homeostasis ⇏ perfect adaptation | `quad_infinitesimalHomeostasis`, `quad_not_perfectAdaptation` (`ẋ = 1 + I² − x`) |
+| ACR is species-specific | `acrNet_not_hasACR_B` |
+| `HasACR` vacuous without steady states | `abNet_hasACR_vacuous`, `abNet_not_hasACRNonvacuous` |
+| ACR trivial with a unique steady state | `bdNet_hasACRNonvacuous` (finding F-3 → `HasACRNontrivial`, `acrNet_hasACRNontrivial`) |
+| Perfect adaptation over `∅` vacuous | finding F-4 → `U.Nonempty` in the definition; regression `not_hasPerfectAdaptation_empty` |
+| Input following | `lin_not_perfectAdaptation`, `lin_adaptationError` (`ẋ = I − x`) |
+
+Still open from the original plan: "ACR ⇏ stability / convergence" (needs a stability predicate and
+an ACR network with an unstable positive steady state); deterministic ACR ⇏ stochastic homeostasis
+(N-015).
 
 ## Outputs and next dependencies
 

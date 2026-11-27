@@ -68,3 +68,8 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.MassActionTrajectory.dotProduct_eq
 #print axioms LeanTheory.CRN.Sanity.isoTraj_trajectory
 #print axioms LeanTheory.CRN.Sanity.acrNet_steadyState_xA
+#print axioms LeanTheory.CRN.ReactionNetwork.HasACR.hasDerivAt_zero
+#print axioms LeanTheory.CRN.HasPerfectAdaptation.infinitesimalHomeostasis
+#print axioms LeanTheory.CRN.hasPerfectAdaptation_iff_error_zero
+#print axioms LeanTheory.CRN.Sanity.acrNet_hasACRNonvacuous
+#print axioms LeanTheory.CRN.Sanity.quad_not_perfectAdaptation
