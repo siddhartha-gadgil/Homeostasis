@@ -23,7 +23,10 @@ As of 2026-11-27 (seeded from the user's prompt):
   ACR value `x_A = k₁/k₀` of the toy network). Homeostasis predicates (N-003,
   `LeanTheory.Kernel.Homeostasis`): ACR (vacuous / nonvacuous / nontrivial), infinitesimal
   homeostasis, perfect adaptation, adaptation error, with the compiled implication map and
-  separating examples in `LeanTheory.Sanity.CRNHomeostasis`. The audited template library
+  separating examples in `LeanTheory.Sanity.CRNHomeostasis`. First case study (N-016,
+  deterministic): antithetic integral feedback gives perfect adaptation to `μ/θ` for any plant
+  (`IsAntitheticController.hasPerfectAdaptation`), with an explicit motif, and dilution breaks it
+  (`LeanTheory.Design.AntitheticMotif`). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -33,7 +36,7 @@ As of 2026-11-27 (seeded from the user's prompt):
 - **Main barriers:** kernel representation choices (Q-6) gate almost everything; no
   continuous-time Markov chain theory in Mathlib/TauCeti (Q-8); the dilution question (Q-3) is
   ill-posed until an input and a synthesis model are chosen (correction X-10).
-- **Ready now:** N-016 deterministic part (antithetic set-point), N-013 (CME generator), N-007 (determinant formula, now also instantiable on CRNs), N-011, N-019 cofactor certificate (determinant formula, Mathlib-only), N-011
+- **Ready now:** N-013 (CME generator; then N-016 stochastic part), N-007 (determinant formula), N-011, N-019 cofactor certificate (determinant formula, Mathlib-only), N-011
   formats 1–2 (polynomial certificate checkers, template-only), and source-reading tasks for
   N-006/N-008/N-015 when the user supplies PDFs.
 
@@ -46,7 +49,7 @@ Several goals may coexist. Goals may be independent or support other goals.
 | `G-1` | **Auditable CRN kernel.** Lean definitions of reaction networks, stoichiometric subspace, compatibility classes, linkage classes, weak reversibility, deficiency (N-001); mass-action field, steady states, conservation laws, dilution variant (N-002); homeostasis predicates ACR / infinitesimal homeostasis / RPA / approximate adaptation (N-003); CME propensities and generator (N-013). Success: all compile axiom-free; every law has the triad plus the five `U-SW` classes (N-004); a strict audit with no open kernel finding | supports G-2, G-3, G-4 | open | compiled declarations + N-004 sanity suite + audit record |
 | `G-2` | **Structural theorems, machine-checked.** At least: (a) determinant formula for infinitesimal homeostasis (N-007); (b) Shinar–Feinberg ACR theorem (N-006); (c) Deficiency Zero Theorem with local stability (N-005); stretch: persistence criteria (N-012), RPA topology (N-018). Success: each as a named compiled theorem whose hypotheses match the source statement, recorded in the ledger | supported by G-1; supports G-4 | open | compiled theorems; source-fidelity check per theorem |
 | `G-3` | **Untrusted oracle + small verifier pipeline.** Exact certificate formats and Lean soundness theorems for: coefficient-sign/injectivity, ideal-membership cofactors, SOS (`LDLᵀ` over `ℚ`), Positivstellensatz refutations (N-011), validated root enclosures (template), siphon covers (N-012), Foster–Lyapunov drift and moment bounds (N-014). Success: each format has a soundness theorem, an accepted and a rejected fixture, and one end-to-end use from an external oracle on a G-4 network | supported by G-1; supports G-2 (case checks), G-4 | open | compiled soundness theorems + fixtures + one documented oracle run per format |
-| `G-4` | **Machine-checked case studies**, separating exact idealized homeostasis from quantitative approximate bounds: EnvZ/OmpR (and IDHKP/IDH) ACR (N-008) and under dilution (N-009); 2-site / `n`-site phosphorylation (N-010); antithetic integral feedback, deterministic and stochastic-mean (N-016); stochastic extinction in ACR networks (N-015). Success: per network a compiled model transcribed from a cited source, plus compiled theorems, each labelled *exact-idealized* or *approximate-bound* with explicit parameter domain | supported by G-1, G-2, G-3 | open | compiled theorems; transcription check against source; assumption ledger entries |
+| `G-4` | **Machine-checked case studies**, separating exact idealized homeostasis from quantitative approximate bounds: EnvZ/OmpR (and IDHKP/IDH) ACR (N-008) and under dilution (N-009); 2-site / `n`-site phosphorylation (N-010); antithetic integral feedback, deterministic and stochastic-mean (N-016); stochastic extinction in ACR networks (N-015). Success: per network a compiled model transcribed from a cited source, plus compiled theorems, each labelled *exact-idealized* or *approximate-bound* with explicit parameter domain | supported by G-1, G-2, G-3 | active (antithetic motif, deterministic, done) | compiled theorems; transcription check against source; assumption ledger entries |
 
 ## 2. Question registry
 
@@ -84,7 +87,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | stated; **ready** (N-001 verified) | Generator algebra + `F-bd`, `F-acr` sanity |
 | `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | stated; blocked | Drift checker; moment bound from generator stationarity |
 | `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | stated; source reading ready | `F-acr` reachability once N-013 compiles |
-| `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | proof-ready; **deterministic part ready** | Formalize after N-002/N-013 |
+| `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | deterministic part **verified**; stochastic part proof-ready (needs N-013) | Formalize after N-002/N-013 |
 | `N-017` | [deterministic/N-017-global-stability](deterministic/N-017-global-stability.md) | G-2, Q-2, Q-5 | N-005, N-012 | research | exploratory; blocked | Check publication status of `S-CRA15` |
 | `N-018` | [deterministic/N-018-rpa-topology](deterministic/N-018-rpa-topology.md) | G-2, Q-7 | N-003, N-007 | moderate–hard | exploratory; source reading ready | Read `S-AL18`; compare with `C-GSF` |
 | `N-019` | [deterministic/N-019-acr-higher-deficiency](deterministic/N-019-acr-higher-deficiency.md) | Q-1, G-2 | N-006, N-003 | research | exploratory; exploration ready (conditional) | `explore` Q-1 conditional on `C-SF` |
@@ -117,7 +120,7 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
@@ -178,9 +181,8 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **N-016 (deterministic)** — antithetic integral feedback: `HasPerfectAdaptation` with set-point
-   `μ/θ` for every plant, the first G-4 case study; cheap with N-002/N-003 in place.
-   Parallel strands: N-013 (CME generator), N-007 (determinant formula).
+1. **N-013** — CME generator; unlocks the stochastic half of N-016 (mean set-point `μ/θ`) and
+   N-015 (extinction in the toy ACR network). Parallel strand: N-007 (determinant formula).
 2. **N-007a** — determinant formula for infinitesimal homeostasis. Ready now with Mathlib alone;
    a reusable theorem feeding G-2, Q-3 and N-018. Good parallel strand.
 3. **N-011 formats 1–2** — polynomial certificate checkers (coefficient sign, cofactor identity).
@@ -255,6 +257,13 @@ the physical model.
   map) and `LeanTheory/Sanity/CRNHomeostasis.lean` (separating examples). Audit findings F-3
   (trivial ACR) and F-4 (empty input set) found and fixed with regression checks. Build clean, axiom
   audit passed for 6159 declarations. Stability contract still undefined.
+
+- **2026-11-27 — N-016 deterministic (work unit).** New `LeanTheory/Theory/CRN/AntitheticFeedback.lean`
+  (structural antithetic condition; integral action `w · f = k_μ − k_θ x_L`; set-point at every
+  steady state; perfect adaptation for inputs not touching `μ, θ`) and
+  `LeanTheory/Design/AntitheticMotif.lean` (motif with one-species plant, explicit steady state,
+  perfect adaptation over all `γ > 0`; no actuation ⇒ no steady state; dilution breaks the
+  set-point). Build clean, axiom audit passed for 6195 declarations. G-4 now active.
 
 ## 12. Implementation and workstation log
 

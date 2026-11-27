@@ -73,3 +73,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.hasPerfectAdaptation_iff_error_zero
 #print axioms LeanTheory.CRN.Sanity.acrNet_hasACRNonvacuous
 #print axioms LeanTheory.CRN.Sanity.quad_not_perfectAdaptation
+#print axioms LeanTheory.CRN.ReactionNetwork.IsAntitheticController.dotProduct_field
+#print axioms LeanTheory.CRN.ReactionNetwork.IsAntitheticController.hasPerfectAdaptation
+#print axioms LeanTheory.CRN.Design.aifNet_hasPerfectAdaptation
+#print axioms LeanTheory.CRN.Design.aifNet_dilution_breaks_setpoint

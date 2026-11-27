@@ -47,6 +47,7 @@ public import LeanTheory.Certificates.ValidatedQuadratureArcs
 public import LeanTheory.Certificates.ValidatedTrig
 public import LeanTheory.Certificates.ValidatedTrigFast
 public import LeanTheory.Certificates.WeightedEll1
+public import LeanTheory.Design.AntitheticMotif
 public import LeanTheory.Elaborate
 public import LeanTheory.Kernel.Example
 public import LeanTheory.Kernel.Homeostasis
@@ -60,6 +61,7 @@ public import LeanTheory.Sanity.Example
 public import LeanTheory.Sanity.QuasisymmetryNotSymmetry
 public import LeanTheory.SubsetSum
 public import LeanTheory.TaskHandlers
+public import LeanTheory.Theory.CRN.AntitheticFeedback
 public import LeanTheory.Theory.Fields.FieldLineExistence
 public import LeanTheory.Theory.Fields.InvariantBarrier
 public import LeanTheory.Theory.Fields.LieGradient
