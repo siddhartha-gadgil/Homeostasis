@@ -12,8 +12,8 @@
 | Dependency requirement | for conditional exploration: the informal statement of `C-SF`; for any verified claim: compiled `acr_of_deficiency_one` |
 | Produces | literature map, examples, conjectures; test networks; possibly an algebraic criterion (steady-state ideal contains `x_S − c`, or a binomial / linear-invariant criterion) |
 | Difficulty | research |
-| Status | exploratory |
-| Implementation status | not started |
+| Status | active (first general result compiled 2026-11-27) |
+| Implementation status | partial: independent unions (`Theory/CRN/Union.lean`) |
 | Implementation evidence | none |
 | Lean evidence | none |
 | Audit evidence | not audited |
@@ -38,6 +38,9 @@ dynamically equivalent networks.
 | Claim | Status |
 | --- | --- |
 | Ideal-membership cofactor identity ⇒ ACR | **compiled** `ReactionNetwork.hasACR_of_cofactor` (N-011); oracle `scripts/oracles/crn_cofactor.py` |
+| ACR is inherited by independent unions (`S₀ ⊓ S₁ = ⊥`); deficiencies add | **compiled** `hasACR_union`, `deficiency_union` |
+| Shinar–Feinberg in a deficiency-one module ⇒ ACR of the union, at any deficiency | **compiled** `hasACR_union_of_deficiency_one` |
+| A coupled deficiency-two network with nontrivial ACR (`A + B → 2B`, `B → A`, `A + C → A + D`, `D → C`) | **compiled** `Sanity.uNet_deficiency`, `Sanity.uNet_hasACRNontrivial` |
 
 ## Difficulty, barriers and readiness
 
@@ -47,3 +50,25 @@ cofactor certificate becomes lean-ready with N-002.
 ## Outputs and next dependencies
 
 Feeds Q-1 directly; supplies the certificate template to N-011 and N-008.
+
+## First general result: independent unions (2026-11-27, `LeanTheory/Theory/CRN/Union.lean`)
+
+`N₀ ∪ N₁` (same species, no common complex; `ReactionNetwork.union`) has field `f₀ + f₁` and
+stoichiometric subspace `S₀ ⊔ S₁`. If `S₀ ⊓ S₁ = ⊥`:
+
+- at a positive steady state `f₀(x) = −f₁(x) ∈ S₀ ∩ S₁ = 0`, so steady states of the union are
+  steady states of both parts (`isPosSteadyState_left_of_union`, `..._right_of_union`);
+- **ACR is inherited** (`hasACR_union`), whatever the coupling through shared species;
+- **deficiencies add** (`deficiency_union`: complexes and linkage classes add, ranks add);
+- with Shinar–Feinberg for `N₀`: ACR at **arbitrary deficiency** (`hasACR_union_of_deficiency_one`).
+
+Example (`Sanity/CRNUnion.lean`): `A + B → 2B`, `B → A` with `A + C → A + D`, `D → C` — the ACR
+species `A` catalyzes the second module, the union has deficiency 2, and has nontrivial ACR in `A`
+(`x_A = κ₁/κ₀`).
+
+Scope: a sufficient condition. It does not cover networks whose ACR needs interaction between
+independent-looking parts; next candidates: (i) unions where only `S₀ ∩ S₁` is controlled through
+the field (e.g. `f₀(x) ∈ S₀ ∩ S₁` with a dimension count as in Shinar–Feinberg), (ii) the
+linkage-class form of the deficiency-one theorem (Feinberg's independence condition `δ = Σ δ_L`
+with the nonterminal pair in a class of deficiency `≤ 1`), (iii) complex-linear invariants (Karp et
+al.).

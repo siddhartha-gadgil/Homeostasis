@@ -84,6 +84,7 @@ public import LeanTheory.Sanity.CRNHomeostasis
 public import LeanTheory.Sanity.CRNMassAction
 public import LeanTheory.Sanity.CRNNetwork
 public import LeanTheory.Sanity.CRNStability
+public import LeanTheory.Sanity.CRNUnion
 public import LeanTheory.Sanity.DeterminantFormula
 public import LeanTheory.Sanity.Example
 public import LeanTheory.Sanity.FosterLyapunov
@@ -103,6 +104,7 @@ public import LeanTheory.Theory.CRN.FosterLyapunov
 public import LeanTheory.Theory.CRN.Horn
 public import LeanTheory.Theory.CRN.Linearization
 public import LeanTheory.Theory.CRN.ShinarFeinberg
+public import LeanTheory.Theory.CRN.Union
 public import LeanTheory.Theory.Fields.FieldLineExistence
 public import LeanTheory.Theory.Homeostasis.DeterminantFormula
 public import LeanTheory.Theory.Fields.InvariantBarrier

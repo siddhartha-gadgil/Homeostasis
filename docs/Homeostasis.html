@@ -192,7 +192,7 @@
     </div>
     <div>
       <ul class="pts" style="font-size: 0.6em">
-        <li><strong>Q-1</strong> ACR beyond deficiency one: necessary and sufficient conditions?</li>
+        <li><strong>Q-1</strong> ACR beyond deficiency one: necessary and sufficient conditions? (First result: independent unions.)</li>
         <li><strong>Q-2</strong> <i>n</i>-site phosphorylation: certify monostability vs multistationarity; global stability.</li>
         <li><strong>Q-3</strong> Sharp bounds on lost robustness under growth dilution.</li>
         <li><strong>Q-4</strong> Which homeostatic networks survive at low copy numbers?</li>
@@ -486,6 +486,36 @@ theorem phos_Yp_surjective (hk : ∀ r, 0 < k r) (hv : 0 < v) :
 theorem phos_deficiency : phosNet.deficiency = 1</code></pre>
     </div>
     <div class="simbox" data-scene="phos"></div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Q-1 &middot; ACR beyond deficiency one</p>
+  <h2>Independent modules: ACR is inherited, deficiencies add</h2>
+  <div class="cols">
+    <div>
+      <p class="small">Union $N = N_0 \cup N_1$ on the same species, no common complex. Then $f = f_0 + f_1$ and $S = S_0 + S_1$. If $S_0 \cap S_1 = 0$:</p>
+      <ul class="pts" style="font-size: 0.6em">
+        <li>at a steady state $f_0(x) = -f_1(x) \in S_0 \cap S_1 = 0$, so <strong>steady states of $N$ are steady states of $N_0$</strong>, and any ACR of $N_0$ is inherited;</li>
+        <li>$\delta(N) = \delta(N_0) + \delta(N_1)$ (complexes, linkage classes and ranks add).</li>
+      </ul>
+      <div class="card"><h3>A coupled example, $\delta = 2$</h3><p>$A + B \to 2B,\ B \to A$ together with $A + C \to A + D,\ D \to C$: $A$ catalyzes the second module, so the parts interact. Shinar&ndash;Feinberg does not apply ($\delta = 2$), yet every positive steady state has $x_A = \kappa_1/\kappa_0$, and there are many.</p></div>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem hasACR_union (hind : N₀.stoichSubspace ⊓ N₁.stoichSubspace = ⊥)
+    (h0 : N₀.HasACR (k ∘ Sum.inl) s) : (N₀.union N₁ hdisj).HasACR k s
+
+theorem deficiency_union (hind : N₀.stoichSubspace ⊓ N₁.stoichSubspace = ⊥) :
+    (N₀.union N₁ hdisj).deficiency = N₀.deficiency + N₁.deficiency
+
+theorem hasACR_union_of_deficiency_one (hind : …) (hk : ∀ r, 0 < k r)
+    (hδ : N₀.deficiency = 1) (hy : ¬ N₀.IsTerminal y) (hy' : ¬ N₀.IsTerminal y')
+    (hne : y ≠ y') (hdiff : ∀ i, i ≠ s → N₀.complex y i = N₀.complex y' i) :
+    (N₀.union N₁ hdisj).HasACR k s
+
+theorem uNet_deficiency : uNet.deficiency = 2
+theorem uNet_hasACRNontrivial (hk : ∀ r, 0 < k r) : uNet.HasACRNontrivial k 0</code></pre>
+    </div>
   </div>
 </section>
 
@@ -800,7 +830,8 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td><b>Deficiency Zero Theorem</b>: no steady state unless weakly reversible; complex balance; uniqueness and local exponential stability in each class</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Birch&rsquo;s theorem: exactly one steady state in every class (given one)</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Horn&rsquo;s theorem: a steady state for every weakly reversible deficiency-zero network &mdash; the Deficiency Zero Theorem is complete</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
-<tr><td>ACR beyond deficiency one (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
+<tr><td>ACR beyond deficiency one: independent unions (ACR inherited, deficiencies add); coupled &delta; = 2 example</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
+<tr><td>A general ACR criterion (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and persistence (Q-8)</td><td></td><td class="open">open</td></tr>
 </table>
   <p class="small mt"><a href="index.html">Website</a> &middot; <a href="https://github.com/siddhartha-gadgil/Homeostasis">Repository</a> &middot; <a href="LeanTheory.html">LeanTheory</a></p>

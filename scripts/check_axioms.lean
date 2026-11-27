@@ -199,3 +199,9 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.exists_posSteadyState_of_deficiency_zero
 #print axioms LeanTheory.CRN.ReactionNetwork.deficiencyZeroTheorem
 #print axioms LeanTheory.CRN.Sanity.isoNet_deficiencyZeroTheorem
+#print axioms LeanTheory.CRN.ReactionNetwork.union_massActionField
+#print axioms LeanTheory.CRN.ReactionNetwork.hasACR_union
+#print axioms LeanTheory.CRN.ReactionNetwork.deficiency_union
+#print axioms LeanTheory.CRN.ReactionNetwork.hasACR_union_of_deficiency_one
+#print axioms LeanTheory.CRN.Sanity.uNet_deficiency
+#print axioms LeanTheory.CRN.Sanity.uNet_hasACRNontrivial

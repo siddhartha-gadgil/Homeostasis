@@ -88,7 +88,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 
 | ID | Question | Needed by | Status | Current best answer / barrier |
 | --- | --- | --- | --- | --- |
-| `Q-1` | Necessary and sufficient graphical/algebraic conditions for ACR when `δ ≥ 2` or with several conservation laws | G-2; N-019 | open (research) | Deficiency-one sufficient condition `C-SF` **compiled** (`hasACR_of_deficiency_one`); hypothesis necessity shown by the phosphatase variant. Ideal-membership certificates give a checkable sufficient condition (N-019) |
+| `Q-1` | Necessary and sufficient graphical/algebraic conditions for ACR when `δ ≥ 2` or with several conservation laws | G-2; N-019 | open (research) | Deficiency-one sufficient condition `C-SF` **compiled** (`hasACR_of_deficiency_one`); hypothesis necessity shown by the phosphatase variant. **Beyond δ = 1**: ACR is inherited by stoichiometrically independent unions, whose deficiencies add (`hasACR_union_of_deficiency_one`; δ = 2 example `Sanity.uNet_hasACRNontrivial`). Ideal-membership certificates give a checkable sufficient condition (N-019) |
 | `Q-2` | For `n`-site phosphorylation (`n ≥ 3`): certify the boundary between monostability and multistationarity; prove global stability in the monostable regime | G-4; N-010, N-017 | open (research) | Multistationarity established in literature for `n ≥ 2` (sourced, unverified); witnesses are cheap, monostability certificates hard (X-7) |
 | `Q-3` | Sharp, uniform bounds `|dX_o*/dI| ≤ C(μ)` for ACR networks (EnvZ/OmpR) under dilution | G-4; N-009 | blocked (ill-posed) | Needs a choice of synthesis model and input `I` (X-10). Conjectured shape `O(μ)` on compact parameter boxes |
 | `Q-4` | Which deterministic homeostatic networks avoid stochastic extinction and keep stationary homeostasis under the CME at low copy numbers? | G-4; N-015, N-016 | open (research) | `F-acr` exhibits extinction (elementary). Antithetic feedback gives stationary-mean RPA under ergodicity (sourced) |
@@ -122,7 +122,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | **verified** (deterministic RPA with linear stability for all parameters; stochastic mean at generator level) | Quantify dilution error (Q-3); stochastic ergodicity | Formalize after N-002/N-013 |
 | `N-017` | [deterministic/N-017-global-stability](deterministic/N-017-global-stability.md) | G-2, Q-2, Q-5 | N-005, N-012 | research | exploratory; blocked | Check publication status of `S-CRA15` |
 | `N-018` | [deterministic/N-018-rpa-topology](deterministic/N-018-rpa-topology.md) | G-2, Q-7 | N-003, N-007 | moderate–hard | exploratory; **Lean prerequisites verified**, source reading ready | Read `S-AL18`; compare with `C-GSF` |
-| `N-019` | [deterministic/N-019-acr-higher-deficiency](deterministic/N-019-acr-higher-deficiency.md) | Q-1, G-2 | N-006, N-003 | research | exploratory; cofactor sufficient condition **compiled**; exploration ready | `explore` Q-1 conditional on `C-SF` |
+| `N-019` | [deterministic/N-019-acr-higher-deficiency](deterministic/N-019-acr-higher-deficiency.md) | Q-1, G-2 | N-006, N-003 | research | active: cofactor condition **compiled**; **independent unions** compiled (ACR inherited, deficiencies add, coupled δ = 2 example with ACR) | Linkage-class independence form of the deficiency-one theorem; complex-linear invariants |
 
 A dependency is established only when its required output is a compiled Lean declaration. A note
 may explore a conditional dependency, but the edge and all downstream status must remain marked
@@ -475,6 +475,12 @@ the physical model.
   (sign constancy on linkage classes + non-injectivity on each class), the log equation at
   `δ = 0` via `dim(ker Y ∩ ker(class sums)) ≤ δ`, a positive complex-balanced state, and
   `deficiencyZeroTheorem`. Build clean, axiom audit passed for 7340 declarations.
+
+- **2026-11-27 — ACR beyond deficiency one (work unit, N-019, Q-1).** New
+  `Theory/CRN/Union.lean` (union of networks; field and stoichiometric subspace; steady states
+  split under `S₀ ⊓ S₁ = ⊥`; ACR inherited; deficiencies add) and `Sanity/CRNUnion.lean` (a coupled
+  deficiency-two network with nontrivial ACR). Build clean, axiom audit passed for 7385
+  declarations.
 
 ## 12. Implementation and workstation log
 
