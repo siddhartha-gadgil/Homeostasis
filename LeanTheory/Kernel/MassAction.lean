@@ -61,15 +61,18 @@ def monomial {ι : Type*} [Fintype ι] (y : ι → ℕ) (x : ι → ℝ) : ℝ :
 /-- All concentrations are positive. -/
 def IsPos {ι : Type*} (x : ι → ℝ) : Prop := ∀ i, 0 < x i
 
+/-- Monomials are continuous. -/
 theorem continuous_monomial {ι : Type*} [Fintype ι] (y : ι → ℕ) :
     Continuous (monomial y) := by
   unfold monomial
   fun_prop
 
+/-- Monomials are nonnegative on the closed orthant. -/
 theorem monomial_nonneg {ι : Type*} [Fintype ι] (y : ι → ℕ) {x : ι → ℝ}
     (hx : ∀ i, 0 ≤ x i) : 0 ≤ monomial y x :=
   Finset.prod_nonneg fun i _ => pow_nonneg (hx i) _
 
+/-- Monomials are positive on the open orthant. -/
 theorem monomial_pos {ι : Type*} [Fintype ι] (y : ι → ℕ) {x : ι → ℝ} (hx : IsPos x) :
     0 < monomial y x :=
   Finset.prod_pos fun i _ => pow_pos (hx i) _
@@ -157,6 +160,7 @@ theorem massActionField_apply (k : R → ℝ) (x : ι → ℝ) (i : ι) :
     N.massActionField k x i = ∑ r, N.rate k x r * N.reactionVector r i := by
   simp [massActionField, Finset.sum_apply, smul_eq_mul]
 
+/-- The mass-action field is continuous in the state. -/
 theorem continuous_massActionField (k : R → ℝ) : Continuous (N.massActionField k) := by
   have := continuous_monomial (ι := ι)
   unfold massActionField rate
@@ -188,6 +192,7 @@ def lossCoeff [DecidableEq ι] (k : R → ℝ) (i : ι) (x : ι → ℝ) : ℝ :
   ∑ r, k r * (N.complex (N.src r) i : ℝ) *
     monomial (Function.update (N.complex (N.src r)) i (N.complex (N.src r) i - 1)) x
 
+/-- The loss coefficient is continuous in the state. -/
 theorem continuous_lossCoeff [DecidableEq ι] (k : R → ℝ) (i : ι) :
     Continuous (N.lossCoeff k i) := by
   have := continuous_monomial (ι := ι)
@@ -231,6 +236,7 @@ namespace MassActionTrajectory
 variable {N} {k : R → ℝ} {x : ℝ → ι → ℝ} (h : MassActionTrajectory N k x)
 include h
 
+/-- A trajectory is continuous on `[0, ∞)`. -/
 theorem continuousOn : ContinuousOn x (Ici 0) := fun t ht =>
   (h.hasDerivWithinAt t ht).continuousWithinAt
 

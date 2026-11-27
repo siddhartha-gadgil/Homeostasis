@@ -12,10 +12,10 @@
 | Dependency requirement | compiled mass-action field and RPA predicate; compiled generator and generator-level stationarity with integrability |
 | Produces | (1) deterministic theorem: at every positive steady state `x_L = μ/θ`; (2) stochastic theorem at generator level: `𝒜(z₁ − z₂) = μ − θ x_L`, hence `E_π x_L = μ/θ` for every generator-stationary `π` with the needed integrability; (3) dilution: the identity breaks; quantify the error (source not supplied) |
 | Difficulty | (1), (2) routine once the kernel exists; (3) research |
-| Status | (1) verified; (2) proof-ready (needs N-013); (3) dilution: loss of exact set-point verified on an example, quantitative error open |
+| Status | (1) verified; (2) verified at generator level (stationarity and integrability as hypotheses); (3) dilution: loss of exact set-point verified on an example, quantitative error open |
 | Implementation status | deterministic part complete |
-| Implementation evidence | `LeanTheory/Theory/CRN/AntitheticFeedback.lean`, `LeanTheory/Design/AntitheticMotif.lean` |
-| Lean evidence | `ReactionNetwork.IsAntitheticController` (structural condition); `IsAntitheticController.dotProduct_field`, `.hasDerivWithinAt`, `.steadyState_output`, `.hasPerfectAdaptation`; motif `Design.aifNet`, `aifNet_isAntitheticController`, `aifNet_field`, `aifNet_isPosSteadyState`, `aifNet_hasPerfectAdaptation`, `aifNet_no_steadyState_without_actuation`, `aifNet_dilution_breaks_setpoint` |
+| Implementation evidence | `LeanTheory/Theory/CRN/AntitheticFeedback.lean`, `LeanTheory/Theory/CRN/AntitheticCME.lean`, `LeanTheory/Design/AntitheticMotif.lean` |
+| Lean evidence | `ReactionNetwork.IsAntitheticController` (structural condition); `IsAntitheticController.dotProduct_field`, `.hasDerivWithinAt`, `.steadyState_output`, `.hasPerfectAdaptation`; motif `Design.aifNet`, `aifNet_isAntitheticController`, `aifNet_field`, `aifNet_isPosSteadyState`, `aifNet_hasPerfectAdaptation`, `aifNet_no_steadyState_without_actuation`, `aifNet_dilution_breaks_setpoint`; stochastic: `IsAntitheticController.generator_dot`, `.stationary_mean`, `aifNet_stationary_mean` |
 | Audit evidence | strict audit 2026-11-27 (implementation plan §4); no findings |
 | Last updated | 2026-11-27 — deterministic part formalized |
 
@@ -54,7 +54,7 @@ pending (Q-10).
 | Claim | Status |
 | --- | --- |
 | (1) deterministic set-point | **compiled** (see above) |
-| (2) stochastic mean set-point | complete elementary proof given stationarity and integrability; not formalized (needs N-013) |
+| (2) stochastic mean set-point | **compiled**: `𝒜(w·x) = κ_μ − κ_θ x_L` at every state; any probability `π`, generator-stationary for `w·x`, with finite mean `m` of `x_L`, has `m = κ_μ/κ_θ`. Existence/ergodicity of `π` remain hypotheses (`S-BGK16` conditions, Q-8) |
 | (3) dilution breaks exact adaptation | **compiled** on an explicit example; quantitative error bound open (Q-3) |
 | Ergodicity conditions of `S-BGK16` | sourced; TBD |
 

@@ -113,8 +113,10 @@ def IsTerminal (c : C) : Prop := ∀ d, N.Reaches c d → N.Reaches d c
 
 /-! ### Basic properties -/
 
+/-- Every reaction relates its source and target complexes. -/
 theorem reacts_src_tgt (r : R) : N.Reacts (N.src r) (N.tgt r) := ⟨r, rfl, rfl⟩
 
+/-- Each reaction vector lies in the stoichiometric subspace. -/
 theorem reactionVector_mem_stoichSubspace (r : R) : N.reactionVector r ∈ N.stoichSubspace :=
   Submodule.subset_span ⟨r, rfl⟩
 
@@ -189,6 +191,7 @@ def complexMap [Fintype C] : (C → ℝ) →ₗ[ℝ] (ι → ℝ) where
 /-- The edge vector `e_{tgt r} − e_{src r}` in `ℝ^C`. -/
 def edgeVector [DecidableEq C] (r : R) : C → ℝ := Pi.single (N.tgt r) 1 - Pi.single (N.src r) 1
 
+/-- The complex map sends the edge vector of `r` to the reaction vector of `r`. -/
 theorem complexMap_edgeVector [Fintype C] [DecidableEq C] (r : R) :
     N.complexMap (N.edgeVector r) = N.reactionVector r := by
   simp [complexMap, edgeVector, reactionVector, sub_smul, Finset.sum_sub_distrib,
@@ -208,10 +211,12 @@ def classSum [Fintype C] [DecidableEq N.LinkageClass] : (C → ℝ) →ₗ[ℝ] 
   map_add' v w := by funext q; simp [Finset.sum_add_distrib]
   map_smul' a v := by funext q; simp [Finset.mul_sum]
 
+/-- Complexes joined by a reaction lie in the same linkage class. -/
 theorem mk_eq_of_reacts {a b : C} (h : N.Reacts a b) :
     Quotient.mk N.linkageSetoid a = Quotient.mk N.linkageSetoid b :=
   Quotient.sound (EqvGen.rel _ _ h)
 
+/-- Edge vectors sum to zero over every linkage class. -/
 theorem edgeVector_mem_ker [Fintype C] [DecidableEq C] [DecidableEq N.LinkageClass] (r : R) :
     N.edgeVector r ∈ LinearMap.ker N.classSum := by
   rw [LinearMap.mem_ker]
@@ -222,6 +227,7 @@ theorem edgeVector_mem_ker [Fintype C] [DecidableEq C] [DecidableEq N.LinkageCla
   rw [Finset.sum_pi_single', Finset.sum_pi_single']
   simp [hq]
 
+/-- The class-sum map is surjective (every linkage class is nonempty). -/
 theorem classSum_surjective [Fintype C] [DecidableEq N.LinkageClass] :
     Function.Surjective N.classSum := by
   classical
@@ -327,6 +333,8 @@ def relabelSpecies {ι' : Type*} (e : ι ≃ ι') : ReactionNetwork ι' C R wher
   src_ne_tgt := N.src_ne_tgt
   complex_used := N.complex_used
 
+/-- Relabelling species transports the stoichiometric subspace along the induced linear
+equivalence. -/
 theorem stoichSubspace_relabelSpecies {ι' : Type*} (e : ι ≃ ι') :
     (N.relabelSpecies e).stoichSubspace =
       N.stoichSubspace.map (LinearEquiv.funCongrLeft ℝ ℝ e.symm).toLinearMap := by

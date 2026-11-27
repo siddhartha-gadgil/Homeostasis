@@ -170,6 +170,8 @@ variable {ι C R : Type*} [Fintype ι] [Fintype R] (N : ReactionNetwork ι C R)
 def massActionFamily (kfam : ℝ → R → ℝ) : ℝ → (ι → ℝ) → (ι → ℝ) :=
   fun I => N.massActionField (kfam I)
 
+/-- Positive equilibria of the input family are the positive steady states for the rate constants
+`kfam I`. -/
 theorem isPosEquilibrium_massActionFamily_iff (kfam : ℝ → R → ℝ) (I : ℝ) (x : ι → ℝ) :
     IsPosEquilibrium (N.massActionFamily kfam) I x ↔ N.IsPosSteadyState (kfam I) x :=
   Iff.rfl

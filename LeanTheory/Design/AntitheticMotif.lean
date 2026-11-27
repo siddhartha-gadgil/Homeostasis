@@ -5,7 +5,7 @@ Authors: LeanTheory contributors
 -/
 module
 
-public import LeanTheory.Theory.CRN.AntitheticFeedback
+public import LeanTheory.Theory.CRN.AntitheticCME
 
 /-!
 # Case study: the antithetic motif with a one-species plant (note N-016, goal G-4)
@@ -38,8 +38,11 @@ Separating examples:
   `(1, 2, 1)` is a steady state for `k = (3, 4, 1, 2, 1)`, but `x = 1 ≠ 3/4 = μ/θ` — exact
   adaptation is lost under dilution (cf. Q-3).
 
-Scope: stability of the steady state is not addressed; the stochastic (CME) version is the
-remaining part of N-016.
+Stochastic version (`aifNet_stationary_mean`): for every probability distribution on copy numbers
+that is generator-stationary for `z₁ − z₂` and under which `x` has finite mean `m`, `m = κ_μ/κ_θ`.
+
+Scope: stability of the steady state is not addressed; existence and ergodicity of a stationary
+distribution are hypotheses (Q-8, N-014).
 -/
 
 @[expose] public section
@@ -147,5 +150,13 @@ theorem aifNet_dilution_breaks_setpoint :
   rw [dilutedField, aifNet_field]
   funext i
   fin_cases i <;> norm_num
+
+/-- **Stochastic mean set-point of the motif**: any probability distribution `π` on copy numbers
+that is generator-stationary for `z₁ − z₂`, and under which `x` has finite mean `m`, has
+`m = κ_μ / κ_θ`, whatever `η`, `a`, `γ`. -/
+theorem aifNet_stationary_mean {κ : Fin 5 → ℝ} (hθ : κ 1 ≠ 0) {π : (Fin 3 → ℕ) → ℝ} {m : ℝ}
+    (hπ : HasSum π 1) (hm : HasSum (fun x => π x * x 2) m)
+    (hst : aifNet.IsGenStationaryFor κ π (fun z => aifW ⬝ᵥ toReal z)) : m = κ 0 / κ 1 :=
+  aifNet_isAntitheticController.stationary_mean hθ hπ hm hst
 
 end LeanTheory.CRN.Design

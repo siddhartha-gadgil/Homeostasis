@@ -65,6 +65,7 @@ namespace IsAntitheticController
 
 variable {N} {w : ι → ℝ} {rμ rθ : R} {L : ι}
 
+/-- The monomial of the complex `L` (one molecule) is `x_L`. -/
 theorem monomial_single (x : ι → ℝ) : monomial (Pi.single L 1) x = x L := by
   unfold monomial
   rw [Finset.prod_eq_single L]

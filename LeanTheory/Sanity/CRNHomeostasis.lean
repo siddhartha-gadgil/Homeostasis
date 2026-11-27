@@ -163,6 +163,7 @@ theorem not_hasPerfectAdaptation_empty (c : ℝ) : ¬ HasPerfectAdaptation quadF
 /-- Inflow rate `I`, outflow rate `1`: `ẋ = I − x`. -/
 def linK (I : ℝ) : Fin 2 → ℝ := ![I, 1]
 
+/-- Positive equilibria of `ẋ = I − x` are exactly `x = I` (with `I > 0`). -/
 theorem lin_isPosEquilibrium_iff (I : ℝ) (x : Fin 1 → ℝ) :
     IsPosEquilibrium (bdNet.massActionFamily linK) I x ↔ IsPos x ∧ x 0 = I := by
   rw [isPosEquilibrium_massActionFamily_iff, bdNet_isPosSteadyState_iff]

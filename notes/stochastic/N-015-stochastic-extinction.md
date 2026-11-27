@@ -12,10 +12,10 @@
 | Dependency requirement | compiled absorbing/reachability definitions; for the probabilistic statement, a compiled finite-CTMC absorption theorem |
 | Produces | (1) `F-acr` case: compiled theorem "the absorbing set is reachable from every state of the class" (pure combinatorics); (2) finite-CTMC lemma: on a finite state space, if an absorbing set is reachable from every state then it is hit a.s.; (3) source synthesis of `C-AEJ`; (4) exploratory catalogue of ACR networks without extinction (e.g. with inflow/outflow, open networks) |
 | Difficulty | (1) routine; (2) moderate (Markov chain theory on finite spaces; TauCeti discrete-time kernels may help via the jump chain); (3) reading; (4) research |
-| Status | stated |
-| Implementation status | not started |
+| Status | (1) verified for `F-acr`; (2)–(4) open |
+| Implementation status | combinatorial part complete |
 | Implementation evidence | none |
-| Lean evidence | none |
+| Lean evidence | `ReactionNetwork.isClosedSet_zero_of_src` (general absorbing-boundary lemma), `Sanity.acrNet_absorbing`, `Sanity.acrNet_reaches_extinction` |
 | Audit evidence | not audited |
 | Last updated | 2026-11-27 — seeded |
 
@@ -35,7 +35,7 @@ supplied), and conditions where the absorbing set is unreachable.
 
 | Claim | Status |
 | --- | --- |
-| `F-acr` absorption (combinatorial part) | complete proof; not formalized |
+| `F-acr` absorption (combinatorial part) | **compiled**: `{x_B = 0}` closed; `(a, b)` reaches `(a + b, 0)` |
 | `C-AEJ` general | sourced; hypotheses TBD |
 
 ## Difficulty, barriers and readiness

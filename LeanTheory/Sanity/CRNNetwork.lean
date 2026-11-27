@@ -98,9 +98,11 @@ def emptyNet : ReactionNetwork (Fin 1) Empty Empty where
 
 /-! ### `F-iso` -/
 
+/-- The reaction vector of `A → B`. -/
 theorem isoNet_reactionVector_zero : isoNet.reactionVector 0 = ![-1, 1] := by
   funext i; fin_cases i <;> simp [reactionVector, complexVec, isoNet]
 
+/-- The reaction vector of `B → A`. -/
 theorem isoNet_reactionVector_one : isoNet.reactionVector 1 = ![1, -1] := by
   funext i; fin_cases i <;> simp [reactionVector, complexVec, isoNet]
 
@@ -108,6 +110,7 @@ theorem isoNet_reactionVector_one : isoNet.reactionVector 1 = ![1, -1] := by
 theorem isoNet_reactionVector_ne_zero (r : Fin 2) : isoNet.reactionVector r ≠ 0 :=
   isoNet.reactionVector_ne_zero r
 
+/-- `A ⇌ B` has rank `1`. -/
 theorem isoNet_rank : isoNet.rank = 1 := by
   refine isoNet.rank_eq_one_of_multiples ![-1, 1] ?_ 0 isoNet_reactionVector_zero ?_
   · intro h; simpa using congrFun h 0
@@ -118,6 +121,7 @@ theorem isoNet_rank : isoNet.rank = 1 := by
       simp only [Fin.mk_one, isoNet_reactionVector_one]
       funext i; fin_cases i <;> simp
 
+/-- `A ⇌ B` has one linkage class. -/
 theorem isoNet_numLinkageClasses : isoNet.numLinkageClasses = 1 := by
   rw [isoNet.numLinkageClasses_eq_of_labelling (fun _ => ()) (fun _ => 0) (fun _ => rfl)
     (fun _ => rfl), Nat.card_unique]
@@ -143,6 +147,7 @@ theorem isoNet_isReversible : isoNet.IsReversible := by
 theorem bdNet_zero_complex : bdNet.complex 0 = 0 := by
   funext i; fin_cases i; rfl
 
+/-- `∅ ⇌ A` has rank `1`. -/
 theorem bdNet_rank : bdNet.rank = 1 := by
   refine bdNet.rank_eq_one_of_multiples ![1] ?_ 0 ?_ ?_
   · intro h; simpa using congrFun h 0
@@ -152,6 +157,7 @@ theorem bdNet_rank : bdNet.rank = 1 := by
     · exact ⟨1, by funext i; fin_cases i; simp [reactionVector, complexVec, bdNet]⟩
     · exact ⟨-1, by funext i; fin_cases i; simp [reactionVector, complexVec, bdNet]⟩
 
+/-- `∅ ⇌ A` has one linkage class. -/
 theorem bdNet_numLinkageClasses : bdNet.numLinkageClasses = 1 := by
   rw [bdNet.numLinkageClasses_eq_of_labelling (fun _ => ()) (fun _ => 0) (fun _ => rfl)
     (fun _ => rfl), Nat.card_unique]
@@ -166,6 +172,7 @@ theorem bdNet_deficiency : bdNet.deficiency = 0 := by
 
 /-! ### `F-acr` -/
 
+/-- `F-acr` has rank `1` (its reaction vectors are `±(−1, 1)`). -/
 theorem acrNet_rank : acrNet.rank = 1 := by
   refine acrNet.rank_eq_one_of_multiples ![-1, 1] ?_ 0 ?_ ?_
   · intro h; simpa using congrFun h 0
@@ -175,6 +182,7 @@ theorem acrNet_rank : acrNet.rank = 1 := by
     · exact ⟨1, by funext i; fin_cases i <;> norm_num [reactionVector, complexVec, acrNet]⟩
     · exact ⟨-1, by funext i; fin_cases i <;> norm_num [reactionVector, complexVec, acrNet]⟩
 
+/-- `F-acr` has two linkage classes, `{A + B, 2B}` and `{B, A}`. -/
 theorem acrNet_numLinkageClasses : acrNet.numLinkageClasses = 2 := by
   rw [acrNet.numLinkageClasses_eq_of_labelling ![0, 0, 1, 1] ![0, 2]
     (by intro r; fin_cases r <;> rfl) (by intro x; fin_cases x <;> rfl), Nat.card_eq_fintype_card,
@@ -220,9 +228,11 @@ theorem acrNet_swap_deficiency :
 
 /-! ### `F-ab` -/
 
+/-- In `A → B` the complex `B` is terminal. -/
 theorem abNet_isTerminal_B : abNet.IsTerminal 1 :=
   abNet.isTerminal_of_not_src (by intro r; fin_cases r; simp [abNet])
 
+/-- In `A → B` the complex `A` is not terminal. -/
 theorem abNet_not_isTerminal_A : ¬ abNet.IsTerminal 0 := by
   intro h
   have := Reaches.eq_of_not_src (N := abNet) (c := 1) (d := 0)
@@ -233,6 +243,7 @@ theorem abNet_not_isTerminal_A : ¬ abNet.IsTerminal 0 := by
 theorem abNet_not_isWeaklyReversible : ¬ abNet.IsWeaklyReversible := fun h =>
   abNet_not_isTerminal_A (h.isTerminal 0)
 
+/-- `A → B` has deficiency zero. -/
 theorem abNet_deficiency : abNet.deficiency = 0 := by
   have hs : abNet.rank = 1 := by
     refine abNet.rank_eq_one_of_multiples ![-1, 1] ?_ 0 ?_ ?_

@@ -10,14 +10,14 @@
 | Addresses | `G-1`, `Q-8` |
 | Depends on | `N-001` (compiled) |
 | Dependency requirement | compiled network syntax and reaction vectors |
-| Produces | `LeanTheory/Kernel/CME.lean` (planned): `propensity κ r x = κ_r ∏_i x_i.descFactorial (y_i)`, `generator κ g x = Σ_r propensity κ r x (g (x + ζ_r) − g x)`, `IsAbsorbing`, `Reachable`, `IsGenStationary π` (for finitely supported test functions); sanity on `F-bd` (Poisson stationary law), `F-acr` (absorbing set) |
+| Produces | `LeanTheory/Kernel/CME.lean`, `LeanTheory/Sanity/CRNCME.lean` |
 | Difficulty | moderate — algebraic layer routine; connecting the generator to an actual Markov process is hard and kept separate (Q-8, N-014) |
-| Status | stated |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Status | verified (algebraic layer); process layer open (Q-8) |
+| Implementation status | algebraic layer complete |
+| Implementation evidence | modules above, in `lake build` |
+| Lean evidence | defs `jump`, `propensity`, `toReal`, `generator`, `Step`, `Reachable`, `IsClosedSet`, `pred`, `masterRHS`, `IsStationary`, `IsStationaryDistribution`, `IsGenStationaryFor`; theorems `propensity_eq_zero_of_not_le`, `le_of_propensity_ne_zero`, `cast_jump`, `generator_const`, `generator_linear`, `Reachable.mem_of_isClosedSet`, `Step.dotProduct_eq`, `isClosedSet_level`, `isClosedSet_zero_of_src`, `jump_pred`, `isStationary_zero` |
+| Audit evidence | strict audit 2026-11-27 (implementation plan §4); finding F-5 resolved |
+| Last updated | 2026-11-27 — algebraic layer formalized |
 
 ## Purpose and scope
 
@@ -37,12 +37,30 @@ Key design point: propensity vanishes automatically when `x_i < y_i` (descending
 states stay in `ℤ_{≥0}^n` — a corner-case sanity theorem. Deterministic vs stochastic mass action
 differ (falling factorials vs powers; volume scaling `κ_r = k_r / V^{|y_r| − 1}`, convention TBD).
 
+## Compiled results (2026-11-27)
+
+- Stochastic mass action on `ι → ℕ`: `propensity κ r x = κ_r ∏ (x_i)_{(y_i)}` (falling factorials;
+  zero when the source is not available), `jump r x = x − y(src) + y(tgt)` (equals `x + ζ_r` when the
+  source is available), generator `𝒜`, steps, reachability, closed sets.
+- Conservation: every step preserves every conservation law; level sets are closed.
+- Absorbing boundary: if every reaction consumes species `i`, `{x_i = 0}` is closed
+  (`isClosedSet_zero_of_src`).
+- Stationarity, three forms: pointwise master equation `IsStationary` (accepts `π = 0` — finding F-5,
+  regression `isStationary_zero`); `IsStationaryDistribution` (adds `π ≥ 0`, mass 1);
+  `IsGenStationaryFor κ π g` (convergent `Σ π 𝒜g = 0`, integrability explicit).
+- `generator_linear`: `𝒜(w · x) = Σ_r λ_r(x) (w · ζ_r)`.
+- Sanity: Poisson(`κ₀/κ₁`) is a stationary distribution of `∅ ⇌ A`; `F-acr` absorbing boundary
+  `{x_B = 0}` reached from every state; conservation level sets of `A ⇌ B` closed.
+
+Open: the link `IsStationaryDistribution` ⇒ `IsGenStationaryFor` (sum exchange; true for finitely
+supported `π` and bounded `g`, needs integrability in general); the process layer (Q-8).
+
 ## Claims and evidence
 
 | Claim | Status |
 | --- | --- |
-| `F-bd`: Poisson(`κ₁/κ₂`) is generator-stationary (detailed balance `π(n) κ₁ = π(n+1) κ₂ (n+1)`) | complete elementary proof; not formalized |
-| `F-acr`: `{x_B = 0}` is absorbing; from every state with `x_B ≥ 1` it is reachable via `B → A` | complete elementary proof; not formalized |
+| `F-bd`: Poisson(`κ₀/κ₁`) is a stationary distribution | **compiled** `bdNet_poisson_isStationaryDistribution` |
+| `F-acr`: `{x_B = 0}` is absorbing and reachable from every state | **compiled** `acrNet_absorbing`, `acrNet_reaches_extinction` |
 
 ## Difficulty, barriers and readiness
 

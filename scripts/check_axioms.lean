@@ -77,3 +77,10 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.IsAntitheticController.hasPerfectAdaptation
 #print axioms LeanTheory.CRN.Design.aifNet_hasPerfectAdaptation
 #print axioms LeanTheory.CRN.Design.aifNet_dilution_breaks_setpoint
+#print axioms LeanTheory.CRN.ReactionNetwork.generator_linear
+#print axioms LeanTheory.CRN.ReactionNetwork.isClosedSet_zero_of_src
+#print axioms LeanTheory.CRN.ReactionNetwork.IsAntitheticController.stationary_mean
+#print axioms LeanTheory.CRN.Sanity.bdNet_poisson_isStationary
+#print axioms LeanTheory.CRN.Sanity.acrNet_reaches_extinction
+#print axioms LeanTheory.CRN.Design.aifNet_stationary_mean
+#print axioms LeanTheory.CRN.Sanity.bdNet_poisson_isStationaryDistribution
