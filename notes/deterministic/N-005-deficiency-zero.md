@@ -12,8 +12,8 @@
 | Dependency requirement | deficiency, weak reversibility, compatibility classes, mass-action field compiled and audited |
 | Produces | `LeanTheory/Theory/CRN/DeficiencyZero.lean`, `LeanTheory/Sanity/CRNDeficiencyZero.lean` |
 | Difficulty | hard — part (b) needs existence of a complex-balanced equilibrium for every `k` (a Birch-type / strictly convex minimization argument) and part (a) the uniqueness-per-class argument; both are substantial but classical |
-| Status | **verified** (2026-11-27) except the first steady state: parts (i)–(iv), Birch's theorem and existence + uniqueness in every class given one positive steady state |
-| Implementation status | nearly complete (open: a first positive steady state for every weakly reversible deficiency-zero network — Horn) |
+| Status | **verified** (2026-11-27): the Deficiency Zero Theorem as stated in `C-DZT`, except the clause on periodic orbits |
+| Implementation status | complete for equilibria (`deficiencyZeroTheorem`); periodic orbits not formalized |
 | Implementation evidence | `Theory/CRN/DeficiencyZero.lean`, `Sanity/CRNDeficiencyZero.lean` |
 | Lean evidence | `not_isPosSteadyState_of_deficiency_zero`, `isWeaklyReversible_of_deficiency_zero`, `isComplexBalanced_of_deficiency_zero`, `eq_of_deficiency_zero`, `isLinearlyStable_of_deficiency_zero`, `classLocallyExpStable_of_deficiency_zero`; general `exists_coordinates` |
 | Audit evidence | axiom audit passed (7301 declarations); sanity triad in `Sanity/CRNDeficiencyZero` |
@@ -117,3 +117,26 @@ Remaining gap: for a weakly reversible deficiency-zero network, **some** positiv
 exists (Horn). Route: a positive vector in `ker A_k` (Perron–Frobenius / Markov-chain stationary
 law on each terminal class), and `ln` of it lies in `im Yᵀ + span{1_L}` — which needs the graph
 identity `dim Im ∂ = m − ℓ` (so far only `≤` is compiled).
+
+## Horn's theorem: the first steady state (2026-11-27, `LeanTheory/Theory/CRN/Horn.lean`)
+
+- `pos_iff_of_linked`: in a weakly reversible network a kernel vector of `A_k` has constant sign on
+  each linkage class (`{v > 0}` is closed under reactions by the sign argument and under reversed
+  reactions by weak reversibility).
+- `exists_kernel_supported`: on each linkage class, `A_k` maps vectors supported there to vectors
+  supported there with coordinate sum `0` (`sum_laplacian`), so it is not onto, hence not
+  injective: a nonzero kernel vector supported on the class.
+- `exists_pos_laplacian_eq_zero`: summing sign-corrected class vectors, `v > 0` with `A_k v = 0`.
+- `finrank_ker_inf_le`: `dim(ker Y ∩ ker(class sums)) ≤ δ` — `Y` maps the class-sum kernel onto a
+  space containing `S` (only the compiled inequality `dim Im ∂ ≤ m − ℓ` was needed, not the graph
+  identity).
+- `exists_log_solution`: at `δ = 0`, every `v : C → ℝ` is `Yᵀα + β∘[·]` (orthogonal complement
+  argument with `mem_of_forall_dot_eq_zero`).
+- `exists_isComplexBalanced_of_deficiency_zero` (**Horn**): `x = e^α` with `ln v = Yᵀα + β∘[·]` is
+  complex balanced; `exists_posSteadyState_of_deficiency_zero`.
+- `deficiencyZeroTheorem`: **weakly reversible + δ = 0 ⇒ exactly one positive steady state in
+  every positive compatibility class** (with Birch and Horn–Jackson); stability from part (iv).
+- Sanity: `isoNet_deficiencyZeroTheorem` (no steady state supplied by hand).
+
+All equilibrium clauses of `C-DZT` are now compiled. Not formalized: absence of nonconstant
+periodic orbits; global stability is `C-GAC` (N-017).

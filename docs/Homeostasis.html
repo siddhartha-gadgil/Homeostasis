@@ -186,7 +186,7 @@
   <div class="cols">
     <div>
       <div class="card"><h3>G-1 &middot; An auditable kernel</h3><p>Networks, deficiency, mass action, CME; homeostasis notions as separate predicates with sanity checks.</p></div>
-      <div class="card" style="margin-top: 8px"><h3>G-2 &middot; Structural theorems</h3><p>Determinant formula (done); Shinar&ndash;Feinberg (done); Deficiency Zero (done); Birch (done); persistence; RPA topology.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>G-2 &middot; Structural theorems</h3><p>Determinant formula (done); Shinar&ndash;Feinberg (done); Deficiency Zero, with Horn and Birch (done); persistence; RPA topology.</p></div>
       <div class="card" style="margin-top: 8px"><h3>G-3 &middot; Oracles + small verifiers</h3><p>Cofactors, SOS, Lyapunov, Positivstellensatz, siphons, Foster&ndash;Lyapunov drift.</p></div>
       <div class="card" style="margin-top: 8px"><h3>G-4 &middot; Case studies</h3><p>EnvZ&ndash;OmpR, IDHKP&ndash;IDH, antithetic feedback, extinction; next, multisite phosphorylation, dilution.</p></div>
     </div>
@@ -590,16 +590,16 @@ theorem acrNet_classStable {k xs : Fin 2 → ℝ} (h0 : 0 < k 0)
         <li><strong>At most one steady state per class</strong> (Horn&ndash;Jackson): $e^a(b-a) \le e^b - e^a$ forces $\ln x - \ln x^\star \perp S$.</li>
         <li><strong>Stability in the class:</strong> $\sum_i \frac{u_i}{x_i}(Ju)_i = -\tfrac12\sum_r k_r x^{y_r}\langle\zeta_r, u/x\rangle^2 < 0$ on $S\setminus 0$.</li>
       </ul>
-      <p class="xsmall muted"><strong>Birch</strong> (<code class="inline">birch</code>): minimize $\sum_i (x^\star_i e^{\mu_i} - x^0_i\mu_i)$ over $\mu \in S^\perp$ &mdash; unconstrained and coercive; the minimizer gives a point of the class $x^0 + S$ with $\ln x - \ln x^\star \perp S$, hence exactly one steady state in every class once one is known. Still open: a first steady state for every weakly reversible network. Global stability is the Global Attractor Conjecture.</p>
+      <p class="xsmall muted"><strong>Birch</strong> (<code class="inline">birch</code>): minimize $\sum_i (x^\star_i e^{\mu_i} - x^0_i\mu_i)$ over $\mu \in S^\perp$ &mdash; unconstrained and coercive; the minimizer gives a point of the class $x^0 + S$ with $\ln x - \ln x^\star \perp S$, hence exactly one steady state in every class once one is known. <strong>Horn</strong>: a positive kernel vector of $A_k$ (sign is constant on linkage classes) and $\ln v \in \operatorname{im} Y^\top + \operatorname{span}\{1_L\}$ (solvable since $\dim(\ker Y \cap \ker \Sigma_L) \le \delta = 0$) give the first one. Global stability is the Global Attractor Conjecture.</p>
     </div>
     <div>
 <pre class="lean xs"><code>theorem not_isPosSteadyState_of_deficiency_zero
     (hk : ∀ r, 0 < k r) (hδ : N.deficiency = 0)
     (hwr : ¬ N.IsWeaklyReversible) (x : ι → ℝ) : ¬ N.IsPosSteadyState k x
 
-theorem eq_of_deficiency_zero (hk : ∀ r, 0 < k r) (hδ : N.deficiency = 0)
-    (hx : N.IsPosSteadyState k x) (hx' : N.IsPosSteadyState k x')
-    (hS : x - x' ∈ N.stoichSubspace) : x = x'
+theorem deficiencyZeroTheorem (hk : ∀ r, 0 < k r) (hwr : N.IsWeaklyReversible)
+    (hδ : N.deficiency = 0) (hx0 : IsPos x0) :
+    ∃! x, N.IsPosSteadyState k x ∧ x - x0 ∈ N.stoichSubspace
 
 theorem quadForm_eq (hx : IsPos x) (hcb : N.IsComplexBalanced k x) (u : ι → ℝ) :
     ∑ i, u i / x i * (N.massActionJacobian k x *ᵥ u) i =
@@ -799,7 +799,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td><b>Shinar&ndash;Feinberg theorem</b> (general), applied to Figs. 2B, 2D, 3</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td><b>Deficiency Zero Theorem</b>: no steady state unless weakly reversible; complex balance; uniqueness and local exponential stability in each class</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Birch&rsquo;s theorem: exactly one steady state in every class (given one)</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
-<tr><td>A first steady state for every weakly reversible deficiency-zero network (Horn)</td><td></td><td class="open">open</td></tr>
+<tr><td>Horn&rsquo;s theorem: a steady state for every weakly reversible deficiency-zero network &mdash; the Deficiency Zero Theorem is complete</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>ACR beyond deficiency one (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and persistence (Q-8)</td><td></td><td class="open">open</td></tr>
 </table>

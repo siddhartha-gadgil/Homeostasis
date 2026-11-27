@@ -190,3 +190,12 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.eq_of_isComplexBalanced
 #print axioms LeanTheory.CRN.ReactionNetwork.existsUnique_of_deficiency_zero
 #print axioms LeanTheory.CRN.Sanity.isoNet_existsUnique_in_class
+#print axioms LeanTheory.CRN.ReactionNetwork.pos_iff_of_linked
+#print axioms LeanTheory.CRN.ReactionNetwork.exists_kernel_supported
+#print axioms LeanTheory.CRN.ReactionNetwork.exists_pos_laplacian_eq_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.finrank_ker_inf_le
+#print axioms LeanTheory.CRN.ReactionNetwork.exists_log_solution
+#print axioms LeanTheory.CRN.ReactionNetwork.exists_isComplexBalanced_of_deficiency_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.exists_posSteadyState_of_deficiency_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.deficiencyZeroTheorem
+#print axioms LeanTheory.CRN.Sanity.isoNet_deficiencyZeroTheorem

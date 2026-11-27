@@ -100,6 +100,7 @@ public import LeanTheory.Theory.CRN.ConverseLyapunovPD
 public import LeanTheory.Theory.CRN.DeficiencyZero
 public import LeanTheory.Theory.CRN.FiniteCME
 public import LeanTheory.Theory.CRN.FosterLyapunov
+public import LeanTheory.Theory.CRN.Horn
 public import LeanTheory.Theory.CRN.Linearization
 public import LeanTheory.Theory.CRN.ShinarFeinberg
 public import LeanTheory.Theory.Fields.FieldLineExistence

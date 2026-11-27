@@ -7,6 +7,7 @@ module
 
 public import LeanTheory.Theory.CRN.DeficiencyZero
 public import LeanTheory.Theory.CRN.Birch
+public import LeanTheory.Theory.CRN.Horn
 public import LeanTheory.Sanity.CRNMassAction
 
 /-!
@@ -20,6 +21,8 @@ public import LeanTheory.Sanity.CRNMassAction
 * **Existence and uniqueness per class** (`isoNet_existsUnique_in_class`): for `A ⇌ B`, every
   positive compatibility class contains exactly one positive steady state (Birch + Deficiency
   Zero, from the single steady state `(k₁, k₀)`).
+* **The complete theorem** (`isoNet_deficiencyZeroTheorem`): the same conclusion from weak
+  reversibility alone, with no steady state supplied (Horn's theorem constructs one).
 * **The deficiency hypothesis matters** (`acrNet_not_isComplexBalanced`): the toy ACR network
   `A + B → 2B`, `B → A` has deficiency one, and **no** positive state is complex balanced (the
   complex `A + B` has an outflow but no inflow), although it has positive steady states; so part
@@ -68,6 +71,12 @@ theorem isoNet_existsUnique_in_class {k : Fin 2 → ℝ} (hk : ∀ r, 0 < k r) {
     · simpa using hk 1
     · simpa using hk 0
   exact isoNet.existsUnique_of_deficiency_zero hk isoNet_deficiency hxs hx0
+
+/-- **The complete Deficiency Zero Theorem** for `A ⇌ B`: weak reversibility and deficiency zero
+alone give exactly one positive steady state in every positive class. -/
+theorem isoNet_deficiencyZeroTheorem {k : Fin 2 → ℝ} (hk : ∀ r, 0 < k r) {x0 : Fin 2 → ℝ}
+    (hx0 : IsPos x0) : ∃! x, isoNet.IsPosSteadyState k x ∧ x - x0 ∈ isoNet.stoichSubspace :=
+  isoNet.deficiencyZeroTheorem hk isoNet_isReversible.isWeaklyReversible isoNet_deficiency hx0
 
 /-- **The deficiency hypothesis matters**: in the toy ACR network (deficiency one) no positive
 state is complex balanced — at the complex `A + B` the outflow `k₀ x_A x_B` has no inflow. -/
