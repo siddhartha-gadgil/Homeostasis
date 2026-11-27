@@ -232,6 +232,7 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
 <tr><td>EnvZ&ndash;OmpR (ADP, Fig.&nbsp;2D): <em>every</em> positive steady state locally exponentially stable within its compatibility class</td><td><code>envz_classStable_unit_all</code></td><td>unit rates</td><td class="ok">verified</td></tr>
 <tr><td>EnvZ&ndash;OmpR (ATP, Fig.&nbsp;2B): <em>every</em> positive steady state locally exponentially stable within its compatibility class</td><td><code>atp_classStable_unit_all</code></td><td>unit rates</td><td class="ok">verified</td></tr>
 <tr><td>IDHKP&ndash;IDH: every positive steady state locally exponentially stable within its compatibility class</td><td><code>idh_classStable</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
+<tr><td>Phosphatase variant of Fig.&nbsp;2B: deficiency one, but <em>no</em> ACR (every Yp value occurs)</td><td><code>phos_not_hasACR</code>, <code>phos_Yp_surjective</code>, <code>phos_deficiency</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic integral feedback: robust perfect adaptation with linear stability</td><td><code>aifNet_hasRPALinear</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic motif: nonlinear local exponential stability for every disturbance <i>&gamma;</i></td><td><code>aifNet_rpa_locallyExpStable</code></td><td>unit <i>&mu;, &theta;, &eta;, a</i></td><td class="ok">verified</td></tr>
 <tr><td>Dilution breaks the antithetic set-point</td><td><code>aifNet_dilution_breaks_setpoint</code></td><td>explicit counterexample</td><td class="ok">verified</td></tr>
@@ -265,7 +266,7 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
 <div class="nums">
   <div class="num"><b>&asymp; 6,900</b><span>lines of Lean for reaction networks and homeostasis</span></div>
   <div class="num"><b>&asymp; 340</b><span>theorems in that development</span></div>
-  <div class="num"><b>5</b><span>case-study networks transcribed from sources</span></div>
+  <div class="num"><b>6</b><span>case-study networks transcribed from sources</span></div>
   <div class="num"><b>0</b><span>project axioms; no <code>sorry</code>, no <code>decide</code></span></div>
 </div>
 
@@ -298,6 +299,10 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
       text: "Shinar–Feinberg Fig. 3, the core of the glyoxylate-bypass switch: a bifunctional kinase–phosphatase E acting on IDH. Six complexes, two linkage classes, rank 3, deficiency one; ACR in the active enzyme I, and every positive steady state is stable within its compatibility class, for all rates (a symbolic Routh–Hurwitz certificate).",
       lean: [D("ok", "theorem idh_steady_I {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 5 → ℝ}\n    (hx : idhNet.IsPosSteadyState k x) : x 3 = idhACRValue k\n\n-- idhACRValue k = k 2 * (k 4 + k 5) / (k 3 * k 5)\n\ntheorem idh_hasACRNontrivial (hk : ∀ r, 0 < k r) : idhNet.HasACRNontrivial k 3\ntheorem idh_deficiency : idhNet.deficiency = 1"),
         D("ok", "theorem idh_classStable {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {xs : Fin 5 → ℝ}\n    (hxs : idhNet.IsPosSteadyState k xs) :\n    ∃ δ > 0, ∃ c > 0, ∃ K > 0, ∀ x T, idhNet.MassActionTrajectoryOn k x T →\n      x 0 - xs ∈ idhNet.stoichSubspace → ‖x 0 - xs‖ < δ →\n        ∀ t ∈ Ico 0 T, ‖x t - xs‖ ^ 2 ≤ K * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2")] },
+    { id: "phos", name: "Phosphatase variant", scene: "phos",
+      text: "Shinar–Feinberg's own counterexample: replace the XT-catalyzed dephosphorylation of Fig. 2B by a separate phosphatase Z. The deficiency is still one, but no two nonterminal complexes differ in one species, and ACR is lost: Yp depends on the ratio of total X to total Z.",
+      lean: [D("ok", "theorem phos_not_hasACR {k : Fin 9 → ℝ} (hk : ∀ r, 0 < k r) : ¬ phosNet.HasACR k 5\n\ntheorem phos_Yp_surjective {k : Fin 9 → ℝ} (hk : ∀ r, 0 < k r) {v : ℝ} (hv : 0 < v) :\n    ∃ x, phosNet.IsPosSteadyState k x ∧ x 5 = v"),
+        D("sanity", "theorem phos_deficiency : phosNet.deficiency = 1   -- deficiency one alone is not enough")] },
     { id: "motif", name: "Antithetic feedback", scene: "motif",
       text: "Robust perfect adaptation: the output X settles at μ/θ for every degradation rate γ > 0 (the disturbance). The curves are five values of γ. Turn on dilution to see the set-point break.",
       lean: [D("ok", "theorem aifNet_hasRPALinear {μ θ η a : ℝ} (hμ : 0 < μ) (hθ : 0 < θ) (hη : 0 < η) (ha : 0 < a) :\n    aifNet.HasRPALinear (fun γ => aifK μ θ η a γ) (Ioi 0) 2 (μ / θ)"),

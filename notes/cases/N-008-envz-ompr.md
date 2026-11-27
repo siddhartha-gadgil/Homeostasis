@@ -166,8 +166,16 @@ certificate (G-3). (The oracle run for `D₄` hit its 50-minute limit.)
 (`isHurwitz_of_charpoly6`) applies. Also `envz_jacobian` for all rates via per-reaction tables
 (the earlier entrywise unit-rate Jacobian took ≈ 4.5 min; this module checks in ≈ 30 s).
 
-Open: class stability for Fig. 2B and EnvZ–OmpR at general rates (Q-11); the source's remark that
-replacing `XT` by a separate phosphatase `Z` destroys ACR (a cheap adversarial check).
+**Adversarial check: a separate phosphatase destroys ACR (2026-11-27,
+`LeanTheory/Design/EnvZOmpRPhosphatase.lean`)**. The source's variant of Fig. 2B, with
+`Z + Yp ⇌ ZYp → Z + Y` in place of the `XT`-catalyzed dephosphorylation: for all positive rates,
+a three-parameter family of positive steady states (`x_X = a`, `x_Y = b`, `x_Z = z`) with
+`[Yp] = κ₁κ₃a(κ₈+κ₉)/(κ₇κ₉z(κ₂+κ₃))`; **no ACR in Yp** (`phos_not_hasACR`), every positive value of
+Yp attained (`phos_Yp_surjective`), and still **deficiency one** (`phos_deficiency`: `ℓ = 3`,
+`s = 5`, three conservation laws). So deficiency one alone does not give ACR; the second hypothesis
+of the Shinar–Feinberg theorem is needed — a compiled regression test for N-006.
+
+Open: class stability at general rates (Q-11).
 
 ## Claims and evidence
 

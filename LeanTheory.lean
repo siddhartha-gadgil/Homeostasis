@@ -61,6 +61,7 @@ public import LeanTheory.Design.AntitheticStability
 public import LeanTheory.Design.EnvZOmpR
 public import LeanTheory.Design.EnvZOmpRATP
 public import LeanTheory.Design.EnvZOmpRATPStability
+public import LeanTheory.Design.EnvZOmpRPhosphatase
 public import LeanTheory.Design.EnvZStability
 public import LeanTheory.Design.EnvZStabilityAll
 public import LeanTheory.Design.IDHKP

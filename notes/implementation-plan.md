@@ -111,7 +111,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
 | `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; **kernel ready** (source reading still needed) | Extract a self-contained proof from the SOM |
 | `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | **verified** (`LeanTheory.Theory.Homeostasis.DeterminantFormula`) | Optional: IFT branch existence; block factorization `C-GSF` |
-| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates; Fig. 2B ATP model and IDHKP–IDH Fig. 3 likewise verified, `δ = 1`; IDHKP–IDH class stability for all rates and all positive steady states; Figs. 2B and 2D class stability at unit rates for every positive steady state, via 5×5 / 6×6 Routh–Hurwitz) | Parametric class stability (Q-11); phosphatase-variant counterexample; dilution |
+| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates; Fig. 2B ATP model and IDHKP–IDH Fig. 3 likewise verified, `δ = 1`; IDHKP–IDH class stability for all rates and all positive steady states; Figs. 2B and 2D class stability at unit rates for every positive steady state, via 5×5 / 6×6 Routh–Hurwitz) | Parametric class stability (Q-11); dilution (Q-3) |
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
@@ -215,8 +215,7 @@ Current priority order (provisional, 2026-11-27):
 
 1. **Q-11, general rates** — a sparse kernel certificate for very large polynomial identities
    (Fig. 2B at general rates: `Δ₃` has 18 160 positive terms; `D₄` not yet expanded), or a
-   structural argument. Adversarial check: the phosphatase
-   variant of Fig. 2B loses ACR (source's remark).
+   structural argument.
 2. **Antithetic motif with dilution** (N-009/Q-3 analogue): quantify the set-point error, now with a
    stable baseline.
 3. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
@@ -444,6 +443,12 @@ the physical model.
   fixtures) and `Design/EnvZStabilityAll.lean` (`envz_jacobian` for all rates;
   `envz_classStable_unit_all`: every unit-rate steady state of Fig. 2D is class-stable). Build
   clean, axiom audit passed for 7194 declarations.
+
+- **2026-11-27 — Phosphatase variant (work unit, N-008, N-006).** New
+  `Design/EnvZOmpRPhosphatase.lean`: the source's variant with a separate phosphatase has
+  deficiency one but no ACR in Yp for all positive rates (`phos_not_hasACR`), every Yp value
+  attained (`phos_Yp_surjective`). Simulation added to the site and slides. Build clean, axiom
+  audit passed for 7222 declarations.
 
 ## 12. Implementation and workstation log
 

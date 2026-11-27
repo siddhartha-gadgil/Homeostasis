@@ -41,6 +41,9 @@ Done (2026-11-27) for the three source networks: Fig. 2D (`Design.envz_steady_Om
 (`Design.atp_steady_Yp`) and Fig. 3 (`Design.idh_steady_I`), each with `δ = 1` compiled. In every
 case the ACR certificate's multiplier is the common part of the two nonterminal nodes the theorem
 names — a pattern the general proof should explain.
+Hypothesis necessity (2026-11-27): the source's phosphatase variant of Fig. 2B has deficiency one
+and positive steady states but **no** ACR (`Design.phos_not_hasACR`, `phos_deficiency`), so the
+nonterminal-pair hypothesis cannot be dropped.
 
 Stability of the toy ACR network (2026-11-27): every positive steady state of `F-acr` (ACR value
 `x_A = k₁/k₀`) is locally exponentially stable within its compatibility class

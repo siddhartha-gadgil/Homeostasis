@@ -60,6 +60,19 @@
       T: 40,
       scheme: "E + Ip ⇌ EIp → E + I\nEIp + I ⇌ EIpI → EIp + Ip"
     },
+    phos: {
+      name: "Phosphatase variant of Fig. 2B", file: "Design/EnvZOmpRPhosphatase.lean",
+      species: ["X", "XT", "Xp", "Y", "XpY", "Yp", "Z", "ZYp"],
+      complexes: [[1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0],[0,0,1,0,0,0,0,0],[0,0,1,1,0,0,0,0],[0,0,0,0,1,0,0,0],
+        [1,0,0,0,0,1,0,0],[0,0,0,0,0,1,1,0],[0,0,0,0,0,0,0,1],[0,0,0,1,0,0,1,0]],
+      reactions: [[0,1],[1,0],[1,2],[3,4],[4,3],[4,5],[6,7],[7,6],[7,8]],
+      rates: ["κ₁","κ₂","κ₃","κ₄","κ₅","κ₆","κ₇","κ₈","κ₉"],
+      k: [1,1,1,1,1,1,1,1,1],
+      acr: 5, noACR: true, acrLabel: "no ACR",
+      acrValue: k => NaN,
+      T: 60,
+      scheme: "X ⇌ XT → Xp\nXp + Y ⇌ XpY → X + Yp\nZ + Yp ⇌ ZYp → Z + Y"
+    },
     motif: {
       name: "Antithetic integral feedback", file: "Design/AntitheticMotif.lean, Design/AntitheticStability.lean",
       species: ["Z₁", "Z₂", "X"],
@@ -156,7 +169,7 @@
 
     if (!stochastic && opts.speciesSelect !== false) {
       const sel = document.createElement("select"); sel.className = "cs-sel"; sel.title = "Species to plot";
-      net.species.forEach((s, i) => sel.append(new Option(s + (i === net.acr ? "  (ACR)" : ""), i)));
+      net.species.forEach((s, i) => sel.append(new Option(s + (i === net.acr && !net.noACR ? "  (ACR)" : ""), i)));
       sel.value = species; sel.onchange = () => { species = +sel.value; draw(); };
       bar.append(sel);
     }
@@ -222,7 +235,7 @@
       const L = 46, Rm = 14, Tm = 14, B = 30, pw = w - L - Rm, ph = h - Tm - B;
       const T = curves.length ? curves[0].T : 1;
       const ref = stochastic ? k[1] / k[0] : net.acrValue(k);
-      const showRef = stochastic || species === net.acr;
+      const showRef = stochastic || (species === net.acr && !net.noACR);
       let ymax = 0;
       if (stochastic) ymax = N;
       else for (const c of curves) for (const x of c.xs) ymax = Math.max(ymax, x[species]);
@@ -280,6 +293,7 @@
       else if (net.family) info.textContent = dil > 0
         ? "With dilution " + dil.toFixed(2) + " the outputs no longer meet at μ/θ (Lean: aifNet_dilution_breaks_setpoint)."
         : "Five disturbances γ; the output adapts to μ/θ = " + fmt(ref) + " for each (Lean: aifNet_hasPerfectAdaptation).";
+      else if (net.noACR && species === net.acr) info.textContent = curves.length + " compatibility classes, " + curves.length + " different limits: with a separate phosphatase Z there is no ACR in Yp (Lean: phos_not_hasACR), although the deficiency is still one.";
       else info.textContent = species === net.acr
         ? curves.length + " compatibility classes; at every positive steady state " + net.acrLabel + ". A class whose total is too small has no positive steady state."
         : "A non-ACR species: its steady value depends on the compatibility class.";

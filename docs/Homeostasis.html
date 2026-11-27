@@ -391,6 +391,25 @@ EIp + I ⇌(κ₄,κ₅) EIpI →(κ₆) EIp + Ip</code></pre>
 </section>
 
 <section>
+  <p class="kicker">The hypothesis matters</p>
+  <h2>A separate phosphatase destroys ACR</h2>
+  <div class="cols wide-right">
+    <div>
+<pre class="scheme"><code>X ⇌ XT → Xp
+Xp + Y ⇌ XpY → X + Yp
+Z + Yp ⇌ ZYp → Z + Y      (was: XT + Yp ⇌ XTYp → XT + Y)</code></pre>
+      <p class="small">Shinar&ndash;Feinberg&rsquo;s own remark. Still deficiency one, but no two nonterminal complexes differ in one species, and</p>
+      $$[Yp] = \frac{\kappa_1\kappa_3(\kappa_8+\kappa_9)}{\kappa_7\kappa_9(\kappa_2+\kappa_3)}\cdot\frac{x_X}{x_Z}$$
+<pre class="lean xs"><code>theorem phos_not_hasACR (hk : ∀ r, 0 < k r) : ¬ phosNet.HasACR k 5
+theorem phos_Yp_surjective (hk : ∀ r, 0 < k r) (hv : 0 < v) :
+    ∃ x, phosNet.IsPosSteadyState k x ∧ x 5 = v
+theorem phos_deficiency : phosNet.deficiency = 1</code></pre>
+    </div>
+    <div class="simbox" data-scene="phos"></div>
+  </div>
+</section>
+
+<section>
   <p class="kicker">Deficiency in Lean</p>
   <h2>Computing $\ell$, $s$ and $\delta$ without <code>decide</code></h2>
   <div class="cols">
@@ -658,6 +677,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>IDHKP&ndash;IDH class stability, every positive steady state</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic motif: RPA + linear stability; nonlinear stability for every $\gamma$</td><td>all rates; unit $\mu,\theta,\eta,a$</td><td class="ok">verified</td></tr>
 <tr><td>Stochastic extinction (toy ACR); stationary mean (antithetic)</td><td>uniformized chain; generator level</td><td class="ok">verified</td></tr>
+<tr><td>Phosphatase variant: deficiency one but no ACR (hypothesis of Shinar&ndash;Feinberg needed)</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Determinant formula for infinitesimal homeostasis</td><td>along a differentiable branch</td><td class="ok">verified</td></tr>
 <tr><td>Q-11: EnvZ&ndash;OmpR class stability at general rates (numerically true)</td><td>sparse certificates; degree-6 Routh&ndash;Hurwitz</td><td class="open">next</td></tr>
 <tr><td>The Shinar&ndash;Feinberg theorem in general; Deficiency Zero Theorem</td><td></td><td class="open">open</td></tr>

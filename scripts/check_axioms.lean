@@ -162,3 +162,6 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.envz_jacobian
 #print axioms LeanTheory.CRN.Design.envzRU_isHurwitz
 #print axioms LeanTheory.CRN.Design.envz_classStable_unit_all
+#print axioms LeanTheory.CRN.Design.phos_not_hasACR
+#print axioms LeanTheory.CRN.Design.phos_Yp_surjective
+#print axioms LeanTheory.CRN.Design.phos_deficiency
