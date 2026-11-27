@@ -10,14 +10,14 @@
 | Addresses | `G-1`, `Q-6`, `Q-7` |
 | Depends on | `N-001` (compiled definitions) |
 | Dependency requirement | `ReactionNetwork`, reaction vectors and `stoichSubspace` as compiled declarations |
-| Produces | Kernel module `LeanTheory/Kernel/MassAction.lean` (planned): `RateConstants` (positive), `massActionRate`, `massActionField`, `IsPosSteadyState`, `compatClass`, `ConservationLaw`; law class `MassActionTrajectory` (solution of the ODE as a hypothesis, cf. `OscillatorLaw`); dilution field `f_k(x) − μ x` |
+| Produces | `LeanTheory/Kernel/MassAction.lean`, `LeanTheory/Sanity/CRNMassAction.lean` |
 | Difficulty | moderate — algebra routine; forward invariance of the open orthant is a genuine ODE argument |
-| Status | stated |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Status | verified (core: field, steady states, conservation, compatibility classes, positivity); open: dilution = augmented network, duplicate-reaction lemma, nonnegative-orthant invariance, finite-horizon trajectories |
+| Implementation status | core complete |
+| Implementation evidence | modules above, in `lake build` |
+| Lean evidence | defs `monomial`, `IsPos`, `ReactionNetwork.rate`, `massActionField`, `IsPosSteadyState`, `dilutedField`, `compatClass`, `IsConservationLaw`, `MassActionTrajectory` (structure, explicit hypothesis), `lossCoeff`; theorems `massActionField_mem_stoichSubspace`, `isConservationLaw_of_forall`, `IsConservationLaw.dotProduct_field`, `rate_eq_zero_of_boundary`, `massActionField_smul_rates`, `isPosSteadyState_smul_rates_iff`, `field_ge_neg_mul`, `MassActionTrajectory.sub_mem_stoichSubspace`, `.dotProduct_eq`, `.isPos`, `.mem_compatClass`, `massActionTrajectory_const` |
+| Audit evidence | strict audit 2026-11-27 (implementation plan §4); finding `F-2` open (low) |
+| Last updated | 2026-11-27 — core formalized with sanity fixtures |
 
 ## Purpose and scope
 
@@ -74,6 +74,31 @@ Theorems to prove:
 Blocked on N-001. Item 2 is the only non-routine piece; check TauCeti's
 `Analysis/ODE/Inhomogeneous` and Mathlib's Grönwall (`norm_le_gronwallBound_of_norm_deriv_right_le`)
 before writing infrastructure.
+
+## Compiled results (2026-11-27)
+
+- **Trajectory law** `MassActionTrajectory N k x`: `∀ t ≥ 0, HasDerivWithinAt x (f_k (x t)) (Ici 0) t`.
+  A structure passed explicitly (a typeclass could not infer `N` from `x`). It presupposes a
+  solution on all of `[0, ∞)`.
+- **Compatibility classes**: `sub_mem_stoichSubspace` (for any trajectory, `x t − x 0 ∈ S`; proof via
+  a dual functional vanishing on `S` and constancy of its composition with `x`), hence
+  `dotProduct_eq` for every conservation law.
+- **Positivity (Q-9)**: `MassActionTrajectory.isPos` — with `0 ≤ k r` and `x 0 > 0`, `x t > 0` for all
+  `t ≥ 0`. Proof: first hitting time `τ` of `{some x_i ≤ 0}` in `[0, T]`; on `[0, τ)` the key lemma
+  `field_ge_neg_mul` gives `ẋ_i ≥ −L_i(x) x_i` with `L_i` continuous, bounded by `c` on `[0, τ]`;
+  `e^{ct} x_i(t)` is monotone, so `x_i(τ) ≥ x_i(0) > 0`, a contradiction.
+- **Sanity** (`LeanTheory/Sanity/CRNMassAction.lean`): explicit fields of `A ⇌ B`, `∅ ⇌ A`,
+  `A + B → 2B, B → A`; their steady-state sets; conservation of `x_A + x_B`; an explicit nonconstant
+  trajectory `isoTraj` (non-vacuity), with conservation and positivity checked along it; a constant
+  non-steady state is not a trajectory; a negative rate constant makes `x = 1 − t` a trajectory that
+  leaves the orthant (the sign hypothesis of `isPos` is needed); `A → B` has no positive steady state;
+  **ACR preview**: every positive steady state of `F-acr` has `x_A = k₁/k₀`.
+
+Open items: the dilution ⇔ augmented-network lemma (needs a disjoint-union construction of
+complexes keeping injectivity); duplicate reactions ⇔ summed rate; invariance of the closed
+orthant from boundary initial data; a finite-horizon trajectory law (`MassActionTrajectoryOn T`)
+for networks that can blow up; existence of solutions (Picard–Lindelöf), needed only for
+statements that assert a trajectory exists.
 
 ## Outputs and next dependencies
 

@@ -49,8 +49,10 @@ public import LeanTheory.Certificates.ValidatedTrigFast
 public import LeanTheory.Certificates.WeightedEll1
 public import LeanTheory.Elaborate
 public import LeanTheory.Kernel.Example
+public import LeanTheory.Kernel.MassAction
 public import LeanTheory.Kernel.Network
 public import LeanTheory.ResponseExt
+public import LeanTheory.Sanity.CRNMassAction
 public import LeanTheory.Sanity.CRNNetwork
 public import LeanTheory.Sanity.Example
 public import LeanTheory.Sanity.QuasisymmetryNotSymmetry

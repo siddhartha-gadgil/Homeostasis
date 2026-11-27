@@ -17,7 +17,10 @@ As of 2026-11-27 (seeded from the user's prompt):
 - **Verified (compiled and audited):** the reaction-network syntax kernel (N-001,
   `LeanTheory.Kernel.Network`): deficiency, linkage classes, weak reversibility, terminal
   complexes, `deficiency_nonneg`, species-relabelling invariance, with fixtures in
-  `LeanTheory.Sanity.CRNNetwork`. The audited template library
+  `LeanTheory.Sanity.CRNNetwork`. Mass-action kinetics (N-002, `LeanTheory.Kernel.MassAction`):
+  field, steady states, conservation laws, trajectories stay in their compatibility class, forward
+  invariance of the positive orthant; fixtures in `LeanTheory.Sanity.CRNMassAction` (including the
+  ACR value `x_A = k₁/k₀` of the toy network). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -27,7 +30,7 @@ As of 2026-11-27 (seeded from the user's prompt):
 - **Main barriers:** kernel representation choices (Q-6) gate almost everything; no
   continuous-time Markov chain theory in Mathlib/TauCeti (Q-8); the dilution question (Q-3) is
   ill-posed until an input and a synthesis model are chosen (correction X-10).
-- **Ready now:** N-002 (mass-action ODE), N-013 (CME generator), N-007a (determinant formula, Mathlib-only), N-011
+- **Ready now:** N-003 (homeostasis predicates), N-013 (CME generator), N-016 deterministic part, N-007a (determinant formula, Mathlib-only), N-011
   formats 1–2 (polynomial certificate checkers, template-only), and source-reading tasks for
   N-006/N-008/N-015 when the user supplies PDFs.
 
@@ -56,7 +59,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `Q-6` | Kernel representation: how are species, complexes and reactions encoded (types vs finsets; self-loops; duplicate reactions; isolated complexes), and how are concrete deficiencies computed without `decide`? | G-1; N-001, N-002, N-013 and everything downstream | **answered** (2026-11-27) | Type-parametrized `ReactionNetwork ι C R`; no self-loops or isolated complexes; duplicates allowed; labelling certificate for `ℓ`, multiples lemma for rank 1 (general rank certificate open). See N-001 |
 | `Q-7` | Precise quantifier structure of ACR, infinitesimal homeostasis, RPA and approximate adaptation, and the proved implication map between them; what is "the input" (rate parameter vs conserved total)? | G-1; N-003, N-007, N-009, N-018 | open | Draft definitions and separating examples in N-003 |
 | `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | open | Proposal: generator-level algebra first; process layer only for finite state spaces initially |
-| `Q-9` | Forward invariance of `ℝ_{>0}^n` for mass-action trajectories and existence/blow-up of solutions — what minimal ODE infrastructure is needed? | G-1; N-002, N-012 | open | Proof sketch (factor `x_i` out of consuming rates + Grönwall) in N-002 |
+| `Q-9` | Forward invariance of `ℝ_{>0}^n` for mass-action trajectories and existence/blow-up of solutions — what minimal ODE infrastructure is needed? | G-1; N-002, N-012 | partly answered | Forward invariance compiled (`MassActionTrajectory.isPos`, needs `k ≥ 0`). Existence and blow-up not addressed; the trajectory law presupposes a global solution (finding F-2) |
 | `Q-10` | Source fidelity: exact hypotheses and locators of `C-DZT`, `C-SF`, `C-GS`, `C-AL`, `C-BGK`, `C-AEJ`, `C-WS`, `C-CFMW`, and exact reaction lists of the case-study networks | all G-2/G-4 notes | open — needs source PDFs | See ledger; all locators TBD |
 
 ## 3. Note registry and dependency graph
@@ -64,8 +67,8 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | ID | Note | Addresses | Depends on | Difficulty | Status / Lean readiness | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
 | `N-001` | [kernel/N-001-network-syntax](kernel/N-001-network-syntax.md) | G-1, Q-6 | — | moderate | **verified** (core: `LeanTheory.Kernel.Network`) | Optional: `δ = dim(ker Y ∩ im ∂)`; general rank certificate |
-| `N-002` | [kernel/N-002-mass-action-ode](kernel/N-002-mass-action-ode.md) | G-1, Q-6, Q-7, Q-9 | N-001 | moderate | stated; **ready** (N-001 verified) | Formalize field, steady states, conservation; then positivity |
-| `N-003` | [kernel/N-003-homeostasis-notions](kernel/N-003-homeostasis-notions.md) | G-1, Q-7 | N-002, N-004 | moderate | exploratory; blocked on N-002 | Fix the input interface; draft predicates |
+| `N-002` | [kernel/N-002-mass-action-ode](kernel/N-002-mass-action-ode.md) | G-1, Q-6, Q-7, Q-9 | N-001 | moderate | **verified** (core: `LeanTheory.Kernel.MassAction`) | Optional: dilution = augmented network; finite-horizon trajectories |
+| `N-003` | [kernel/N-003-homeostasis-notions](kernel/N-003-homeostasis-notions.md) | G-1, Q-7 | N-002, N-004 | moderate | exploratory; **ready** (N-002 verified) | Fix the input interface; draft predicates |
 | `N-004` | [kernel/N-004-sanity-suite](kernel/N-004-sanity-suite.md) | G-1 | N-001, N-002, N-003, N-013 | routine–moderate | network part verified (`LeanTheory.Sanity.CRNNetwork`); grows with the kernel | Write fixtures alongside N-001/N-002 |
 | `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
 | `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; blocked (source reading ready) | Extract a self-contained proof from the SOM |
@@ -111,11 +114,11 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audit 2026-11-27 of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
-| Open findings | None blocking. Info: (i) `amplitude_bound` is trivially true at `k = 0` (gives `0 ≤ 2E`); acceptable, scope noted. (ii) `theory_loop.lean`/`theory_server.lean` import `LeanTheory.Elaborate` at top level and load full `LeanTheory` via `importModules`; `LeanTheoryMeta` reaches them through `LeanTheory` — consistent with the template convention. (iii) Inherited Theory tracks (Fields, KAM, Stability) are unrelated to homeostasis; keep or prune when the domain is seeded |
+| Open findings | `F-2` (low, N-002): `MassActionTrajectory` presupposes a solution on all of `[0, ∞)`; for networks that blow up in finite time every statement about trajectories is vacuous. Add a finite-horizon variant before such case studies. Non-vacuity shown for `A ⇌ B` (`isoTraj_trajectory`). Earlier: Info: (i) `amplitude_bound` is trivially true at `k = 0` (gives `0 ≤ 2E`); acceptable, scope noted. (ii) `theory_loop.lean`/`theory_server.lean` import `LeanTheory.Elaborate` at top level and load full `LeanTheory` via `importModules`; `LeanTheoryMeta` reaches them through `LeanTheory` — consistent with the template convention. (iii) Inherited Theory tracks (Fields, KAM, Stability) are unrelated to homeostasis; keep or prune when the domain is seeded |
 | Missing sanity checks | CRN network kernel: special (`isoNet`, `bdNet`), degenerate (`emptyNet`), corner (zero complex; nonvanishing reaction vectors), symmetry (species relabelling), negative cases for weak reversibility/terminality (`abNet`, `acrNet`) — done; complex relabelling invariance and a deficiency-two fixture still to add. Example law has the triad (`free_velocity_const`, `instOscillatorLawCos`, `not_oscillatorLaw_exp`) plus risk-specific checks (time-shift, linearity in `Bridge/Example`; accepted/rejected certificate fixtures). Every future homeostasis law will need its own triad and adversarial checks |
 
 Previous code is in scope. A full startup audit inventories and red-teams every kernel declaration,
@@ -172,8 +175,9 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **N-002** — mass-action field, steady states, conservation laws, positivity (N-001 done).
-   Unblocks N-003 and most of G-2/G-4. N-013 (CME generator) is an independent parallel strand.
+1. **N-003** — homeostasis predicates (ACR, infinitesimal homeostasis, RPA) on top of N-002;
+   unblocks N-006, N-008, N-016 and the G-4 case studies. N-013 (CME generator) is an independent
+   parallel strand.
 2. **N-007a** — determinant formula for infinitesimal homeostasis. Ready now with Mathlib alone;
    a reusable theorem feeding G-2, Q-3 and N-018. Good parallel strand.
 3. **N-011 formats 1–2** — polynomial certificate checkers (coefficient sign, cofactor identity).
@@ -235,6 +239,12 @@ the physical model.
   and `LeanTheory/Sanity/CRNNetwork.lean` (fixtures `isoNet`, `bdNet`, `acrNet` with `δ = 1` and
   the structural hypotheses of N-006, `abNet`, `emptyNet`). `lake build` OK (no warnings), axiom
   audit passed for 6055 declarations. N-002 and N-013 now ready.
+
+- **2026-11-27 — N-002 (work unit).** New `LeanTheory/Kernel/MassAction.lean` (monomials, rates,
+  mass-action field, steady states, compatibility classes, conservation laws, dilution field,
+  trajectory law; `sub_mem_stoichSubspace`, `dotProduct_eq`, `isPos` forward invariance,
+  time-rescaling invariance of steady states) and `LeanTheory/Sanity/CRNMassAction.lean`. Build
+  clean, axiom audit passed for 6121 declarations. Finding F-2 recorded. N-003 now ready.
 
 ## 12. Implementation and workstation log
 

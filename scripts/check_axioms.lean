@@ -63,3 +63,8 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.deficiency_relabelSpecies
 #print axioms LeanTheory.CRN.Sanity.acrNet_deficiency
 #print axioms LeanTheory.CRN.Sanity.emptyNet_deficiency
+#print axioms LeanTheory.CRN.ReactionNetwork.MassActionTrajectory.isPos
+#print axioms LeanTheory.CRN.ReactionNetwork.MassActionTrajectory.sub_mem_stoichSubspace
+#print axioms LeanTheory.CRN.ReactionNetwork.MassActionTrajectory.dotProduct_eq
+#print axioms LeanTheory.CRN.Sanity.isoTraj_trajectory
+#print axioms LeanTheory.CRN.Sanity.acrNet_steadyState_xA
