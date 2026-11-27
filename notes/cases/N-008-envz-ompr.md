@@ -156,7 +156,15 @@ the Hurwitz quantities are rational functions with positive denominators; the nu
 `a₁`, `a₅`, `Δ₂` (797 terms) and `Δ₃` (18 160 terms) have **only positive coefficients**; `D₄` is
 too large to expand quickly. If `D₄` is also positive, the general-rate theorem reduces to
 checking very large polynomial identities — beyond `ring`, but a candidate for a sparse kernel
-certificate (G-3).
+certificate (G-3). (The oracle run for `D₄` hit its 50-minute limit.)
+
+**Fig. 2D, every unit-rate steady state (2026-11-27, `LeanTheory/Design/EnvZStabilityAll.lean`)**:
+`envz_classStable_unit_all`. At a unit-rate steady state `x_{OmpR-P} = 1` and
+`x_{EnvZ-D} = x_{EnvZ-P} x_{OmpR}`, so the `6 × 6` restricted Jacobian is the polynomial matrix
+`envzRU b c` (`b = x_{OmpR}`, `c = x_{EnvZ-P}`); its Hurwitz determinants `Δ₂, …, Δ₅` (13, 27, 46,
+70 terms) have positive coefficients, and the degree-6 Routh–Hurwitz criterion
+(`isHurwitz_of_charpoly6`) applies. Also `envz_jacobian` for all rates via per-reaction tables
+(the earlier entrywise unit-rate Jacobian took ≈ 4.5 min; this module checks in ≈ 30 s).
 
 Open: class stability for Fig. 2B and EnvZ–OmpR at general rates (Q-11); the source's remark that
 replacing `XT` by a separate phosphatase `Z` destroys ACR (a cheap adversarial check).

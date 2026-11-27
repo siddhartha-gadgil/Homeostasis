@@ -94,6 +94,11 @@ Laplace expansion and `ring`). Accepted `(z + 1)⁵`; rejected `(z + 1)(z² + 1)
 First use: the ATP EnvZ–OmpR model at every unit-rate steady state (N-008). The same Schwarz
 argument extends to any degree.
 
+Degree 6 (`Certificates/RouthHurwitz6.lean`): `re_neg_of_schwarz6`, `re_neg_of_sextic` (Hurwitz
+determinants `hurwitz6Δ₂ … hurwitz6Δ₅`, Schwarz parameters `b₄ = a₁Δ₄/(Δ₂Δ₃)`,
+`b₅ = Δ₂Δ₅/(Δ₃Δ₄)`, `b₆ = a₆Δ₃/Δ₄`), `isHurwitz_of_charpoly6`; accepted `(z + 1)⁶`, rejected
+`(z + 1)²(z² + 1)²` (`Δ₄ ≤ 0`, root `i`). Used for EnvZ–OmpR Fig. 2D (N-008).
+
 Open: Jacobian-sign / injectivity certificates (need the injectivity theorem, source not supplied);
 SOS and Psatz oracles (SDP solver + rational rounding); larger certificates (sparse checker).
 

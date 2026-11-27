@@ -461,7 +461,7 @@ theorem idh_deficiency : idhNet.deficiency = 1 := by
   <div class="cols">
     <div>
       <p class="small">With conservation laws the Jacobian is singular, so no full-space Lyapunov function exists (<code class="inline">isoNet_no_lyapunov</code>). Instead, choose coordinates $B$, $C$ on $S$ ($CB = I$) and ask that the <strong>restricted Jacobian</strong> $CJB$ be Hurwitz.</p>
-      <p class="small">EnvZ&ndash;OmpR at unit rates, both models: integer restricted Jacobians ($6\times 6$, $5\times 5$), integer Lyapunov matrices, exact $LDL^\top$ factors (<code class="inline">envz_classStable_unit</code>, <code class="inline">atp_classStable_unit</code>). For Fig.&nbsp;2B, every unit-rate steady state, by $5\times 5$ Routh&ndash;Hurwitz; general rates are open (Q-11).</p>
+      <p class="small">EnvZ&ndash;OmpR at unit rates, both models: integer restricted Jacobians ($6\times 6$, $5\times 5$), integer Lyapunov matrices, exact $LDL^\top$ factors (<code class="inline">envz_classStable_unit</code>, <code class="inline">atp_classStable_unit</code>). Both models, every unit-rate steady state, by $5\times 5$ and $6\times 6$ Routh&ndash;Hurwitz; general rates are open (Q-11).</p>
       <p class="small">The toy ACR network: restricted Jacobian $-\kappa_0 x_B < 0$, so <em>every</em> positive steady state is class-stable.</p>
     </div>
     <div>
@@ -509,7 +509,7 @@ theorem idh_classStable {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {xs : Fin 5 �
 
 <section>
   <p class="kicker">Certificate format 8</p>
-  <h2>Routh&ndash;Hurwitz for $5\times5$, by an energy identity</h2>
+  <h2>Routh&ndash;Hurwitz for $5\times5$ and $6\times6$, by an energy identity</h2>
   <div class="cols" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)">
     <div>
       <p class="small">For $b_1,\dots,b_5 > 0$ the tridiagonal <strong>Schwarz matrix</strong></p>
@@ -528,10 +528,10 @@ theorem idh_classStable {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {xs : Fin 5 �
     (hz : z ^ 5 + a₁ * z ^ 4 + a₂ * z ^ 3 + a₃ * z ^ 2 + a₄ * z + a₅ = 0) :
     z.re < 0
 
--- first use: every unit-rate steady state of the ATP model (Fig. 2B)
-theorem atp_classStable_unit_all {xs : Fin 7 → ℝ}
-    (hxs : atpNet.IsPosSteadyState (fun _ => 1) xs) : ∃ δ > 0, ∃ c > 0, ∃ K > 0, …</code></pre>
-      <p class="small mt">At a steady state the restricted Jacobian is polynomial in $b = x_Y$, $c = x_{Xp}$; all five Hurwitz quantities have positive coefficients (the largest: 63 terms).</p>
+-- uses: every unit-rate steady state of both EnvZ–OmpR models
+theorem atp_classStable_unit_all  (hxs : atpNet.IsPosSteadyState (fun _ => 1) xs) : …
+theorem envz_classStable_unit_all (hxs : envzNet.IsPosSteadyState (fun _ => 1) xs) : …</code></pre>
+      <p class="small mt">At a steady state the restricted Jacobian is polynomial in two concentrations; all Hurwitz quantities have positive coefficients (up to 70 terms). The same argument, with one more step of the recursion, gives degree 6.</p>
     </div>
   </div>
 </section>
@@ -653,8 +653,8 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <table>
 <tr><th>Result</th><th>Scope</th><th></th></tr>
 <tr><td>ACR, steady-state families, nontrivial ACR, $\delta = 1$: EnvZ&ndash;OmpR (2B, 2D), IDHKP&ndash;IDH</td><td>all positive rates</td><td class="ok">verified</td></tr>
-<tr><td>EnvZ&ndash;OmpR class stability: Fig.&nbsp;2B at every steady state, Fig.&nbsp;2D at one</td><td>unit rates</td><td class="ok">verified</td></tr>
-<tr><td>Routh&ndash;Hurwitz for quintics and $5\times5$ matrices</td><td>general</td><td class="ok">verified</td></tr>
+<tr><td>EnvZ&ndash;OmpR class stability, every steady state (Figs.&nbsp;2B and 2D)</td><td>unit rates</td><td class="ok">verified</td></tr>
+<tr><td>Routh&ndash;Hurwitz for degrees 5 and 6 ($5\times5$, $6\times6$ matrices)</td><td>general</td><td class="ok">verified</td></tr>
 <tr><td>IDHKP&ndash;IDH class stability, every positive steady state</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic motif: RPA + linear stability; nonlinear stability for every $\gamma$</td><td>all rates; unit $\mu,\theta,\eta,a$</td><td class="ok">verified</td></tr>
 <tr><td>Stochastic extinction (toy ACR); stationary mean (antithetic)</td><td>uniformized chain; generator level</td><td class="ok">verified</td></tr>

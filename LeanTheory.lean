@@ -46,6 +46,7 @@ public import LeanTheory.Certificates.PolyCert
 public import LeanTheory.Certificates.PolyInterval
 public import LeanTheory.Certificates.RouthHurwitz
 public import LeanTheory.Certificates.RouthHurwitz5
+public import LeanTheory.Certificates.RouthHurwitz6
 public import LeanTheory.Certificates.RadiiPolynomial
 public import LeanTheory.Certificates.RationalIntervals
 public import LeanTheory.Certificates.SBP
@@ -61,6 +62,7 @@ public import LeanTheory.Design.EnvZOmpR
 public import LeanTheory.Design.EnvZOmpRATP
 public import LeanTheory.Design.EnvZOmpRATPStability
 public import LeanTheory.Design.EnvZStability
+public import LeanTheory.Design.EnvZStabilityAll
 public import LeanTheory.Design.IDHKP
 public import LeanTheory.Design.IDHKPStability
 public import LeanTheory.Elaborate
