@@ -10,14 +10,14 @@
 | Addresses | `G-1`, `Q-6` |
 | Depends on | none (Mathlib: `Module.finrank`, `Submodule.span`, `Matrix.rank`, `SimpleGraph`/`Quiver` reachability) |
 | Dependency requirement | — |
-| Produces | Kernel module `LeanTheory/Kernel/Network.lean` (planned); definitions `ReactionNetwork`, `stoichSubspace`, `linkageClasses`, `IsWeaklyReversible`, `IsTerminal`, `deficiency`; characterizing lemmas |
+| Produces | `LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean` |
 | Difficulty | moderate — the mathematics is elementary, the risk is in representation choices (Q-6) that every later note inherits |
-| Status | stated |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Status | verified (core); `δ = dim(ker Y ∩ im ∂)` characterization still open |
+| Implementation status | complete for the core; characterization (item 2) not started |
+| Implementation evidence | modules above, built in `lake build` |
+| Lean evidence | `LeanTheory.CRN.ReactionNetwork` (structure), `reactionVector`, `stoichSubspace`, `rank`, `Reacts`, `Reaches`, `Linked`, `numLinkageClasses`, `deficiency`, `IsReversible`, `IsWeaklyReversible`, `IsTerminal`; theorems `reactionVector_ne_zero`, `IsReversible.isWeaklyReversible`, `IsWeaklyReversible.reaches_symm`, `IsWeaklyReversible.isTerminal`, `Reaches.eq_of_not_src`, `isTerminal_of_not_src`, `rank_add_numLinkageClasses_le`, `deficiency_nonneg`, `numLinkageClasses_eq_of_labelling`, `rank_eq_one_of_multiples`, `rank_relabelSpecies`, `deficiency_relabelSpecies` |
+| Audit evidence | strict audit 2026-11-27 on top of `ce30608` (see implementation plan §4); no open findings |
+| Last updated | 2026-11-27 — Q-6 resolved, kernel formalized with sanity fixtures |
 
 ## Purpose and scope
 
@@ -79,6 +79,35 @@ concrete networks by kernel-checkable rank computation (needed for case studies;
 
 Smallest next step: write a design memo answering Q-6 with two or three concrete encodings of the
 toy networks of N-004, then formalize.
+
+## Representation decision (Q-6, resolved 2026-11-27)
+
+`ReactionNetwork ι C R` is parametrized by three types (species, complexes, reactions) rather than
+lists or finsets: concrete networks use `Fin n`, and all structural definitions need no
+`Fintype` instance except where counting (`Finite C` for `δ ≥ 0`).
+
+| Choice | Decision | Reason |
+| --- | --- | --- |
+| complexes | `complex : C → ι → ℕ`, injective | complexes counted once; zero complex allowed (`bdNet`) |
+| self-loops | forbidden (`src_ne_tgt`) | they contribute `ζ = 0` and would break `δ` conventions; `reactionVector_ne_zero` is the regression check |
+| duplicate reactions | allowed | harmless for `δ`; in mass action equivalent to one reaction with summed rate (to be proved in N-002) |
+| isolated complexes | forbidden (`complex_used`) | makes `m` the standard count |
+| `ℓ` | `Nat.card` of the quotient by `EqvGen Reacts` | standard; computed for concrete networks by `numLinkageClasses_eq_of_labelling` (a labelling certificate) |
+| `s` | `finrank ℝ (span (range reactionVector))` | computed by `rank_eq_one_of_multiples` for rank 1; a general exact rank certificate (rational row echelon form) is future work for larger case studies |
+| `δ` | integer-valued; `Nat.card C` is `0` for infinite `C`, so `δ` is meaningful only for finite `C` (all theorems assume `Finite C`) | — |
+
+## Compiled results
+
+- `deficiency_nonneg` (`[Finite C]`, no other assumptions): proof via the linear map
+  `ℝ^C → ℝ^ι`, `e_c ↦ y(c)`, whose image of the edge span is `S`, and the class-sum map
+  `ℝ^C → ℝ^{linkage classes}`, surjective with the edge span in its kernel.
+- Weak reversibility makes reachability symmetric and every complex terminal.
+- Fixtures (`LeanTheory/Sanity/CRNNetwork.lean`): `isoNet` (`δ = 0`, reversible), `bdNet` (zero
+  complex, `δ = 0`), `acrNet` (`δ = 1`; `A + B` and `B` nonterminal and differ by `e_A`; not
+  weakly reversible), `abNet` (`δ = 0`, not weakly reversible, `A` nonterminal, `B` terminal),
+  `emptyNet` (`δ = 0`), species-swap invariance on `acrNet`.
+
+Still open: item 2 (`δ = dim (ker Y ∩ im ∂)`), useful for N-005/N-006; a general rank certificate.
 
 ## Outputs and next dependencies
 

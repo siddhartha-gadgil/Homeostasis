@@ -14,7 +14,10 @@ Spatial models are excluded in the initial phase.
 
 As of 2026-11-27 (seeded from the user's prompt):
 
-- **Verified (compiled and audited):** no domain results yet. The audited template library
+- **Verified (compiled and audited):** the reaction-network syntax kernel (N-001,
+  `LeanTheory.Kernel.Network`): deficiency, linkage classes, weak reversibility, terminal
+  complexes, `deficiency_nonneg`, species-relabelling invariance, with fixtures in
+  `LeanTheory.Sanity.CRNNetwork`. The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -24,7 +27,7 @@ As of 2026-11-27 (seeded from the user's prompt):
 - **Main barriers:** kernel representation choices (Q-6) gate almost everything; no
   continuous-time Markov chain theory in Mathlib/TauCeti (Q-8); the dilution question (Q-3) is
   ill-posed until an input and a synthesis model are chosen (correction X-10).
-- **Ready now:** N-001 (kernel design, Q-6), N-007a (determinant formula, Mathlib-only), N-011
+- **Ready now:** N-002 (mass-action ODE), N-013 (CME generator), N-007a (determinant formula, Mathlib-only), N-011
   formats 1–2 (polynomial certificate checkers, template-only), and source-reading tasks for
   N-006/N-008/N-015 when the user supplies PDFs.
 
@@ -50,7 +53,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `Q-3` | Sharp, uniform bounds `|dX_o*/dI| ≤ C(μ)` for ACR networks (EnvZ/OmpR) under dilution | G-4; N-009 | blocked (ill-posed) | Needs a choice of synthesis model and input `I` (X-10). Conjectured shape `O(μ)` on compact parameter boxes |
 | `Q-4` | Which deterministic homeostatic networks avoid stochastic extinction and keep stationary homeostasis under the CME at low copy numbers? | G-4; N-015, N-016 | open (research) | `F-acr` exhibits extinction (elementary). Antithetic feedback gives stationary-mean RPA under ergodicity (sourced) |
 | `Q-5` | How to unify siphon analysis, toric Lyapunov functions and Foster–Lyapunov drift into reusable Lean certificate templates? | G-3; N-011, N-012, N-014, N-017 | open | Proposed common shape: finite exact witness + polynomial identity/inequality checker + one soundness theorem per format |
-| `Q-6` | Kernel representation: how are species, complexes and reactions encoded (types vs finsets; self-loops; duplicate reactions; isolated complexes), and how are concrete deficiencies computed without `decide`? | G-1; N-001, N-002, N-013 and everything downstream | open — **ready, highest priority** | Draft proposal in N-001 |
+| `Q-6` | Kernel representation: how are species, complexes and reactions encoded (types vs finsets; self-loops; duplicate reactions; isolated complexes), and how are concrete deficiencies computed without `decide`? | G-1; N-001, N-002, N-013 and everything downstream | **answered** (2026-11-27) | Type-parametrized `ReactionNetwork ι C R`; no self-loops or isolated complexes; duplicates allowed; labelling certificate for `ℓ`, multiples lemma for rank 1 (general rank certificate open). See N-001 |
 | `Q-7` | Precise quantifier structure of ACR, infinitesimal homeostasis, RPA and approximate adaptation, and the proved implication map between them; what is "the input" (rate parameter vs conserved total)? | G-1; N-003, N-007, N-009, N-018 | open | Draft definitions and separating examples in N-003 |
 | `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | open | Proposal: generator-level algebra first; process layer only for finite state spaces initially |
 | `Q-9` | Forward invariance of `ℝ_{>0}^n` for mass-action trajectories and existence/blow-up of solutions — what minimal ODE infrastructure is needed? | G-1; N-002, N-012 | open | Proof sketch (factor `x_i` out of consuming rates + Grönwall) in N-002 |
@@ -60,10 +63,10 @@ Questions may be primary research outputs or auxiliary prerequisites.
 
 | ID | Note | Addresses | Depends on | Difficulty | Status / Lean readiness | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
-| `N-001` | [kernel/N-001-network-syntax](kernel/N-001-network-syntax.md) | G-1, Q-6 | — | moderate | stated; **ready** | Resolve Q-6 by encoding `F-iso`, `F-acr`, `F-ab` in two candidate representations; then formalize |
-| `N-002` | [kernel/N-002-mass-action-ode](kernel/N-002-mass-action-ode.md) | G-1, Q-6, Q-7, Q-9 | N-001 | moderate | stated; blocked on N-001 | Formalize field, steady states, conservation; then positivity |
+| `N-001` | [kernel/N-001-network-syntax](kernel/N-001-network-syntax.md) | G-1, Q-6 | — | moderate | **verified** (core: `LeanTheory.Kernel.Network`) | Optional: `δ = dim(ker Y ∩ im ∂)`; general rank certificate |
+| `N-002` | [kernel/N-002-mass-action-ode](kernel/N-002-mass-action-ode.md) | G-1, Q-6, Q-7, Q-9 | N-001 | moderate | stated; **ready** (N-001 verified) | Formalize field, steady states, conservation; then positivity |
 | `N-003` | [kernel/N-003-homeostasis-notions](kernel/N-003-homeostasis-notions.md) | G-1, Q-7 | N-002, N-004 | moderate | exploratory; blocked on N-002 | Fix the input interface; draft predicates |
-| `N-004` | [kernel/N-004-sanity-suite](kernel/N-004-sanity-suite.md) | G-1 | N-001, N-002, N-003, N-013 | routine–moderate | stated; grows with the kernel | Write fixtures alongside N-001/N-002 |
+| `N-004` | [kernel/N-004-sanity-suite](kernel/N-004-sanity-suite.md) | G-1 | N-001, N-002, N-003, N-013 | routine–moderate | network part verified (`LeanTheory.Sanity.CRNNetwork`); grows with the kernel | Write fixtures alongside N-001/N-002 |
 | `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
 | `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; blocked (source reading ready) | Extract a self-contained proof from the SOM |
 | `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | (a) proof-ready, **ready**; (b) blocked | Formalize Cramer/minor lemma, then the IFT wrapper |
@@ -72,7 +75,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | proof-ready; **ready** (formats 1–2) | Choose sparse polynomial representation; soundness + fixtures |
 | `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | exploratory; blocked | Approve siphon source; design minimal-siphon cover certificate |
-| `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | stated; blocked on N-001 | Generator algebra + `F-bd`, `F-acr` sanity |
+| `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | stated; **ready** (N-001 verified) | Generator algebra + `F-bd`, `F-acr` sanity |
 | `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | stated; blocked | Drift checker; moment bound from generator stationarity |
 | `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | stated; source reading ready | `F-acr` reachability once N-013 compiles |
 | `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | proof-ready; blocked on kernel | Formalize after N-002/N-013 |
@@ -108,12 +111,12 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), audited 2026-11-27 |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audit 2026-11-27 of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
-| Kernel coverage | Every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
+| Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
 | Open findings | None blocking. Info: (i) `amplitude_bound` is trivially true at `k = 0` (gives `0 ≤ 2E`); acceptable, scope noted. (ii) `theory_loop.lean`/`theory_server.lean` import `LeanTheory.Elaborate` at top level and load full `LeanTheory` via `importModules`; `LeanTheoryMeta` reaches them through `LeanTheory` — consistent with the template convention. (iii) Inherited Theory tracks (Fields, KAM, Stability) are unrelated to homeostasis; keep or prune when the domain is seeded |
-| Missing sanity checks | Example law has the triad (`free_velocity_const`, `instOscillatorLawCos`, `not_oscillatorLaw_exp`) plus risk-specific checks (time-shift, linearity in `Bridge/Example`; accepted/rejected certificate fixtures). Every future homeostasis law will need its own triad and adversarial checks |
+| Missing sanity checks | CRN network kernel: special (`isoNet`, `bdNet`), degenerate (`emptyNet`), corner (zero complex; nonvanishing reaction vectors), symmetry (species relabelling), negative cases for weak reversibility/terminality (`abNet`, `acrNet`) — done; complex relabelling invariance and a deficiency-two fixture still to add. Example law has the triad (`free_velocity_const`, `instOscillatorLawCos`, `not_oscillatorLaw_exp`) plus risk-specific checks (time-shift, linearity in `Bridge/Example`; accepted/rejected certificate fixtures). Every future homeostasis law will need its own triad and adversarial checks |
 
 Previous code is in scope. A full startup audit inventories and red-teams every kernel declaration,
 then traces findings into dependent results. After a kernel or foundational change, update the
@@ -169,9 +172,8 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **N-001 / Q-6** — kernel representation. Resolves the main model ambiguity and unblocks 14
-   notes. Write the representation memo with the `F-iso`, `F-acr`, `F-ab` encodings, then
-   formalize with sanity checks (N-004).
+1. **N-002** — mass-action field, steady states, conservation laws, positivity (N-001 done).
+   Unblocks N-003 and most of G-2/G-4. N-013 (CME generator) is an independent parallel strand.
 2. **N-007a** — determinant formula for infinitesimal homeostasis. Ready now with Mathlib alone;
    a reusable theorem feeding G-2, Q-3 and N-018. Good parallel strand.
 3. **N-011 formats 1–2** — polynomial certificate checkers (coefficient sign, cofactor identity).
@@ -225,6 +227,14 @@ the physical model.
   Picard–Lindelöf, ω-limits; TauCeti has discrete-time Markov kernels, Lyapunov convergence for
   flows on compact spaces, quiver strongly connected components. Neither has reaction networks,
   siphons, SOS/Positivstellensatz or continuous-time Markov chains.
+
+- **2026-11-27 — N-001 (work unit).** Q-6 answered. New `LeanTheory/Kernel/Network.lean` (network
+  syntax, reaction vectors, stoichiometric subspace, rank, linkage classes, weak reversibility,
+  terminal complexes, deficiency; `deficiency_nonneg`, `IsWeaklyReversible.isTerminal`,
+  `numLinkageClasses_eq_of_labelling`, `rank_eq_one_of_multiples`, `deficiency_relabelSpecies`)
+  and `LeanTheory/Sanity/CRNNetwork.lean` (fixtures `isoNet`, `bdNet`, `acrNet` with `δ = 1` and
+  the structural hypotheses of N-006, `abNet`, `emptyNet`). `lake build` OK (no warnings), axiom
+  audit passed for 6055 declarations. N-002 and N-013 now ready.
 
 ## 12. Implementation and workstation log
 

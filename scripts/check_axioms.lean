@@ -58,3 +58,8 @@ run_cmd do
 #print axioms LeanTheory.Fields.ODEGlobal.existsUnique_global
 #print axioms LeanTheory.Certificates.EvalCert.ECert.sound
 #print axioms LeanTheory.Certificates.KronProof.kernelFact_fixture
+#print axioms LeanTheory.CRN.ReactionNetwork.deficiency_nonneg
+#print axioms LeanTheory.CRN.ReactionNetwork.numLinkageClasses_eq_of_labelling
+#print axioms LeanTheory.CRN.ReactionNetwork.deficiency_relabelSpecies
+#print axioms LeanTheory.CRN.Sanity.acrNet_deficiency
+#print axioms LeanTheory.CRN.Sanity.emptyNet_deficiency
