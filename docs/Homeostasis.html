@@ -236,6 +236,51 @@ def deficiency : ℤ := (Nat.card C : ℤ) - N.numLinkageClasses - N.rank</code>
 </section>
 
 <section>
+  <p class="kicker">Background</p>
+  <h2>Deficiency: three counts</h2>
+  <div class="cols">
+    <div>
+      <p class="small">A network has <strong>complexes</strong> (the formal sums on either side of an arrow) joined by reactions. Count three things:</p>
+      <ul class="pts" style="font-size: 0.62em">
+        <li>$n$: the number of <strong>complexes</strong>.</li>
+        <li>$\ell$: the number of <strong>linkage classes</strong>, the connected pieces of the reaction graph (one per line of a scheme).</li>
+        <li>$s$: the <strong>rank</strong>, the number of independent reaction vectors $y' - y$ (net changes in species). Equivalently, the number of species minus the number of conservation laws.</li>
+      </ul>
+      $$\delta \;=\; n - \ell - s \;\ge\; 0$$
+      <p class="small">A forest connecting the complexes has $n - \ell$ edges, so the graph alone allows $n - \ell$ independent reaction directions. Replacing each complex by its species composition can make some of them coincide. <strong>$\delta$ counts the coincidences.</strong></p>
+    </div>
+    <div>
+      <div class="card"><h3>$A \rightleftharpoons B$</h3><p>$n = 2$, $\ell = 1$, $s = 1$: $\delta = 0$. Nothing coincides.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>$A + B \to 2B,\quad B \to A$</h3><p>Complexes $A{+}B,\ 2B,\ B,\ A$: $n = 4$, $\ell = 2$. Both reactions change the species by $\pm(B - A)$, so $s = 1$ and $\delta = 4 - 2 - 1 = 1$. Two graph directions collapse to one.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>The case studies</h3><p>EnvZ&ndash;OmpR (2B: $9 - 3 - 5$; 2D: $10 - 3 - 6$) and IDHKP&ndash;IDH ($6 - 2 - 3$) all have $\delta = 1$.</p></div>
+      <p class="small mt">$\delta = 0$ is very rigid (Deficiency Zero Theorem); $\delta = 1$ leaves just enough room for ACR.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Digression</p>
+  <h2>Deficiency, homologically</h2>
+  <div class="cols" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)">
+    <div>
+      <p class="small">Reactions, complexes and species give maps</p>
+      <div style="font-size: 0.85em">$$\mathbb{R}^R \xrightarrow{\ \partial\ } \mathbb{R}^C \xrightarrow{\ Y\ } \mathbb{R}^{\text{species}},\qquad \partial(y \to y') = e_{y'} - e_y,$$</div>
+      <p class="small">with $Y$ the composition of a complex. This is <em>not</em> a chain complex: $Y\partial = \Gamma$ is the stoichiometric matrix, and $\operatorname{im}\Gamma = S \ne 0$. Instead, $(\mathrm{id}, Y)$ is a <strong>chain map</strong> between two 2-term complexes:</p>
+      $$\begin{array}{ccc} \mathbb{R}^R & \xrightarrow{\ \partial\ } & \mathbb{R}^C \\ \| & & \downarrow Y \\ \mathbb{R}^R & \xrightarrow{\ \Gamma\ } & \mathbb{R}^{\text{species}} \end{array}$$
+      <p class="small">Graph: $H_1 = \ker\partial$ (cycles, dimension $b_1$), $H_0 = \operatorname{coker}\partial$ (dimension $\ell$).</p>
+    </div>
+    <div>
+      <div class="callout accent">
+        <div style="font-size: 0.85em">$$\delta \;=\; \dim(\ker Y \cap \operatorname{im}\partial) \;=\; \dim\ker\Gamma \;-\; b_1$$</div>
+        <p class="small" style="margin: 0">$\ker\Gamma$ = steady-state fluxes. Graph cycles give some for free; <strong>$\delta$ counts the rest</strong>: the cokernel of $H_1(\text{graph}) \to H_1(\text{stoichiometry})$.</p>
+      </div>
+      <p class="small mt">From the exact sequence $0 \to \ker Y \cap \operatorname{im}\partial \to \operatorname{im}\partial \xrightarrow{Y} S \to 0$: &ensp;$\delta = (n - \ell) - s$, so $\delta \ge 0$.</p>
+      <div class="card"><h3>Toy network</h3><p>No graph cycles ($b_1 = 0$), yet the flux &ldquo;both reactions at equal rate&rdquo; is steady: $(A{+}B \to 2B) + (B \to A)$ has net change $0$. So $\dim\ker\Gamma = 1$ and $\delta = 1$.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
   <p class="kicker">Definitions</p>
   <h2>Absolute concentration robustness, made honest</h2>
   <div class="cols wide-right">
