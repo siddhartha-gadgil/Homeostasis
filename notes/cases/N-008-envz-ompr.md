@@ -119,10 +119,22 @@ positive rates:
 
 In all three models the certificate's multiplier is the species-free part of the two nonterminal
 nodes named by the Shinar–Feinberg theorem (`EnvZ-D`, `XT`, `EIp`), an observation that the
-general theorem (N-006) would explain. Open: class stability for Fig. 2B and IDHKP (the IDHKP
-restricted Jacobian is `3 × 3`, so a parametric Routh–Hurwitz certificate looks feasible); the
-source's remark that replacing `XT` by a separate phosphatase `Z` destroys ACR (a cheap
-adversarial check).
+general theorem (N-006) would explain.
+
+**IDHKP–IDH class stability, all rates (2026-11-27, `LeanTheory/Design/IDHKPStability.lean`)**:
+for all positive rate constants and **every** positive steady state, local exponential stability
+within the compatibility class (`idh_classStable`). Coordinates on `S`: `B` = reaction vectors
+`r₀, r₂, r₃`, `C u = (−u₁, u₀ − u₁, u₄)`; the restricted Jacobian `C J B` is an explicit `3 × 3`
+matrix at every state (`idhR`, `idh_restrict`). Routh–Hurwitz (`idhR_isHurwitz`): `tr < 0` for
+any positive `x`; `det = −D < 0` with `D` a positive polynomial, using only the ACR relation
+`κ₄κ₆ x_I = κ₃(κ₅ + κ₆)`; `det − tr · m = E` with `E` an 83-term polynomial with positive
+coefficients, at any positive `x` (sympy oracle; checked by `ring`, `positivity`). The Jacobian is
+computed through per-reaction gradient and reaction-vector tables (`idhG`, `idhZ`, `idh_grad`,
+`idh_rv`): the module checks in ≈ 7 s, against ≈ 4.5 min for the entrywise EnvZ computation —
+a reusable speed-up pattern.
+
+Open: class stability for Fig. 2B and EnvZ–OmpR at general rates; the source's remark that
+replacing `XT` by a separate phosphatase `Z` destroys ACR (a cheap adversarial check).
 
 ## Claims and evidence
 

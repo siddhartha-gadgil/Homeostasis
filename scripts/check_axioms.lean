@@ -142,3 +142,5 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.idh_steady_I
 #print axioms LeanTheory.CRN.Design.idh_hasACRNontrivial
 #print axioms LeanTheory.CRN.Design.idh_deficiency
+#print axioms LeanTheory.CRN.Design.idhR_isHurwitz
+#print axioms LeanTheory.CRN.Design.idh_classStable

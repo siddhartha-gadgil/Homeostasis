@@ -191,6 +191,7 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
 <tr><td>EnvZ&ndash;OmpR (ATP, Fig.&nbsp;2B, the source&rsquo;s main model)</td><td><code>atp_steady_Yp</code>, <code>atp_hasACRNontrivial</code>, <code>atp_deficiency</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>IDHKP&ndash;IDH core module (Fig.&nbsp;3): ACR in active IDH</td><td><code>idh_steady_I</code>, <code>idh_hasACRNontrivial</code>, <code>idh_deficiency</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>EnvZ&ndash;OmpR steady state locally exponentially stable within its compatibility class</td><td><code>envz_classStable_unit</code></td><td>unit rates</td><td class="ok">verified</td></tr>
+<tr><td>IDHKP&ndash;IDH: every positive steady state locally exponentially stable within its compatibility class</td><td><code>idh_classStable</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic integral feedback: robust perfect adaptation with linear stability</td><td><code>aifNet_hasRPALinear</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic motif: nonlinear local exponential stability for every disturbance <i>&gamma;</i></td><td><code>aifNet_rpa_locallyExpStable</code></td><td>unit <i>&mu;, &theta;, &eta;, a</i></td><td class="ok">verified</td></tr>
 <tr><td>Dilution breaks the antithetic set-point</td><td><code>aifNet_dilution_breaks_setpoint</code></td><td>explicit counterexample</td><td class="ok">verified</td></tr>
@@ -213,7 +214,7 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
 
 <h2>Open directions</h2>
 <div class="cards">
-  <div class="card"><span class="status open">next</span><h3>Class stability for all models</h3><p>IDHKP&ndash;IDH (a 3&times;3 restricted Jacobian, so Routh&ndash;Hurwitz applies parametrically), the ATP model, and EnvZ&ndash;OmpR for general rates.</p></div>
+  <div class="card"><span class="status open">next</span><h3>Class stability for all models</h3><p>Done for IDHKP&ndash;IDH at all rates (symbolic Routh&ndash;Hurwitz). Next: the ATP model and EnvZ&ndash;OmpR for general rates, where the restricted Jacobian is 5&times;5 or 6&times;6.</p></div>
   <div class="card"><span class="status open">open</span><h3>The Shinar&ndash;Feinberg theorem</h3><p>The general deficiency-one theorem itself. In every case study, the certificate&rsquo;s multiplier is the common part of the two nonterminal complexes the theorem names.</p></div>
   <div class="card"><span class="status open">open</span><h3>Dilution and approximate robustness</h3><p>Quantitative bounds on the loss of ACR and of perfect adaptation under growth dilution.</p></div>
   <div class="card"><span class="status open">open</span><h3>Continuous-time stochastic laws</h3><p>The semigroup <code>e^{tQ}</code>, non-explosion, and stochastic persistence at low copy numbers.</p></div>
@@ -221,8 +222,8 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
 
 <h2>In numbers</h2>
 <div class="nums">
-  <div class="num"><b>&asymp; 6,700</b><span>lines of Lean for reaction networks and homeostasis</span></div>
-  <div class="num"><b>&asymp; 330</b><span>theorems in that development</span></div>
+  <div class="num"><b>&asymp; 6,900</b><span>lines of Lean for reaction networks and homeostasis</span></div>
+  <div class="num"><b>&asymp; 340</b><span>theorems in that development</span></div>
   <div class="num"><b>5</b><span>case-study networks transcribed from sources</span></div>
   <div class="num"><b>0</b><span>project axioms; no <code>sorry</code>, no <code>decide</code></span></div>
 </div>
@@ -253,8 +254,9 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
       lean: [D("ok", "theorem atp_steady_Yp {k : Fin 9 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 7 → ℝ}\n    (hx : atpNet.IsPosSteadyState k x) : x 5 = atpACRValue k\n\n-- atpACRValue k = k 2 * (k 7 + k 8) / (k 6 * k 8)\n\ntheorem atp_deficiency : atpNet.deficiency = 1"),
         D("def", "-- the whole proof of ACR, after reading off the steady-state equations e₀ … e₄:\nhave key : x 1 * (k 6 * k 8 * x 5 - k 2 * (k 7 + k 8)) = 0 := by\n  linear_combination (-k 8) * e0 + (-k 8) * e1 + (-(k 7 + 2 * k 8)) * e2\n    + (k 7 + k 8) * e3 + (-k 8) * e4")] },
     { id: "idh", name: "IDHKP–IDH", scene: "idh",
-      text: "Shinar–Feinberg Fig. 3, the core of the glyoxylate-bypass switch: a bifunctional kinase–phosphatase E acting on IDH. Six complexes, two linkage classes, rank 3, deficiency one; ACR in the active enzyme I.",
-      lean: [D("ok", "theorem idh_steady_I {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 5 → ℝ}\n    (hx : idhNet.IsPosSteadyState k x) : x 3 = idhACRValue k\n\n-- idhACRValue k = k 2 * (k 4 + k 5) / (k 3 * k 5)\n\ntheorem idh_hasACRNontrivial (hk : ∀ r, 0 < k r) : idhNet.HasACRNontrivial k 3\ntheorem idh_deficiency : idhNet.deficiency = 1")] },
+      text: "Shinar–Feinberg Fig. 3, the core of the glyoxylate-bypass switch: a bifunctional kinase–phosphatase E acting on IDH. Six complexes, two linkage classes, rank 3, deficiency one; ACR in the active enzyme I, and every positive steady state is stable within its compatibility class, for all rates (a symbolic Routh–Hurwitz certificate).",
+      lean: [D("ok", "theorem idh_steady_I {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 5 → ℝ}\n    (hx : idhNet.IsPosSteadyState k x) : x 3 = idhACRValue k\n\n-- idhACRValue k = k 2 * (k 4 + k 5) / (k 3 * k 5)\n\ntheorem idh_hasACRNontrivial (hk : ∀ r, 0 < k r) : idhNet.HasACRNontrivial k 3\ntheorem idh_deficiency : idhNet.deficiency = 1"),
+        D("ok", "theorem idh_classStable {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {xs : Fin 5 → ℝ}\n    (hxs : idhNet.IsPosSteadyState k xs) :\n    ∃ δ > 0, ∃ c > 0, ∃ K > 0, ∀ x T, idhNet.MassActionTrajectoryOn k x T →\n      x 0 - xs ∈ idhNet.stoichSubspace → ‖x 0 - xs‖ < δ →\n        ∀ t ∈ Ico 0 T, ‖x t - xs‖ ^ 2 ≤ K * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2")] },
     { id: "motif", name: "Antithetic feedback", scene: "motif",
       text: "Robust perfect adaptation: the output X settles at μ/θ for every degradation rate γ > 0 (the disturbance). The curves are five values of γ. Turn on dilution to see the set-point break.",
       lean: [D("ok", "theorem aifNet_hasRPALinear {μ θ η a : ℝ} (hμ : 0 < μ) (hθ : 0 < θ) (hη : 0 < η) (ha : 0 < a) :\n    aifNet.HasRPALinear (fun γ => aifK μ θ η a γ) (Ioi 0) 2 (μ / θ)"),

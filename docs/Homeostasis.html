@@ -454,6 +454,34 @@ theorem acrNet_classStable {k xs : Fin 2 → ℝ} (h0 : 0 < k 0)
   </div>
 </section>
 
+<section>
+  <p class="kicker">All rates, every steady state</p>
+  <h2>IDHKP&ndash;IDH is stable within its classes</h2>
+  <div class="cols" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)">
+    <div>
+      <p class="small">Rank 3, so the restricted Jacobian is $3\times 3$, explicit at <em>every</em> state:</p>
+      <div style="font-size: 0.62em">$$CJB = \begin{pmatrix} -\kappa_1(x_0{+}x_1) - \kappa_2 & \kappa_1 x_1 + \kappa_2 & \kappa_2 - \kappa_6\\ \kappa_3 & -\kappa_3 & -\kappa_3 - \kappa_6 \\ \kappa_4 x_3 & \kappa_4(x_2 - x_3) & -\kappa_4(x_2{+}x_3) - \kappa_5 - \kappa_6\end{pmatrix}$$</div>
+      <ul class="pts" style="font-size: 0.6em">
+        <li>$\operatorname{tr} < 0$ at every positive state.</li>
+        <li>$\det = -D < 0$, $D$ a positive polynomial: uses only the ACR relation $\kappa_4\kappa_6 x_I = \kappa_3(\kappa_5+\kappa_6)$.</li>
+        <li>$\det - \operatorname{tr}\cdot m = E > 0$: an 83-term polynomial, every coefficient positive (oracle; Lean: <code class="inline">ring</code>, <code class="inline">positivity</code>).</li>
+      </ul>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem idhR_isHurwitz {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 5 → ℝ}
+    (hx : IsPos x) (hI : x 3 = idhACRValue k) : IsHurwitz (idhR k x)
+
+theorem idh_classStable {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {xs : Fin 5 → ℝ}
+    (hxs : idhNet.IsPosSteadyState k xs) :
+    ∃ δ > 0, ∃ c > 0, ∃ K > 0, ∀ (x : ℝ → Fin 5 → ℝ) (T : ℝ),
+      idhNet.MassActionTrajectoryOn k x T → x 0 - xs ∈ idhNet.stoichSubspace →
+        ‖x 0 - xs‖ < δ →
+          ∀ t ∈ Ico 0 T, ‖x t - xs‖ ^ 2 ≤ K * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2</code></pre>
+      <p class="small mt">The Jacobian is computed from per-reaction tables (monomial gradients, reaction vectors): the module checks in about 7 seconds.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============================ PART 3 ============================ -->
 <section class="divider" data-background-color="#0b1220">
   <p class="kicker">Part 3</p>
@@ -558,8 +586,8 @@ theorem massAction_infinitesimalHomeostasis_iff_det
         <li>Research notes with stable IDs; a claim is a dependency only when a named compiled theorem matches it.</li>
       </ul>
       <div class="cols-2 mt">
-        <div><p class="stat">&asymp; 6,700</p><p class="statcap">lines of Lean for networks and homeostasis</p></div>
-        <div><p class="stat">&asymp; 330</p><p class="statcap">theorems</p></div>
+        <div><p class="stat">&asymp; 6,900</p><p class="statcap">lines of Lean for networks and homeostasis</p></div>
+        <div><p class="stat">&asymp; 340</p><p class="statcap">theorems</p></div>
       </div>
     </div>
   </div>
@@ -572,10 +600,11 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><th>Result</th><th>Scope</th><th></th></tr>
 <tr><td>ACR, steady-state families, nontrivial ACR, $\delta = 1$: EnvZ&ndash;OmpR (2B, 2D), IDHKP&ndash;IDH</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>EnvZ&ndash;OmpR (2D) class stability</td><td>unit rates</td><td class="ok">verified</td></tr>
+<tr><td>IDHKP&ndash;IDH class stability, every positive steady state</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic motif: RPA + linear stability; nonlinear stability for every $\gamma$</td><td>all rates; unit $\mu,\theta,\eta,a$</td><td class="ok">verified</td></tr>
 <tr><td>Stochastic extinction (toy ACR); stationary mean (antithetic)</td><td>uniformized chain; generator level</td><td class="ok">verified</td></tr>
 <tr><td>Determinant formula for infinitesimal homeostasis</td><td>along a differentiable branch</td><td class="ok">verified</td></tr>
-<tr><td>Class stability for IDHKP&ndash;IDH and the ATP model; general rates</td><td>parametric Routh&ndash;Hurwitz</td><td class="open">next</td></tr>
+<tr><td>Class stability for the ATP model and EnvZ&ndash;OmpR at general rates</td><td>$5\times5$, $6\times6$ restricted Jacobians</td><td class="open">next</td></tr>
 <tr><td>The Shinar&ndash;Feinberg theorem in general; Deficiency Zero Theorem</td><td></td><td class="open">open</td></tr>
 <tr><td>Dilution bounds; continuous-time CME; persistence</td><td></td><td class="open">open</td></tr>
 </table>

@@ -110,7 +110,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
 | `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; **kernel ready** (source reading still needed) | Extract a self-contained proof from the SOM |
 | `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | **verified** (`LeanTheory.Theory.Homeostasis.DeterminantFormula`) | Optional: IFT branch existence; block factorization `C-GSF` |
-| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates; Fig. 2B ATP model and IDHKP–IDH Fig. 3 likewise verified, `δ = 1`) | Parametric class stability; IDHKP class stability; dilution |
+| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates; Fig. 2B ATP model and IDHKP–IDH Fig. 3 likewise verified, `δ = 1`; IDHKP–IDH class stability for all rates and all positive steady states) | Parametric class stability (EnvZ, ATP); phosphatase-variant counterexample; dilution |
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
@@ -212,9 +212,9 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **Class stability for the source's models** — IDHKP–IDH (3 × 3 restricted Jacobian: parametric
-   Routh–Hurwitz), Fig. 2B, parametric EnvZ–OmpR; a faster Jacobian computation. Adversarial
-   check: the phosphatase variant of Fig. 2B loses ACR (source's remark).
+1. **Class stability for the source's models** — Fig. 2B (restricted Jacobian `5 × 5`), parametric
+   EnvZ–OmpR; use the per-reaction gradient pattern of `Design/IDHKPStability` for fast Jacobians.
+   Adversarial check: the phosphatase variant of Fig. 2B loses ACR (source's remark).
 2. **Antithetic motif with dilution** (N-009/Q-3 analogue): quantify the set-point error, now with a
    stable baseline.
 3. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
@@ -412,6 +412,17 @@ the physical model.
   constant-cofactor identities (`atp_steady_Yp`, `idh_steady_I`), explicit positive steady-state
   families, nontrivial ACR, `ℓ`, `s` and `δ = 1` matching the source. Build clean, axiom audit
   passed.
+
+- **2026-11-27 — Website and slides.** `docs/index.html` (project site with an interactive
+  explorer of the formalized networks), `docs/Homeostasis.html` (reveal.js deck), `docs/crn-sim.js`
+  (in-browser RK4 integration of the kernel's mass-action field and Gillespie runs of the CME).
+  The template's page moved to `docs/LeanTheory.html`. Site and slides are updated with each stage.
+
+- **2026-11-27 — IDHKP–IDH class stability (work unit, N-008).** New
+  `LeanTheory/Design/IDHKPStability.lean`: for all positive rates and every positive steady
+  state, local exponential stability within the compatibility class (`idh_classStable`), via a
+  symbolic Routh–Hurwitz certificate (`idhR_isHurwitz`). Fast Jacobian via per-reaction tables
+  (≈ 7 s). Build clean, axiom audit passed for 6824 declarations.
 
 ## 12. Implementation and workstation log
 

@@ -60,6 +60,7 @@ public import LeanTheory.Design.EnvZOmpR
 public import LeanTheory.Design.EnvZOmpRATP
 public import LeanTheory.Design.EnvZStability
 public import LeanTheory.Design.IDHKP
+public import LeanTheory.Design.IDHKPStability
 public import LeanTheory.Elaborate
 public import LeanTheory.Kernel.CME
 public import LeanTheory.Kernel.Example
