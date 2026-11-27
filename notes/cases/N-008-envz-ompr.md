@@ -10,7 +10,7 @@
 | Addresses | `G-4`, `G-2` (regression test for N-006) |
 | Depends on | `N-002`, `N-003` (compiled); `N-011` cofactor checker (for the certificate route); `N-006` (only for the route via the general theorem) |
 | Dependency requirement | compiled mass-action field, `HasACRNonvacuous`; either a compiled cofactor-certificate soundness theorem or a direct algebraic proof |
-| Produces | Lean model files `LeanTheory/Design/EnvZOmpR.lean`, `.../IDHKP.lean` (planned) with the exact source networks; theorems: deficiency value, existence of a positive steady state for all `k` (or the stated parameter set), ACR in the output species with explicit value |
+| Produces | Lean model files `LeanTheory/Design/EnvZOmpR.lean`, `.../EnvZOmpRATP.lean`, `.../IDHKP.lean` with the exact source networks; theorems: deficiency value, existence of a positive steady state for all `k` (or the stated parameter set), ACR in the output species with explicit value |
 | Difficulty | moderate — the algebra is small; the risks are transcription errors and the existence part |
 | Status | **verified** for all positive rates: ACR value, nontrivial ACR, positive steady-state family, deficiency 1; class-relative local exponential stability verified at unit rates |
 | Implementation status | not started |
@@ -68,8 +68,8 @@ The formalized network is **Shinar–Feinberg Fig. 2D** (ADP cofactor), checked 
 source (institutional copy, git-ignored). Rate mapping: `κ₁ = k₋₉`, `κ₂ = k₉[D]`, `κ₃ = k₁[T]`,
 `κ₄ = k₋₁`, `κ₅ = k₂`, `κ₆ = k₃`, `κ₇ = k₋₃`, `κ₈ = k₄`, `κ₉ = k₇`, `κ₁₀ = k₋₇`, `κ₁₁ = k₈`.
 The paper's main model is **Fig. 2B** (ATP cofactor; third line `XT + Yp ⇌ XTYp → XT + Y`;
-9 nodes, 3 linkage classes, rank 5, δ = 1; ACR in `Yp` via `XT + Yp`, `XT`) — not yet formalized.
-The IDHKP–IDH module (Fig. 3) is now transcribable as well.
+9 nodes, 3 linkage classes, rank 5, δ = 1; ACR in `Yp` via `XT + Yp`, `XT`) — formalized below.
+The IDHKP–IDH module (Fig. 3) is formalized below as well.
 
 ## Compiled results (2026-11-27, `LeanTheory/Design/EnvZOmpR.lean`)
 
@@ -95,7 +95,34 @@ factorizations (`envzR_isHurwitz`). Build cost ≈ 4.5 min, mostly the 64-entry 
 speed-up target: closed-form Jacobian columns for unit and binary source complexes.
 
 Label: exact, idealized. Open: stability for general rates and the whole steady-state family
-(parametric certificate); dilution (Q-3); stochastic model; source's main model Fig. 2B.
+(parametric certificate); dilution (Q-3); stochastic model.
+
+## Source's main model and IDHKP–IDH (2026-11-27)
+
+**Fig. 2B, ATP cofactor** (`LeanTheory/Design/EnvZOmpRATP.lean`). Species X, XT, Xp, Y, XpY, Yp,
+XTYp; rate map `κ₁ = k₁[T]`, `κ₂ = k₋₁`, `κ₃ = k₂`, `κ₄ = k₃`, `κ₅ = k₋₃`, `κ₆ = k₄`, `κ₇ = k₅`,
+`κ₈ = k₋₅`, `κ₉ = k₆`. For all positive rates:
+
+- `atp_steady_Yp`: every positive steady state has `[Yp] = κ₃(κ₈+κ₉)/(κ₇κ₉)`
+  (`= k₂(k₋₅+k₆)/(k₅k₆)` in the source's notation). Certificate: multiplier `x_{XT}`, constant
+  cofactors `(−κ₉, −κ₉, −(κ₈+2κ₉), κ₈+κ₉, −κ₉, 0, 0)`.
+- `atpSteady`, `atp_isPosSteadyState`, `atp_hasACRNontrivial`.
+- `atp_numLinkageClasses` (3), `atp_rank` (5), `atp_deficiency` (1) — agree with the source.
+
+**Fig. 3, IDHKP–IDH** (`LeanTheory/Design/IDHKP.lean`). Species E, Ip, EIp, I, EIpI. For all
+positive rates:
+
+- `idh_steady_I`: every positive steady state has `[I] = κ₃(κ₅+κ₆)/(κ₄κ₆)`. Certificate:
+  multiplier `x_{EIp}`, cofactors `(−(κ₅+2κ₆), κ₅+κ₆, −κ₆, 0, 0)`.
+- `idhSteady`, `idh_isPosSteadyState`, `idh_hasACRNontrivial`.
+- `idh_numLinkageClasses` (2), `idh_rank` (3), `idh_deficiency` (1) — agree with the source.
+
+In all three models the certificate's multiplier is the species-free part of the two nonterminal
+nodes named by the Shinar–Feinberg theorem (`EnvZ-D`, `XT`, `EIp`), an observation that the
+general theorem (N-006) would explain. Open: class stability for Fig. 2B and IDHKP (the IDHKP
+restricted Jacobian is `3 × 3`, so a parametric Routh–Hurwitz certificate looks feasible); the
+source's remark that replacing `XT` by a separate phosphatase `Z` destroys ACR (a cheap
+adversarial check).
 
 ## Claims and evidence
 

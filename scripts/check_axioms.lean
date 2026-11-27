@@ -136,3 +136,9 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.envz_deficiency
 #print axioms LeanTheory.CRN.Design.envzR_isHurwitz
 #print axioms LeanTheory.CRN.Design.envz_classStable_unit
+#print axioms LeanTheory.CRN.Design.atp_steady_Yp
+#print axioms LeanTheory.CRN.Design.atp_hasACRNontrivial
+#print axioms LeanTheory.CRN.Design.atp_deficiency
+#print axioms LeanTheory.CRN.Design.idh_steady_I
+#print axioms LeanTheory.CRN.Design.idh_hasACRNontrivial
+#print axioms LeanTheory.CRN.Design.idh_deficiency
