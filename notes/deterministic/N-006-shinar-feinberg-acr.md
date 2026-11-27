@@ -42,6 +42,10 @@ Stability of the toy ACR network (2026-11-27): every positive steady state of `F
 `x_A = k₁/k₀`) is locally exponentially stable within its compatibility class
 (`Sanity.acrNet_classStable`), while the stochastic model goes extinct (`Sanity.acrNet_extinction`).
 
+Primary source read (2026-11-27): the theorem statement is now verbatim in the ledger (`C-SF`);
+the proof is in the SOM (§S3), still unavailable. The paper's toy example Eq. 1 is exactly our
+`F-acr` (`A + B → 2B`, `B → A`) with ACR value `b/a`, matching `Sanity.acrNet_steadyState_xA`.
+
 ## Claims and evidence
 
 | Claim | Status |

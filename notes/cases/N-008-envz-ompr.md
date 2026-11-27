@@ -12,7 +12,7 @@
 | Dependency requirement | compiled mass-action field, `HasACRNonvacuous`; either a compiled cofactor-certificate soundness theorem or a direct algebraic proof |
 | Produces | Lean model files `LeanTheory/Design/EnvZOmpR.lean`, `.../IDHKP.lean` (planned) with the exact source networks; theorems: deficiency value, existence of a positive steady state for all `k` (or the stated parameter set), ACR in the output species with explicit value |
 | Difficulty | moderate — the algebra is small; the risks are transcription errors and the existence part |
-| Status | network transcribed (secondary source); ACR at sample rates compiled; general-rate ACR, existence, class stability open |
+| Status | **verified** for all positive rates: ACR value, nontrivial ACR, positive steady-state family, deficiency 1; class stability open |
 | Implementation status | not started |
 | Implementation evidence | none |
 | Lean evidence | none |
@@ -61,6 +61,33 @@ and EnvZ-D + OmpR-P. Stated ACR value (eq. `calculation_ex`):
 (`scripts/oracles/specs/envz_ompr.json`) finds a certificate with multiplier `x_{EnvZ-D}` and value
 `c = 35/198`, equal to the source formula; Lean checks it
 (`Generated.envZOmpRGenNet_hasACR`, `LeanTheory/Certificates/Generated/EnvZOmpRGen.lean`).
+
+## Primary-source check (2026-11-27)
+
+The formalized network is **Shinar–Feinberg Fig. 2D** (ADP cofactor), checked against the primary
+source (institutional copy, git-ignored). Rate mapping: `κ₁ = k₋₉`, `κ₂ = k₉[D]`, `κ₃ = k₁[T]`,
+`κ₄ = k₋₁`, `κ₅ = k₂`, `κ₆ = k₃`, `κ₇ = k₋₃`, `κ₈ = k₄`, `κ₉ = k₇`, `κ₁₀ = k₋₇`, `κ₁₁ = k₈`.
+The paper's main model is **Fig. 2B** (ATP cofactor; third line `XT + Yp ⇌ XTYp → XT + Y`;
+9 nodes, 3 linkage classes, rank 5, δ = 1; ACR in `Yp` via `XT + Yp`, `XT`) — not yet formalized.
+The IDHKP–IDH module (Fig. 3) is now transcribable as well.
+
+## Compiled results (2026-11-27, `LeanTheory/Design/EnvZOmpR.lean`)
+
+For **all positive rate constants** (`κ_{r+1} = k r`, ADP/ATP absorbed):
+
+- `envz_field`: the mass-action ODE.
+- `envz_steady_OmpRP`: every positive steady state has
+  `[OmpR-P] = κ₁κ₃κ₅(κ₁₀+κ₁₁) / (κ₂(κ₄+κ₅)κ₉κ₁₁)` — the source's value. Certificate: polynomial
+  identity with **constant** cofactors (symbolic sympy oracle), checked by `linear_combination`.
+- `envzSteady`, `envz_isPosSteadyState`: explicit two-parameter family of positive steady states
+  (free `x_{EnvZ-D} = a`, `x_{OmpR} = b`).
+- `envz_hasACRNontrivial`: nontrivial ACR in OmpR-P.
+- `envz_numLinkageClasses` (`ℓ = 3`), `envz_rank` (`s = 6`: six independent reaction vectors, and
+  the two conservation laws bound `s ≤ 6`), `envz_deficiency` (`δ = 1`) — settles the source
+  discrepancy (`ℓ = 3`, not `2`).
+
+Label: exact, idealized. Open: stability within compatibility classes (6-dimensional restricted
+Jacobian; certificate at sample rates or a parametric argument); dilution (Q-3); stochastic model.
 
 ## Claims and evidence
 

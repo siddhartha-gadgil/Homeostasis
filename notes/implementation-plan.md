@@ -54,7 +54,9 @@ As of 2026-11-27 (seeded from the user's prompt):
   (`Design.aifNet_rpa_locallyExpStable_all`). **Class-relative stability** for conservative
   networks (`ReactionNetwork.classLocallyExpStable`): class-relative linear stability ⇒ local
   exponential stability within the compatibility class; the toy ACR network's steady states are
-  stable in their classes (`Sanity.acrNet_classStable`). The audited template library
+  stable in their classes (`Sanity.acrNet_classStable`). **EnvZ/OmpR** (N-008): nontrivial ACR in
+  OmpR-P with the source's value for all positive rates, explicit steady states, `δ = 1`
+  (`Design.envz_hasACRNontrivial`, `envz_deficiency`). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -77,7 +79,7 @@ Several goals may coexist. Goals may be independent or support other goals.
 | `G-1` | **Auditable CRN kernel.** Lean definitions of reaction networks, stoichiometric subspace, compatibility classes, linkage classes, weak reversibility, deficiency (N-001); mass-action field, steady states, conservation laws, dilution variant (N-002); homeostasis predicates ACR / infinitesimal homeostasis / RPA / approximate adaptation (N-003); CME propensities and generator (N-013). Success: all compile axiom-free; every law has the triad plus the five `U-SW` classes (N-004); a strict audit with no open kernel finding | supports G-2, G-3, G-4 | open | compiled declarations + N-004 sanity suite + audit record |
 | `G-2` | **Structural theorems, machine-checked.** At least: (a) determinant formula for infinitesimal homeostasis (N-007); (b) Shinar–Feinberg ACR theorem (N-006); (c) Deficiency Zero Theorem with local stability (N-005); stretch: persistence criteria (N-012), RPA topology (N-018). Success: each as a named compiled theorem whose hypotheses match the source statement, recorded in the ledger | supported by G-1; supports G-4 | active ((a) determinant formula done; (b), (c) open) | compiled theorems; source-fidelity check per theorem |
 | `G-3` | **Untrusted oracle + small verifier pipeline.** Exact certificate formats and Lean soundness theorems for: coefficient-sign/injectivity, ideal-membership cofactors, SOS (`LDLᵀ` over `ℚ`), Positivstellensatz refutations (N-011), validated root enclosures (template), siphon covers (N-012), Foster–Lyapunov drift and moment bounds (N-014). Success: each format has a soundness theorem, an accepted and a rejected fixture, and one end-to-end use from an external oracle on a G-4 network | supported by G-1; supports G-2 (case checks), G-4 | active (formats 1–4 compiled; cofactor oracle end-to-end) | compiled soundness theorems + fixtures + one documented oracle run per format |
-| `G-4` | **Machine-checked case studies**, separating exact idealized homeostasis from quantitative approximate bounds: EnvZ/OmpR (and IDHKP/IDH) ACR (N-008) and under dilution (N-009); 2-site / `n`-site phosphorylation (N-010); antithetic integral feedback, deterministic and stochastic-mean (N-016); stochastic extinction in ACR networks (N-015). Success: per network a compiled model transcribed from a cited source, plus compiled theorems, each labelled *exact-idealized* or *approximate-bound* with explicit parameter domain | supported by G-1, G-2, G-3 | active (antithetic motif, deterministic, done) | compiled theorems; transcription check against source; assumption ledger entries |
+| `G-4` | **Machine-checked case studies**, separating exact idealized homeostasis from quantitative approximate bounds: EnvZ/OmpR (and IDHKP/IDH) ACR (N-008) and under dilution (N-009); 2-site / `n`-site phosphorylation (N-010); antithetic integral feedback, deterministic and stochastic-mean (N-016); stochastic extinction in ACR networks (N-015). Success: per network a compiled model transcribed from a cited source, plus compiled theorems, each labelled *exact-idealized* or *approximate-bound* with explicit parameter domain | supported by G-1, G-2, G-3 | active (antithetic motif done; EnvZ/OmpR ACR done) | compiled theorems; transcription check against source; assumption ledger entries |
 
 ## 2. Question registry
 
@@ -94,7 +96,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `Q-7` | Precise quantifier structure of ACR, infinitesimal homeostasis, RPA and approximate adaptation, and the proved implication map between them; what is "the input" (rate parameter vs conserved total)? | G-1; N-003, N-007, N-009, N-018 | **answered at the equilibrium level** (2026-11-27) | ACR: fixed `k`, robustness across compatibility classes; GS/RPA: input-parametrized family `F I`; stability kept as a separate (not yet defined) contract. Implication map compiled (N-003) |
 | `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | partly answered | Generator level compiled (N-013). Finite closed state sets compiled: rate matrix, uniformized chain (laws `μ Pⁿ`), absorption theorem, finite stationarity ⇒ generator stationarity. Open: continuous-time semigroup `e^{tQ}`, infinite state spaces (non-explosion), path space |
 | `Q-9` | Forward invariance of `ℝ_{>0}^n` for mass-action trajectories and existence/blow-up of solutions — what minimal ODE infrastructure is needed? | G-1; N-002, N-012 | mostly answered | Forward invariance compiled for global and finite-horizon trajectories (`isPos`, `MassActionTrajectoryOn.isPos`); blow-up handled by the finite-horizon law (F-2). Existence of solutions (Picard–Lindelöf) not formalized |
-| `Q-10` | Source fidelity: exact hypotheses and locators of `C-DZT`, `C-SF`, `C-GS`, `C-AL`, `C-BGK`, `C-AEJ`, `C-WS`, `C-CFMW`, and exact reaction lists of the case-study networks | all G-2/G-4 notes | partly answered | EnvZ/OmpR network transcribed from open source `S-CGK19` (2026-11-27); `S-SF10` itself paywalled (HTTP 403). Other claims still need sources |
+| `Q-10` | Source fidelity: exact hypotheses and locators of `C-DZT`, `C-SF`, `C-GS`, `C-AL`, `C-BGK`, `C-AEJ`, `C-WS`, `C-CFMW`, and exact reaction lists of the case-study networks | all G-2/G-4 notes | partly answered | `S-SF10` main paper read (institutional copy, git-ignored): theorem verbatim, EnvZ–OmpR Figs. 2B/2D, IDHKP–IDH Fig. 3; N-008 model confirmed as Fig. 2D. SOM and other sources still needed |
 
 ## 3. Note registry and dependency graph
 
@@ -107,7 +109,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
 | `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; **kernel ready** (source reading still needed) | Extract a self-contained proof from the SOM |
 | `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | **verified** (`LeanTheory.Theory.Homeostasis.DeterminantFormula`) | Optional: IFT branch existence; block factorization `C-GSF` |
-| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | network **transcribed** (from `S-CGK19`); ACR at sample rates compiled | General-rate ACR (symbolic cofactor), existence of positive steady states, deficiency in Lean, class stability |
+| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`) | Class stability of the steady states; dilution |
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
@@ -209,9 +211,9 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **EnvZ/OmpR case study (N-008)** — network transcribed and ACR certified at sample rates;
-   next: ACR for general rates (symbolic cofactor, value `κ₁κ₃κ₅(κ₁₀+κ₁₁)/(κ₂(κ₄+κ₅)κ₉κ₁₁)`),
-   deficiency computed in Lean, existence of positive steady states, stability within classes.
+1. **EnvZ/OmpR stability within classes (N-008)** — restricted 6×6 Jacobian at the steady-state
+   family; certificate at sample rates first, parametric later. Also formalize the source's main
+   model (Fig. 2B, ATP cofactor) and the IDHKP–IDH module (Fig. 3) with the same tooling.
 2. **Antithetic motif with dilution** (N-009/Q-3 analogue): quantify the set-point error, now with a
    stable baseline.
 3. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
@@ -388,6 +390,15 @@ the physical model.
   and Shinar et al. 2007; a discrepancy in that source (`ℓ = 2` vs `ℓ = 3`) is recorded. The
   cofactor oracle reproduced the source's ACR value (`35/198` at sample rates) and Lean checked the
   certificate (`Generated/EnvZOmpRGen.lean`). The oracle emitter now wraps long lines.
+
+- **2026-11-27 — N-008 (work unit).** New `LeanTheory/Design/EnvZOmpR.lean`: network, ODE,
+  general-rate ACR via a constant-cofactor polynomial identity (symbolic oracle), explicit positive
+  steady states, nontrivial ACR, linkage classes (3), rank (6, via independence + conservation-law
+  kernel) and deficiency (1). Build clean, axiom audit passed for 6688 declarations.
+
+- **2026-11-27 — Primary source (Q-10).** The user supplied Shinar–Feinberg 2010 (institutional access,
+  `iisc-sources/`, added to `.gitignore`). Verified: N-008's network is Fig. 2D; theorem statement
+  recorded verbatim; Fig. 2B and Fig. 3 networks transcribed into the notes.
 
 ## 12. Implementation and workstation log
 
