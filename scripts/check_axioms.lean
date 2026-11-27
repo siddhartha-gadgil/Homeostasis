@@ -144,3 +144,6 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.idh_deficiency
 #print axioms LeanTheory.CRN.Design.idhR_isHurwitz
 #print axioms LeanTheory.CRN.Design.idh_classStable
+#print axioms LeanTheory.CRN.Design.atp_jacobian
+#print axioms LeanTheory.CRN.Design.atpR_isHurwitz
+#print axioms LeanTheory.CRN.Design.atp_classStable_unit

@@ -133,7 +133,18 @@ computed through per-reaction gradient and reaction-vector tables (`idhG`, `idhZ
 `idh_rv`): the module checks in ≈ 7 s, against ≈ 4.5 min for the entrywise EnvZ computation —
 a reusable speed-up pattern.
 
-Open: class stability for Fig. 2B and EnvZ–OmpR at general rates; the source's remark that
+**Fig. 2B class stability at unit rates (2026-11-27, `LeanTheory/Design/EnvZOmpRATPStability.lean`)**:
+the Jacobian for all rates and states (`atp_jacobian`, per-reaction tables), coordinates on `S`
+(`atpB`, `atpC`, `atp_proj`), the restricted Jacobian at unit rates and `x⋆ = (1, ½, 1, 1, ½, 2, ½)`
+(`atpR`), an integer Lyapunov matrix with exact `LDLᵀ` factors (`atpR_isHurwitz`), hence
+`atp_classStable_unit`. Module checks in ≈ 22 s.
+
+Parametric attempt (oracle): over 20 000 random rate constants (`10^{±2}`) and steady states
+(`a, b ∈ 10^{±3}`) the `5 × 5` restricted Jacobian was always Hurwitz (max normalized real part
+≈ 0⁻), but a **diagonal** Lyapunov certificate fails at 42 of 60 sampled points, and the symbolic
+characteristic polynomial is too large for a quick Routh–Hurwitz check. Barrier recorded as Q-11.
+
+Open: class stability for Fig. 2B and EnvZ–OmpR at general rates (Q-11); the source's remark that
 replacing `XT` by a separate phosphatase `Z` destroys ACR (a cheap adversarial check).
 
 ## Claims and evidence

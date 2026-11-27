@@ -178,6 +178,7 @@ footer { margin-top: 64px; padding: 28px 0 40px; border-top: 1px solid var(--lin
 <tr><td><b>Q-3</b></td><td>Sharp bounds on the loss of ACR under growth dilution (EnvZ&ndash;OmpR)</td><td>Needs a choice of synthesis model and input; dilution provably breaks antithetic adaptation</td></tr>
 <tr><td><b>Q-4</b></td><td>Which deterministic homeostatic networks keep homeostasis, or avoid extinction, at low copy numbers?</td><td>Extinction proved for the toy ACR network; stationary mean set-point proved for antithetic feedback</td></tr>
 <tr><td><b>Q-5</b></td><td>A common certificate template for siphons, toric Lyapunov functions and Foster&ndash;Lyapunov drift</td><td>Realized for polynomial certificates; siphon and drift formats to follow</td></tr>
+<tr><td><b>Q-11</b></td><td>Is every positive steady state of the EnvZ&ndash;OmpR models stable in its class, for all rates, and how to certify it?</td><td>Done for IDHKP&ndash;IDH (3&times;3); numerically true for Fig.&nbsp;2B, proved at unit rates; needs a 5&times;5 Routh&ndash;Hurwitz theorem or a parametric Lyapunov matrix</td></tr>
 <tr><td><b>Q-8</b></td><td>The stochastic process in Lean: continuous-time laws, non-explosion, stochastic persistence</td><td>Generator level and finite state spaces compiled; continuous time and infinite state spaces open</td></tr>
 <tr><td><b>Q-9</b></td><td>Minimal ODE infrastructure: forward invariance, existence, blow-up</td><td>Forward invariance and finite-horizon trajectories compiled; existence of solutions not formalized</td></tr>
 </table>
@@ -229,6 +230,7 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
 <tr><td>EnvZ&ndash;OmpR (ATP, Fig.&nbsp;2B, the source&rsquo;s main model)</td><td><code>atp_steady_Yp</code>, <code>atp_hasACRNontrivial</code>, <code>atp_deficiency</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>IDHKP&ndash;IDH core module (Fig.&nbsp;3): ACR in active IDH</td><td><code>idh_steady_I</code>, <code>idh_hasACRNontrivial</code>, <code>idh_deficiency</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>EnvZ&ndash;OmpR steady state locally exponentially stable within its compatibility class</td><td><code>envz_classStable_unit</code></td><td>unit rates</td><td class="ok">verified</td></tr>
+<tr><td>EnvZ&ndash;OmpR (ATP, Fig.&nbsp;2B) steady state locally exponentially stable within its compatibility class</td><td><code>atp_classStable_unit</code></td><td>unit rates</td><td class="ok">verified</td></tr>
 <tr><td>IDHKP&ndash;IDH: every positive steady state locally exponentially stable within its compatibility class</td><td><code>idh_classStable</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic integral feedback: robust perfect adaptation with linear stability</td><td><code>aifNet_hasRPALinear</code></td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic motif: nonlinear local exponential stability for every disturbance <i>&gamma;</i></td><td><code>aifNet_rpa_locallyExpStable</code></td><td>unit <i>&mu;, &theta;, &eta;, a</i></td><td class="ok">verified</td></tr>
@@ -252,7 +254,7 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
 
 <h2>Next steps</h2>
 <div class="cards">
-  <div class="card"><span class="status open">next</span><h3>Class stability for all case studies</h3><p>Done for IDHKP&ndash;IDH at all rates. Next: the ATP model and EnvZ&ndash;OmpR at general rates (5&times;5 and 6&times;6 restricted Jacobians).</p></div>
+  <div class="card"><span class="status open">Q-11</span><h3>Class stability for all case studies</h3><p>Done for IDHKP&ndash;IDH at all rates; EnvZ&ndash;OmpR (both models) at unit rates. General rates need a 5&times;5 Routh&ndash;Hurwitz theorem in Lean or a parametric Lyapunov matrix.</p></div>
   <div class="card"><span class="status open">G-2</span><h3>General theorems</h3><p>The Shinar&ndash;Feinberg theorem (in every case study, the certificate&rsquo;s multiplier is the common part of the two nonterminal complexes it names) and the Deficiency Zero Theorem.</p></div>
   <div class="card"><span class="status open">Q-2</span><h3>Multisite phosphorylation</h3><p>Multistationarity witnesses and monostability certificates for 2-site and <i>n</i>-site systems.</p></div>
   <div class="card"><span class="status open">Q-3, Q-4, Q-8</span><h3>Dilution and noise</h3><p>Quantitative loss of robustness under dilution; continuous-time stochastic laws and persistence at low copy numbers.</p></div>
@@ -289,7 +291,7 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
         D("ok", "theorem envz_classStable_unit :   -- stability within the compatibility class\n    ∃ δ > 0, ∃ c > 0, ∃ K > 0, ∀ x T, envzNet.MassActionTrajectoryOn (fun _ => 1) x T →\n      x 0 - envzXs ∈ envzNet.stoichSubspace → ‖x 0 - envzXs‖ < δ →\n        ∀ t ∈ Ico 0 T, ‖x t - envzXs‖ ^ 2 ≤ K * Real.exp (-c * t) * ‖x 0 - envzXs‖ ^ 2")] },
     { id: "atp", name: "EnvZ–OmpR (ATP)", scene: "atp",
       text: "The source's main model, Fig. 2B: ATP is the dephosphorylation cofactor. Nine complexes, three linkage classes, rank 5, deficiency one; the certificate multiplies by x_XT, the common part of the nonterminal complexes XT + Yp and XT.",
-      lean: [D("ok", "theorem atp_steady_Yp {k : Fin 9 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 7 → ℝ}\n    (hx : atpNet.IsPosSteadyState k x) : x 5 = atpACRValue k\n\n-- atpACRValue k = k 2 * (k 7 + k 8) / (k 6 * k 8)\n\ntheorem atp_deficiency : atpNet.deficiency = 1"),
+      lean: [D("ok", "theorem atp_steady_Yp {k : Fin 9 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 7 → ℝ}\n    (hx : atpNet.IsPosSteadyState k x) : x 5 = atpACRValue k\n\n-- atpACRValue k = k 2 * (k 7 + k 8) / (k 6 * k 8)\n\ntheorem atp_deficiency : atpNet.deficiency = 1\ntheorem atp_classStable_unit : …   -- stable within its class at unit rates"),
         D("def", "-- the whole proof of ACR, after reading off the steady-state equations e₀ … e₄:\nhave key : x 1 * (k 6 * k 8 * x 5 - k 2 * (k 7 + k 8)) = 0 := by\n  linear_combination (-k 8) * e0 + (-k 8) * e1 + (-(k 7 + 2 * k 8)) * e2\n    + (k 7 + k 8) * e3 + (-k 8) * e4")] },
     { id: "idh", name: "IDHKP–IDH", scene: "idh",
       text: "Shinar–Feinberg Fig. 3, the core of the glyoxylate-bypass switch: a bifunctional kinase–phosphatase E acting on IDH. Six complexes, two linkage classes, rank 3, deficiency one; ACR in the active enzyme I, and every positive steady state is stable within its compatibility class, for all rates (a symbolic Routh–Hurwitz certificate).",

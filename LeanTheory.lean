@@ -58,6 +58,7 @@ public import LeanTheory.Design.AntitheticMotif
 public import LeanTheory.Design.AntitheticStability
 public import LeanTheory.Design.EnvZOmpR
 public import LeanTheory.Design.EnvZOmpRATP
+public import LeanTheory.Design.EnvZOmpRATPStability
 public import LeanTheory.Design.EnvZStability
 public import LeanTheory.Design.IDHKP
 public import LeanTheory.Design.IDHKPStability

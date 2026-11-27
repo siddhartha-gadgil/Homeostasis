@@ -98,6 +98,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | partly answered | Generator level compiled (N-013). Finite closed state sets compiled: rate matrix, uniformized chain (laws `μ Pⁿ`), absorption theorem, finite stationarity ⇒ generator stationarity. Open: continuous-time semigroup `e^{tQ}`, infinite state spaces (non-explosion), path space |
 | `Q-9` | Forward invariance of `ℝ_{>0}^n` for mass-action trajectories and existence/blow-up of solutions — what minimal ODE infrastructure is needed? | G-1; N-002, N-012 | mostly answered | Forward invariance compiled for global and finite-horizon trajectories (`isPos`, `MassActionTrajectoryOn.isPos`); blow-up handled by the finite-horizon law (F-2). Existence of solutions (Picard–Lindelöf) not formalized |
 | `Q-10` | Source fidelity: exact hypotheses and locators of `C-DZT`, `C-SF`, `C-GS`, `C-AL`, `C-BGK`, `C-AEJ`, `C-WS`, `C-CFMW`, and exact reaction lists of the case-study networks | all G-2/G-4 notes | partly answered | `S-SF10` main paper read (institutional copy, git-ignored): theorem verbatim, EnvZ–OmpR Figs. 2B/2D, IDHKP–IDH Fig. 3; N-008 model confirmed as Fig. 2D. SOM and other sources still needed |
+| `Q-11` | Parametric local stability for the source's larger models: is the restricted Jacobian of EnvZ–OmpR (Figs. 2B, 2D; `5 × 5`, `6 × 6`) Hurwitz at every positive steady state for all rates, and how to certify it in Lean? | N-008, G-4; N-010 | open | Numerically always Hurwitz (Fig. 2B, 20 000 samples); no diagonal Lyapunov certificate. Routes: a general Routh–Hurwitz / Liénard–Chipart theorem in Lean, a parametric (polynomial) Lyapunov matrix, or a structural argument (piecewise-linear Lyapunov functions in reaction coordinates). IDHKP–IDH (`3 × 3`) done |
 
 ## 3. Note registry and dependency graph
 
@@ -110,7 +111,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
 | `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; **kernel ready** (source reading still needed) | Extract a self-contained proof from the SOM |
 | `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | **verified** (`LeanTheory.Theory.Homeostasis.DeterminantFormula`) | Optional: IFT branch existence; block factorization `C-GSF` |
-| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates; Fig. 2B ATP model and IDHKP–IDH Fig. 3 likewise verified, `δ = 1`; IDHKP–IDH class stability for all rates and all positive steady states) | Parametric class stability (EnvZ, ATP); phosphatase-variant counterexample; dilution |
+| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates; Fig. 2B ATP model and IDHKP–IDH Fig. 3 likewise verified, `δ = 1`; IDHKP–IDH class stability for all rates and all positive steady states; Fig. 2B class stability at unit rates) | Parametric class stability (Q-11); phosphatase-variant counterexample; dilution |
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
@@ -212,9 +213,10 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **Class stability for the source's models** — Fig. 2B (restricted Jacobian `5 × 5`), parametric
-   EnvZ–OmpR; use the per-reaction gradient pattern of `Design/IDHKPStability` for fast Jacobians.
-   Adversarial check: the phosphatase variant of Fig. 2B loses ACR (source's remark).
+1. **Q-11, parametric stability of the larger models** — a general Routh–Hurwitz (or Liénard–Chipart)
+   theorem in Lean would settle Fig. 2B and Fig. 2D for all rates; alternatively a parametric
+   Lyapunov matrix. Adversarial check: the phosphatase variant of Fig. 2B loses ACR (source's
+   remark).
 2. **Antithetic motif with dilution** (N-009/Q-3 analogue): quantify the set-point error, now with a
    stable baseline.
 3. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
@@ -423,6 +425,13 @@ the physical model.
   state, local exponential stability within the compatibility class (`idh_classStable`), via a
   symbolic Routh–Hurwitz certificate (`idhR_isHurwitz`). Fast Jacobian via per-reaction tables
   (≈ 7 s). Build clean, axiom audit passed for 6824 declarations.
+
+- **2026-11-27 — Fig. 2B class stability (work unit, N-008).** New
+  `LeanTheory/Design/EnvZOmpRATPStability.lean`: Jacobian for all rates and states via
+  per-reaction tables, `atp_classStable_unit` via an integer Lyapunov certificate with exact `LDLᵀ`
+  factors. Parametric version recorded as Q-11 with numerical evidence. Site and slides reframed
+  around the research program (goals, open questions) at the user's request. Build clean, axiom
+  audit passed for 6876 declarations.
 
 ## 12. Implementation and workstation log
 
