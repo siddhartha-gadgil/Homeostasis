@@ -10,13 +10,13 @@
 | Addresses | `G-2`, `G-4` (supports case studies with `δ = 0` subnetworks) |
 | Depends on | `N-001`, `N-002` (compiled); `N-004` fixtures `F-iso`, `F-bd` |
 | Dependency requirement | deficiency, weak reversibility, compatibility classes, mass-action field compiled and audited |
-| Produces | `LeanTheory/Theory/CRN/ComplexBalanced.lean`, `.../DeficiencyZero.lean` (planned) |
+| Produces | `LeanTheory/Theory/CRN/DeficiencyZero.lean`, `LeanTheory/Sanity/CRNDeficiencyZero.lean` |
 | Difficulty | hard — part (b) needs existence of a complex-balanced equilibrium for every `k` (a Birch-type / strictly convex minimization argument) and part (a) the uniqueness-per-class argument; both are substantial but classical |
-| Status | stated |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
+| Status | **verified except existence** (2026-11-27): parts (i)–(iv) compiled; Birch existence open |
+| Implementation status | partial (existence of a positive steady state in every class not formalized) |
+| Implementation evidence | `Theory/CRN/DeficiencyZero.lean`, `Sanity/CRNDeficiencyZero.lean` |
+| Lean evidence | `not_isPosSteadyState_of_deficiency_zero`, `isWeaklyReversible_of_deficiency_zero`, `isComplexBalanced_of_deficiency_zero`, `eq_of_deficiency_zero`, `isLinearlyStable_of_deficiency_zero`, `classLocallyExpStable_of_deficiency_zero`; general `exists_coordinates` |
+| Audit evidence | axiom audit passed (7301 declarations); sanity triad in `Sanity/CRNDeficiencyZero` |
 | Last updated | 2026-11-27 — seeded |
 
 ## Purpose and scope
@@ -65,3 +65,32 @@ Mathlib has no matrix-tree theorem — check TauCeti).
 
 Feeds N-006 (deficiency-one arguments reuse the Laplacian machinery), N-013 (product-form
 stationary distributions for complex-balanced CMEs), N-017.
+
+## Compiled results (2026-11-27)
+
+`LeanTheory/Theory/CRN/DeficiencyZero.lean`, for every network of deficiency zero and all
+positive rate constants:
+
+- (i) `not_isPosSteadyState_of_deficiency_zero`: not weakly reversible ⇒ no positive steady state.
+  Proof: `δ = 0` ⇒ `dim(Im ∂ ∩ ker Y) = 0` (N-006's `finrank_edgeSpan_inf_ker_le`) ⇒ `A_kψ(x) = 0`;
+  the kernel lemma makes `ψ(x)` vanish on nonterminal complexes, impossible for `x > 0`; so all
+  complexes are terminal, i.e. the network is weakly reversible.
+- (ii) `isComplexBalanced_of_deficiency_zero` (`IsComplexBalanced k x := A_kψ(x) = 0`).
+- (iii) `eq_of_deficiency_zero`: at most one positive steady state per compatibility class, via the
+  Horn–Jackson argument `reactionVector_dot_log_eq_zero` (`ln x − ln x*` ⊥ `S` for any positive
+  steady state `x` and complex-balanced `x*`), using `e^a(b − a) ≤ e^b − e^a`.
+- (iv) `isLinearlyStable_of_deficiency_zero`, `classLocallyExpStable_of_deficiency_zero`: the
+  quadratic form `Σ_i (u_i/x_i)(Ju)_i = −½ Σ_r k_r x^{y_r}⟨ζ_r, u/x⟩²` (`quadForm_eq`, complex
+  balance applied to `c ↦ ⟨c, u/x⟩²`) is negative on `S \ {0}`, so `J` is Hurwitz on `S`
+  (`isHurwitzOn_of_isComplexBalanced`, for every positive complex-balanced state), and local
+  exponential stability within the class follows. `exists_coordinates` supplies coordinates on
+  any subspace, so the stability theorem has no extra hypotheses.
+
+Sanity (`Sanity/CRNDeficiencyZero.lean`): `A → B` has no positive steady state (degenerate case,
+from (i)); `A ⇌ B` uniqueness and stability (instance); the toy ACR network (`δ = 1`) has no
+complex-balanced positive state, so (ii) needs `δ = 0`.
+
+Open: **existence** of a positive steady state in every positive class (Birch's theorem: minimize
+the strictly convex `Σ x_i(ln x_i − ln x*_i − 1)` over the class; also needs one complex-balanced
+state, i.e. the matrix-tree theorem or a Perron–Frobenius argument on each linkage class), and the
+absence of periodic orbits. Global stability remains `C-GAC` (N-017).

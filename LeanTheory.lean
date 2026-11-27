@@ -78,6 +78,7 @@ public import LeanTheory.ResponseExt
 public import LeanTheory.Sanity.CRNBlowUp
 public import LeanTheory.Sanity.CRNCME
 public import LeanTheory.Sanity.CRNClassStability
+public import LeanTheory.Sanity.CRNDeficiencyZero
 public import LeanTheory.Sanity.CRNExtinction
 public import LeanTheory.Sanity.CRNHomeostasis
 public import LeanTheory.Sanity.CRNMassAction
@@ -95,6 +96,7 @@ public import LeanTheory.Theory.CRN.AntitheticFeedback
 public import LeanTheory.Theory.CRN.ClassStability
 public import LeanTheory.Theory.CRN.ConverseLyapunov
 public import LeanTheory.Theory.CRN.ConverseLyapunovPD
+public import LeanTheory.Theory.CRN.DeficiencyZero
 public import LeanTheory.Theory.CRN.FiniteCME
 public import LeanTheory.Theory.CRN.FosterLyapunov
 public import LeanTheory.Theory.CRN.Linearization

@@ -173,3 +173,13 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.atp_hasACR_SF
 #print axioms LeanTheory.CRN.Design.envz_hasACR_SF
 #print axioms LeanTheory.CRN.Design.idh_hasACR_SF
+#print axioms LeanTheory.CRN.exists_coordinates
+#print axioms LeanTheory.CRN.ReactionNetwork.isComplexBalanced_of_deficiency_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.not_isPosSteadyState_of_deficiency_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.reactionVector_dot_log_eq_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.eq_of_deficiency_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.isHurwitzOn_of_isComplexBalanced
+#print axioms LeanTheory.CRN.ReactionNetwork.classLocallyExpStable_of_deficiency_zero
+#print axioms LeanTheory.CRN.Sanity.abNet_no_posSteadyState_dz
+#print axioms LeanTheory.CRN.Sanity.isoNet_classStable_dz
+#print axioms LeanTheory.CRN.Sanity.acrNet_not_isComplexBalanced
