@@ -94,3 +94,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.Sanity.acrNet_hasACR_cert
 #print axioms LeanTheory.CRN.Generated.acrToyGenNet_hasACR
 #print axioms LeanTheory.CRN.Generated.aifGenNet_hasACR
+#print axioms LeanTheory.CRN.ReactionNetwork.stationary_moment_le
+#print axioms LeanTheory.CRN.ReactionNetwork.hasDrift_of_cert
+#print axioms LeanTheory.CRN.Sanity.bd_poisson_attains_bound
+#print axioms LeanTheory.CRN.Sanity.bd_second_moment_le

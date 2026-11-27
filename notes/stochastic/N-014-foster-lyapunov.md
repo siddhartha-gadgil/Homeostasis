@@ -10,14 +10,14 @@
 | Addresses | `G-3`, `Q-4`, `Q-5`, `Q-8` |
 | Depends on | `N-013` (compiled generator), `N-011` (polynomial certificate checkers) |
 | Dependency requirement | compiled `generator`; compiled coefficient-sign / SOS checker with soundness |
-| Produces | (a) a checker: for polynomial `V` (e.g. linear `w · x` or quadratic), certify the polynomial inequality `𝒜V(x) + cV(x) − b ≤ 0` on `ℤ_{≥0}^n` (or outside a finite box) — note it is a statement on the lattice, which can be weaker than on `ℝ_{≥0}^n`; (b) the consequences: moment bounds `E_π V ≤ b/c` for any generator-stationary `π` with suitable integrability (pure algebra); (c) non-explosion / positive recurrence of the process (needs the process layer) |
+| Produces | `LeanTheory/Theory/CRN/FosterLyapunov.lean`, `LeanTheory/Sanity/FosterLyapunov.lean` |
 | Difficulty | (a), (b) moderate; (c) hard — requires CTMC theory not present in the libraries |
-| Status | stated |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Status | (a), (b) verified (drift certificate, moment bound); (c) process-level consequences open (Q-8) |
+| Implementation status | generator-level part complete |
+| Implementation evidence | modules above, in `lake build` |
+| Lean evidence | `ReactionNetwork.HasDrift`, `stationary_moment_le`, `hasDrift_of_cert` (format 5); sanity `Sanity.bd_generator_lin`, `bd_generator_sq`, `bd_drift_lin`, `bd_drift_sq` (SOS-certified), `bd_not_drift_zero`, `hasSum_poisson_mean`, `bd_poisson_genStationary`, `bd_poisson_attains_bound`, `bd_second_moment_le` |
+| Audit evidence | strict audit 2026-11-27 (implementation plan §4); one vacuous-looking statement replaced (F-7) |
+| Last updated | 2026-11-27 — drift certificates and moment bounds compiled |
 
 ## Purpose and scope
 
@@ -31,11 +31,26 @@ on moments; an SDP oracle finds bounds, and the certificate is a polynomial iden
 positivity certificate — format (iii) of N-011 — valid **for every** generator-stationary
 distribution with finite moments of the relevant degree (state that integrability hypothesis).
 
+## Compiled results (2026-11-27)
+
+- `HasDrift N κ V c b`: `𝒜V(x) ≤ −c V(x) + b` at every state (no exceptional set; `b` absorbs it).
+- `stationary_moment_le`: for `c > 0`, every `π ≥ 0` with mass 1, finite `V`-moment `m` and
+  generator-stationarity for `V` has `m ≤ b/c`.
+- Certificate format 5 `hasDrift_of_cert`: `−cV + b − 𝒜V = SOS + nonnegative-coefficient
+  polynomial` (identity by `ring`) ⇒ drift.
+- `∅ ⇌ A`: exact `𝒜 n`, `𝒜 n²` (boundary `n = 0` included); linear drift with equality;
+  quadratic drift certified by `(n − 3/2)²` (`κ = (1,1)`), giving `E[n²] ≤ 13/4` for every admissible
+  stationary law (Poisson(1) has `E[n²] = 2`); a false drift rejected at `n = 0`; the Poisson law
+  satisfies every hypothesis of the moment bound with mean equal to the bound (sharpness).
+
+Open: drift outside a finite exceptional set; process-level consequences (non-explosion,
+positive recurrence, existence of stationary laws) — Q-8; SDP oracle for drift certificates.
+
 ## Claims and evidence
 
 | Claim | Status |
 | --- | --- |
-| (b) `E_π V ≤ b/c` from `π(𝒜V) = 0` and the drift inequality | complete elementary argument given integrability; not formalized |
+| (b) `E_π V ≤ b/c` from `π(𝒜V) = 0` and the drift inequality | **compiled** `stationary_moment_le` |
 | (c) | sourced classical theory; source to be supplied |
 
 ## Difficulty, barriers and readiness

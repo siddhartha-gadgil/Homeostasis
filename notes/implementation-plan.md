@@ -34,7 +34,9 @@ As of 2026-11-27 (seeded from the user's prompt):
   homeostasis ⇔ `det H = 0` (`Homeostasis.infinitesimalHomeostasis_iff_det`), also for mass-action
   networks. Certificate pipeline (G-3, N-011): four polynomial certificate formats with
   soundness and accepted/rejected fixtures; cofactor certificates ⇒ ACR; an untrusted sympy oracle
-  emitting Lean (`scripts/oracles/crn_cofactor.py`, two generated certificates checked). The audited template library
+  emitting Lean (`scripts/oracles/crn_cofactor.py`, two generated certificates checked).
+  Stochastic certificates (N-014): Foster–Lyapunov drift `𝒜V ≤ −cV + b` ⇒ stationary moment bound
+  `E_π V ≤ b/c`; SOS-certified drift; sharp on the Poisson law of `∅ ⇌ A`. The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -44,7 +46,7 @@ As of 2026-11-27 (seeded from the user's prompt):
 - **Main barriers:** kernel representation choices (Q-6) gate almost everything; no
   continuous-time Markov chain theory in Mathlib/TauCeti (Q-8); the dilution question (Q-3) is
   ill-posed until an input and a synthesis model are chosen (correction X-10).
-- **Ready now:** N-014 (Foster–Lyapunov drift certificates), N-019 exploration, finite-state CTMC absorption (N-015, Q-8), N-008 once the source network is transcribed, N-009 once the dilution model is chosen (X-10) (determinant formula, Mathlib-only), N-011
+- **Ready now:** N-019 exploration, finite-state CTMC absorption (N-015, Q-8), N-008 once the source network is transcribed, N-009 once the dilution model is chosen (X-10) (determinant formula, Mathlib-only), N-011
   formats 1–2 (polynomial certificate checkers, template-only), and source-reading tasks for
   N-006/N-008/N-015 when the user supplies PDFs.
 
@@ -93,7 +95,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
 | `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | exploratory; blocked | Approve siphon source; design minimal-siphon cover certificate |
 | `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | **verified** (algebraic layer: `LeanTheory.Kernel.CME`) | Prove `IsStationaryDistribution ⇒ IsGenStationaryFor` for finite support; process layer (Q-8) |
-| `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | stated; **ready** (drift checker + moment bound) | Drift checker; moment bound from generator stationarity |
+| `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | **verified** at generator level (drift certificate, moment bound) | Process-level consequences (Q-8); drift oracle | Drift checker; moment bound from generator stationarity |
 | `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | combinatorial part **verified** for `F-acr`; source reading ready | Finite-state absorption theorem (Q-8); read `S-AEJ14` |
 | `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | **verified** (deterministic; stochastic mean at generator level) | Quantify dilution error (Q-3); stability | Formalize after N-002/N-013 |
 | `N-017` | [deterministic/N-017-global-stability](deterministic/N-017-global-stability.md) | G-2, Q-2, Q-5 | N-005, N-012 | research | exploratory; blocked | Check publication status of `S-CRA15` |
@@ -128,11 +130,11 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
-| Open findings | `F-5` (resolved, N-013): the pointwise stationary CME accepts `π = 0` → `IsStationaryDistribution` (nonnegative, mass 1), regression `isStationary_zero`. `F-6` (resolved, hygiene): 32 CRN declarations lacked docstrings → added. `F-3` (resolved, N-003): ACR holds trivially when the positive steady state is unique (`bdNet_hasACRNonvacuous`) → added `HasACRNontrivial`; headline ACR claims must use it. `F-4` (resolved, N-003): perfect adaptation over an empty input set was vacuous → `U.Nonempty` added to `HasPerfectAdaptation`, regression `not_hasPerfectAdaptation_empty`. `F-2` (low, N-002): `MassActionTrajectory` presupposes a solution on all of `[0, ∞)`; for networks that blow up in finite time every statement about trajectories is vacuous. Add a finite-horizon variant before such case studies. Non-vacuity shown for `A ⇌ B` (`isoTraj_trajectory`). Earlier: Info: (i) `amplitude_bound` is trivially true at `k = 0` (gives `0 ≤ 2E`); acceptable, scope noted. (ii) `theory_loop.lean`/`theory_server.lean` import `LeanTheory.Elaborate` at top level and load full `LeanTheory` via `importModules`; `LeanTheoryMeta` reaches them through `LeanTheory` — consistent with the template convention. (iii) Inherited Theory tracks (Fields, KAM, Stability) are unrelated to homeostasis; keep or prune when the domain is seeded |
+| Open findings | `F-7` (resolved, N-014): a sanity theorem had the trivially true statement `κ₀/κ₁ ≤ κ₀/κ₁`; replaced by `bd_poisson_attains_bound`, which states the hypotheses and the attained mean. `F-5` (resolved, N-013): the pointwise stationary CME accepts `π = 0` → `IsStationaryDistribution` (nonnegative, mass 1), regression `isStationary_zero`. `F-6` (resolved, hygiene): 32 CRN declarations lacked docstrings → added. `F-3` (resolved, N-003): ACR holds trivially when the positive steady state is unique (`bdNet_hasACRNonvacuous`) → added `HasACRNontrivial`; headline ACR claims must use it. `F-4` (resolved, N-003): perfect adaptation over an empty input set was vacuous → `U.Nonempty` added to `HasPerfectAdaptation`, regression `not_hasPerfectAdaptation_empty`. `F-2` (low, N-002): `MassActionTrajectory` presupposes a solution on all of `[0, ∞)`; for networks that blow up in finite time every statement about trajectories is vacuous. Add a finite-horizon variant before such case studies. Non-vacuity shown for `A ⇌ B` (`isoTraj_trajectory`). Earlier: Info: (i) `amplitude_bound` is trivially true at `k = 0` (gives `0 ≤ 2E`); acceptable, scope noted. (ii) `theory_loop.lean`/`theory_server.lean` import `LeanTheory.Elaborate` at top level and load full `LeanTheory` via `importModules`; `LeanTheoryMeta` reaches them through `LeanTheory` — consistent with the template convention. (iii) Inherited Theory tracks (Fields, KAM, Stability) are unrelated to homeostasis; keep or prune when the domain is seeded |
 | Missing sanity checks | CRN network kernel: special (`isoNet`, `bdNet`), degenerate (`emptyNet`), corner (zero complex; nonvanishing reaction vectors), symmetry (species relabelling), negative cases for weak reversibility/terminality (`abNet`, `acrNet`) — done; complex relabelling invariance and a deficiency-two fixture still to add. Example law has the triad (`free_velocity_const`, `instOscillatorLawCos`, `not_oscillatorLaw_exp`) plus risk-specific checks (time-shift, linearity in `Bridge/Example`; accepted/rejected certificate fixtures). Every future homeostasis law will need its own triad and adversarial checks |
 
 Previous code is in scope. A full startup audit inventories and red-teams every kernel declaration,
@@ -189,16 +191,15 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **N-014** — Foster–Lyapunov drift certificates and moment bounds on the CME generator (uses
-   N-011 formats on the lattice); the stochastic half of G-3.
+1. **Finite-state CTMC layer** (Q-8, N-015) — the main remaining gap on the stochastic side:
+   absorption a.s. for conservative networks, and `IsStationaryDistribution ⇒ IsGenStationaryFor`
+   for finitely supported laws.
 2. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
    N-007, block factorization), Anderson–Enciso–Johnston (N-015). Needs the PDFs or permission to
    fetch them.
-3. **Finite-state CTMC absorption** (Q-8, N-015) — turns the compiled extinction combinatorics into
-   an almost-sure statement for conservative networks.
-4. **N-009 / Q-3 model choice** — a user decision (synthesis model and input); cheap, and it turns
+3. **N-009 / Q-3 model choice** — a user decision (synthesis model and input); cheap, and it turns
    an ill-posed question into a precise one.
-5. **N-002 finite-horizon trajectories / N-003 stability contract** — close finding F-2 and give
+4. **N-002 finite-horizon trajectories / N-003 stability contract** — close finding F-2 and give
    RPA its stability half.
 
 ## 8. Running a work unit
@@ -295,6 +296,12 @@ the physical model.
   positive combination ⇒ no positive steady state), `LeanTheory/Sanity/PolyCert.lean` (accepted and
   rejected fixture per format), oracle `scripts/oracles/crn_cofactor.py` with specs and two generated,
   Lean-checked certificates. Build clean, axiom audit passed for 6361 declarations. G-3 active.
+
+- **2026-11-27 — N-014 (work unit).** New `LeanTheory/Theory/CRN/FosterLyapunov.lean` (drift
+  predicate, stationary moment bound, drift certificate format 5) and
+  `LeanTheory/Sanity/FosterLyapunov.lean` (`∅ ⇌ A`: exact generators of `n`, `n²`; linear and
+  SOS-certified quadratic drifts; rejected drift; Poisson mean and generator stationarity; sharpness;
+  second-moment envelope). Finding F-7 fixed. Build clean, axiom audit passed for 6383 declarations.
 
 ## 12. Implementation and workstation log
 

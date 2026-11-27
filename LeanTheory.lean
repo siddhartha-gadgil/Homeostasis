@@ -65,12 +65,14 @@ public import LeanTheory.Sanity.CRNMassAction
 public import LeanTheory.Sanity.CRNNetwork
 public import LeanTheory.Sanity.DeterminantFormula
 public import LeanTheory.Sanity.Example
+public import LeanTheory.Sanity.FosterLyapunov
 public import LeanTheory.Sanity.PolyCert
 public import LeanTheory.Sanity.QuasisymmetryNotSymmetry
 public import LeanTheory.SubsetSum
 public import LeanTheory.TaskHandlers
 public import LeanTheory.Theory.CRN.AntitheticCME
 public import LeanTheory.Theory.CRN.AntitheticFeedback
+public import LeanTheory.Theory.CRN.FosterLyapunov
 public import LeanTheory.Theory.Fields.FieldLineExistence
 public import LeanTheory.Theory.Homeostasis.DeterminantFormula
 public import LeanTheory.Theory.Fields.InvariantBarrier
