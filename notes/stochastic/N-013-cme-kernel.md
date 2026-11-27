@@ -52,8 +52,11 @@ differ (falling factorials vs powers; volume scaling `κ_r = k_r / V^{|y_r| − 
 - Sanity: Poisson(`κ₀/κ₁`) is a stationary distribution of `∅ ⇌ A`; `F-acr` absorbing boundary
   `{x_B = 0}` reached from every state; conservation level sets of `A ⇌ B` closed.
 
-Open: the link `IsStationaryDistribution` ⇒ `IsGenStationaryFor` (sum exchange; true for finitely
-supported `π` and bounded `g`, needs integrability in general); the process layer (Q-8).
+Process layer, finite case (2026-11-27, `Theory/CRN/FiniteCME.lean`): generator matrix on a finite
+closed state set, uniformized chain, absorption theorem; a law on `S` with `πQ = 0` is
+generator-stationary for every test function (`isGenStationaryFor_of_vecMul_eq_zero`). Open: link
+`IsStationary` (pointwise master equation) ⇔ `πQ = 0` on `S`; continuous-time semigroup; infinite
+state spaces (non-explosion).
 
 ## Claims and evidence
 

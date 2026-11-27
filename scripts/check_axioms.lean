@@ -98,3 +98,8 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.hasDrift_of_cert
 #print axioms LeanTheory.CRN.Sanity.bd_poisson_attains_bound
 #print axioms LeanTheory.CRN.Sanity.bd_second_moment_le
+#print axioms LeanTheory.Markov.tendsto_outMass
+#print axioms LeanTheory.Markov.isStochastic_uniformize
+#print axioms LeanTheory.CRN.ReactionNetwork.tendsto_outMass_cme
+#print axioms LeanTheory.CRN.ReactionNetwork.isGenStationaryFor_of_vecMul_eq_zero
+#print axioms LeanTheory.CRN.Sanity.acrNet_extinction

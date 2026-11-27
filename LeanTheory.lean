@@ -60,6 +60,7 @@ public import LeanTheory.Kernel.MassAction
 public import LeanTheory.Kernel.Network
 public import LeanTheory.ResponseExt
 public import LeanTheory.Sanity.CRNCME
+public import LeanTheory.Sanity.CRNExtinction
 public import LeanTheory.Sanity.CRNHomeostasis
 public import LeanTheory.Sanity.CRNMassAction
 public import LeanTheory.Sanity.CRNNetwork
@@ -72,6 +73,7 @@ public import LeanTheory.SubsetSum
 public import LeanTheory.TaskHandlers
 public import LeanTheory.Theory.CRN.AntitheticCME
 public import LeanTheory.Theory.CRN.AntitheticFeedback
+public import LeanTheory.Theory.CRN.FiniteCME
 public import LeanTheory.Theory.CRN.FosterLyapunov
 public import LeanTheory.Theory.Fields.FieldLineExistence
 public import LeanTheory.Theory.Homeostasis.DeterminantFormula
@@ -102,6 +104,7 @@ public import LeanTheory.Theory.KAM.StripPaleyWiener
 public import LeanTheory.Theory.KAM.StripSmooth
 public import LeanTheory.Theory.KAM.TorusFieldAna
 public import LeanTheory.Theory.KAM.WeightedEll1Z2
+public import LeanTheory.Theory.Markov.FiniteChain
 public import LeanTheory.Theory.Stability.AbstractEnergy
 public import LeanTheory.Theory.Stability.BlockBounds
 public import LeanTheory.Theory.Stability.Newcomb

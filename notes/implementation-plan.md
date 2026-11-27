@@ -36,7 +36,9 @@ As of 2026-11-27 (seeded from the user's prompt):
   soundness and accepted/rejected fixtures; cofactor certificates ⇒ ACR; an untrusted sympy oracle
   emitting Lean (`scripts/oracles/crn_cofactor.py`, two generated certificates checked).
   Stochastic certificates (N-014): Foster–Lyapunov drift `𝒜V ≤ −cV + b` ⇒ stationary moment bound
-  `E_π V ≤ b/c`; SOS-certified drift; sharp on the Poisson law of `∅ ⇌ A`. The audited template library
+  `E_π V ≤ b/c`; SOS-certified drift; sharp on the Poisson law of `∅ ⇌ A`. Finite-state Markov
+  layer (Q-8): uniformization, absorption theorem, and **stochastic extinction of the toy ACR
+  network** on every level set (`Sanity.acrNet_extinction`, discrete-time uniformized chain). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -74,7 +76,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `Q-5` | How to unify siphon analysis, toric Lyapunov functions and Foster–Lyapunov drift into reusable Lean certificate templates? | G-3; N-011, N-012, N-014, N-017 | active | Common shape realized for polynomial formats (N-011): exact rational data + identity checked by `ring` + one soundness theorem + bridge to a CRN statement + oracle emitting Lean. Siphon and drift formats still to follow it |
 | `Q-6` | Kernel representation: how are species, complexes and reactions encoded (types vs finsets; self-loops; duplicate reactions; isolated complexes), and how are concrete deficiencies computed without `decide`? | G-1; N-001, N-002, N-013 and everything downstream | **answered** (2026-11-27) | Type-parametrized `ReactionNetwork ι C R`; no self-loops or isolated complexes; duplicates allowed; labelling certificate for `ℓ`, multiples lemma for rank 1 (general rank certificate open). See N-001 |
 | `Q-7` | Precise quantifier structure of ACR, infinitesimal homeostasis, RPA and approximate adaptation, and the proved implication map between them; what is "the input" (rate parameter vs conserved total)? | G-1; N-003, N-007, N-009, N-018 | **answered at the equilibrium level** (2026-11-27) | ACR: fixed `k`, robustness across compatibility classes; GS/RPA: input-parametrized family `F I`; stability kept as a separate (not yet defined) contract. Implication map compiled (N-003) |
-| `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | partly answered | Generator-level layer compiled (N-013): pointwise master equation, stationary distributions, integrability-explicit generator stationarity. Process layer (finite state spaces first) still open |
+| `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | partly answered | Generator level compiled (N-013). Finite closed state sets compiled: rate matrix, uniformized chain (laws `μ Pⁿ`), absorption theorem, finite stationarity ⇒ generator stationarity. Open: continuous-time semigroup `e^{tQ}`, infinite state spaces (non-explosion), path space |
 | `Q-9` | Forward invariance of `ℝ_{>0}^n` for mass-action trajectories and existence/blow-up of solutions — what minimal ODE infrastructure is needed? | G-1; N-002, N-012 | partly answered | Forward invariance compiled (`MassActionTrajectory.isPos`, needs `k ≥ 0`). Existence and blow-up not addressed; the trajectory law presupposes a global solution (finding F-2) |
 | `Q-10` | Source fidelity: exact hypotheses and locators of `C-DZT`, `C-SF`, `C-GS`, `C-AL`, `C-BGK`, `C-AEJ`, `C-WS`, `C-CFMW`, and exact reaction lists of the case-study networks | all G-2/G-4 notes | open — needs source PDFs | See ledger; all locators TBD |
 
@@ -96,7 +98,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | exploratory; blocked | Approve siphon source; design minimal-siphon cover certificate |
 | `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | **verified** (algebraic layer: `LeanTheory.Kernel.CME`) | Prove `IsStationaryDistribution ⇒ IsGenStationaryFor` for finite support; process layer (Q-8) |
 | `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | **verified** at generator level (drift certificate, moment bound) | Process-level consequences (Q-8); drift oracle | Drift checker; moment bound from generator stationarity |
-| `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | combinatorial part **verified** for `F-acr`; source reading ready | Finite-state absorption theorem (Q-8); read `S-AEJ14` |
+| `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | **verified** for `F-acr` in the uniformized chain | Continuous-time version (uniformization identity); read `S-AEJ14`; Q-4 exploration |
 | `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | **verified** (deterministic; stochastic mean at generator level) | Quantify dilution error (Q-3); stability | Formalize after N-002/N-013 |
 | `N-017` | [deterministic/N-017-global-stability](deterministic/N-017-global-stability.md) | G-2, Q-2, Q-5 | N-005, N-012 | research | exploratory; blocked | Check publication status of `S-CRA15` |
 | `N-018` | [deterministic/N-018-rpa-topology](deterministic/N-018-rpa-topology.md) | G-2, Q-7 | N-003, N-007 | moderate–hard | exploratory; **Lean prerequisites verified**, source reading ready | Read `S-AL18`; compare with `C-GSF` |
@@ -130,7 +132,7 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of the finite-chain layer (`Theory/Markov/FiniteChain.lean`, `Theory/CRN/FiniteCME.lean`, `Sanity/CRNExtinction.lean`; no findings), of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
@@ -191,16 +193,15 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **Finite-state CTMC layer** (Q-8, N-015) — the main remaining gap on the stochastic side:
-   absorption a.s. for conservative networks, and `IsStationaryDistribution ⇒ IsGenStationaryFor`
-   for finitely supported laws.
+1. **N-002 finite-horizon trajectories / N-003 stability contract** — close finding F-2 and give
+   RPA its stability half (linear stability via the Jacobian is the natural first contract).
 2. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
    N-007, block factorization), Anderson–Enciso–Johnston (N-015). Needs the PDFs or permission to
    fetch them.
 3. **N-009 / Q-3 model choice** — a user decision (synthesis model and input); cheap, and it turns
    an ill-posed question into a precise one.
-4. **N-002 finite-horizon trajectories / N-003 stability contract** — close finding F-2 and give
-   RPA its stability half.
+4. **Continuous-time CME laws** — the uniformization identity `e^{tQ} = Σ Poisson(Λt)ₙ Pⁿ`, turning
+   the discrete-time absorption theorem into a statement about the CTMC.
 
 ## 8. Running a work unit
 
@@ -302,6 +303,15 @@ the physical model.
   `LeanTheory/Sanity/FosterLyapunov.lean` (`∅ ⇌ A`: exact generators of `n`, `n²`; linear and
   SOS-certified quadratic drifts; rejected drift; Poisson mean and generator stationarity; sharpness;
   second-moment envelope). Finding F-7 fixed. Build clean, axiom audit passed for 6383 declarations.
+
+- **2026-11-27 — Finite-state CTMC layer (work unit, Q-8 / N-015).** New
+  `LeanTheory/Theory/Markov/FiniteChain.lean` (rate and stochastic matrices, uniformization,
+  closed sets, outside mass, absorption theorem with geometric decay),
+  `LeanTheory/Theory/CRN/FiniteCME.lean` (generator matrix on a finite closed state set,
+  uniformized CME chain, reachability ⇒ positive paths, CME absorption theorem, `πQ = 0` ⇒
+  generator stationarity) and `LeanTheory/Sanity/CRNExtinction.lean` (toy ACR network: level sets
+  closed, `(N, 0)` absorbing and reachable, extinction from every initial law). Build clean, axiom
+  audit passed for 6457 declarations.
 
 ## 12. Implementation and workstation log
 
