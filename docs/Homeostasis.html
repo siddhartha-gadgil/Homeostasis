@@ -143,7 +143,7 @@
   <div class="title-text">
     <p class="kicker">Mathematical homeostasis, verified in Lean 4</p>
     <h1>Homeostasis in chemical reaction networks</h1>
-    <p class="subtitle">Absolute concentration robustness, perfect adaptation and stochastic extinction: precise notions, classic case studies, machine-checked proofs</p>
+    <p class="subtitle">A research program on robustness in reaction networks (ACR, perfect adaptation, infinitesimal homeostasis, persistence, stochastic models), with Lean as the validity gate</p>
     <p class="author">Siddhartha Gadgil</p>
   </div>
   <aside class="notes">Background: trajectories of the EnvZ–OmpR (ATP) model from many compatibility classes; the phosphorylated response regulator converges to the same value from all of them.</aside>
@@ -176,6 +176,30 @@
       <p><strong>Infinitesimal homeostasis</strong>: the derivative of the output with respect to the input vanishes (Golubitsky&ndash;Stewart).</p>
       <p><strong>Stochastic</strong>: what survives at low copy numbers?</p>
       <p class="muted">In Lean these are separate predicates, linked only by proved implications.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">The program</p>
+  <h2>Goals and open questions</h2>
+  <div class="cols">
+    <div>
+      <div class="card"><h3>G-1 &middot; An auditable kernel</h3><p>Networks, deficiency, mass action, CME; homeostasis notions as separate predicates with sanity checks.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>G-2 &middot; Structural theorems</h3><p>Determinant formula (done); Shinar&ndash;Feinberg; Deficiency Zero; persistence; RPA topology.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>G-3 &middot; Oracles + small verifiers</h3><p>Cofactors, SOS, Lyapunov, Positivstellensatz, siphons, Foster&ndash;Lyapunov drift.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>G-4 &middot; Case studies</h3><p>EnvZ&ndash;OmpR, IDHKP&ndash;IDH, antithetic feedback, extinction; next, multisite phosphorylation, dilution.</p></div>
+    </div>
+    <div>
+      <ul class="pts" style="font-size: 0.6em">
+        <li><strong>Q-1</strong> ACR beyond deficiency one: necessary and sufficient conditions?</li>
+        <li><strong>Q-2</strong> <i>n</i>-site phosphorylation: certify monostability vs multistationarity; global stability.</li>
+        <li><strong>Q-3</strong> Sharp bounds on lost robustness under growth dilution.</li>
+        <li><strong>Q-4</strong> Which homeostatic networks survive at low copy numbers?</li>
+        <li><strong>Q-5</strong> One certificate template for siphons, toric Lyapunov functions and drift.</li>
+        <li><strong>Q-8</strong> The stochastic process in Lean: continuous time, non-explosion, persistence.</li>
+      </ul>
+      <div class="callout accent mt">A result is established only when a named Lean theorem compiles; everything else stays a conjecture, an observation or a sourced claim.</div>
     </div>
   </div>
 </section>
@@ -606,7 +630,8 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>Determinant formula for infinitesimal homeostasis</td><td>along a differentiable branch</td><td class="ok">verified</td></tr>
 <tr><td>Class stability for the ATP model and EnvZ&ndash;OmpR at general rates</td><td>$5\times5$, $6\times6$ restricted Jacobians</td><td class="open">next</td></tr>
 <tr><td>The Shinar&ndash;Feinberg theorem in general; Deficiency Zero Theorem</td><td></td><td class="open">open</td></tr>
-<tr><td>Dilution bounds; continuous-time CME; persistence</td><td></td><td class="open">open</td></tr>
+<tr><td>ACR beyond deficiency one (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
+<tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and persistence (Q-8)</td><td></td><td class="open">open</td></tr>
 </table>
   <p class="small mt"><a href="index.html">Website</a> &middot; <a href="https://github.com/siddhartha-gadgil/Homeostasis">Repository</a> &middot; <a href="LeanTheory.html">LeanTheory</a></p>
 </section>

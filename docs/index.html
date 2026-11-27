@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Homeostasis in Lean</title>
-<meta name="description" content="Machine-checked homeostasis in chemical reaction networks: absolute concentration robustness, perfect adaptation and stochastic extinction, verified in Lean 4, with live simulations.">
+<meta name="description" content="A research program on mathematical homeostasis in chemical reaction networks (CRNT, ACR, infinitesimal homeostasis, robust perfect adaptation, persistence, stochastic models), with results verified in Lean 4 and live simulations.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
@@ -120,6 +120,7 @@ table.res { border-collapse: collapse; width: 100%; font-size: 16px; margin: 10p
 table.res th, table.res td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
 table.res th { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
 table.res td.ok { color: var(--good); font-weight: 700; white-space: nowrap; }
+table.res td:first-child b { white-space: nowrap; }
 .tablewrap { overflow-x: auto; }
 footer { margin-top: 64px; padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
 
@@ -147,7 +148,7 @@ footer { margin-top: 64px; padding: 28px 0 40px; border-top: 1px solid var(--lin
   <div class="wrap">
     <p class="kicker">Mathematical homeostasis, verified in Lean 4</p>
     <h1>Homeostasis in chemical reaction networks</h1>
-    <p class="tagline">Why do some biochemical networks hold an output exactly fixed, whatever the total amounts of their proteins? We state the notions of homeostasis precisely, prove the classic case studies, and check every step in Lean.</p>
+    <p class="tagline">How do biochemical reaction networks keep an output fixed while totals, rates and inputs vary, and when does that robustness survive noise, dilution and low copy numbers? A research program in chemical reaction network theory, with every established result checked in Lean.</p>
     <p class="author">Siddhartha Gadgil</p>
     <div class="links">
       <a class="link-card primary" href="Homeostasis.html"><span class="label">Slides</span><span class="title">The talk</span><span class="desc">The results with live simulations and the Lean statements.</span></a>
@@ -159,23 +160,60 @@ footer { margin-top: 64px; padding: 28px 0 40px; border-top: 1px solid var(--lin
 
 <main class="wrap">
 
-<h2>The phenomenon</h2>
-<p class="lead">In the osmoregulation system EnvZ&ndash;OmpR of <i>E. coli</i>, the concentration of the phosphorylated response regulator is almost insensitive to how much EnvZ and OmpR the cell makes. Shinar and Feinberg (<i>Science</i>, 2010) explained this as <b>absolute concentration robustness</b> (ACR): in the idealized mass-action model, <em>every</em> positive steady state has the same value of OmpR-P, given by a formula in the rate constants alone.</p>
+<h2>The program</h2>
+<p class="lead">Homeostasis in biochemistry comes in several mathematically distinct forms. The project studies them in deterministic mass-action models <code>ẋ = Γ v(x)</code> on the positive orthant and in their stochastic counterparts (the chemical master equation on copy numbers), and treats Lean as the validity gate: a result counts as established only once a named theorem compiles.</p>
+<div class="cards">
+  <div class="card"><span class="status done">G-1 &middot; done in core</span><h3>An auditable kernel</h3><p>Reaction networks, deficiency, mass action, conservation laws, the chemical master equation, and the notions of homeostasis as separate predicates, each with sanity checks.</p></div>
+  <div class="card"><span class="status open">G-2 &middot; active</span><h3>Structural theorems</h3><p>Machine-checked general theorems: the determinant formula for infinitesimal homeostasis (done), the Shinar&ndash;Feinberg ACR theorem, the Deficiency Zero Theorem, persistence criteria, the topology of robust perfect adaptation.</p></div>
+  <div class="card"><span class="status open">G-3 &middot; active</span><h3>Oracles and small verifiers</h3><p>Untrusted solvers propose certificates (cofactor identities, sums of squares, Lyapunov matrices, Positivstellensatz refutations, siphon covers, Foster&ndash;Lyapunov drift); short Lean checkers accept them.</p></div>
+  <div class="card"><span class="status open">G-4 &middot; active</span><h3>Case studies</h3><p>Exact idealized results kept separate from quantitative bounds: EnvZ&ndash;OmpR and IDHKP&ndash;IDH, antithetic integral feedback, stochastic extinction; next, multisite phosphorylation and dilution.</p></div>
+</div>
+
+<h2>Open questions</h2>
+<div class="tablewrap">
+<table class="res">
+<tr><th>ID</th><th>Question</th><th>Where it stands</th></tr>
+<tr><td><b>Q-1</b></td><td>Necessary and sufficient conditions for ACR beyond deficiency one, or with several conservation laws</td><td>Polynomial cofactor certificates give a checkable sufficient condition (compiled); a general criterion is open</td></tr>
+<tr><td><b>Q-2</b></td><td>For <i>n</i>-site phosphorylation: certify the boundary between monostability and multistationarity; global stability in the monostable regime</td><td>Open; multistationarity witnesses are cheap, monostability certificates hard</td></tr>
+<tr><td><b>Q-3</b></td><td>Sharp bounds on the loss of ACR under growth dilution (EnvZ&ndash;OmpR)</td><td>Needs a choice of synthesis model and input; dilution provably breaks antithetic adaptation</td></tr>
+<tr><td><b>Q-4</b></td><td>Which deterministic homeostatic networks keep homeostasis, or avoid extinction, at low copy numbers?</td><td>Extinction proved for the toy ACR network; stationary mean set-point proved for antithetic feedback</td></tr>
+<tr><td><b>Q-5</b></td><td>A common certificate template for siphons, toric Lyapunov functions and Foster&ndash;Lyapunov drift</td><td>Realized for polynomial certificates; siphon and drift formats to follow</td></tr>
+<tr><td><b>Q-8</b></td><td>The stochastic process in Lean: continuous-time laws, non-explosion, stochastic persistence</td><td>Generator level and finite state spaces compiled; continuous time and infinite state spaces open</td></tr>
+<tr><td><b>Q-9</b></td><td>Minimal ODE infrastructure: forward invariance, existence, blow-up</td><td>Forward invariance and finite-horizon trajectories compiled; existence of solutions not formalized</td></tr>
+</table>
+</div>
+
+<h2>Notions of homeostasis</h2>
+<p class="lead">Kept as distinct predicates in Lean and linked only by proved implications, with examples separating them.</p>
+<div class="cards">
+  <div class="card"><h3>Absolute concentration robustness</h3><p>For fixed rates, every positive steady state has the same value of a species, across all compatibility classes (Shinar&ndash;Feinberg). Vacuous without steady states and trivial with a unique one, so headline claims use <code>HasACRNontrivial</code>.</p></div>
+  <div class="card"><h3>Perfect adaptation</h3><p>The output at equilibrium does not depend on an input, over a set of inputs; stability is a separate contract (<code>HasRPALinear</code> adds it).</p></div>
+  <div class="card"><h3>Infinitesimal homeostasis</h3><p>The derivative of the output along a branch of equilibria vanishes; for networks it is equivalent to <code>det H = 0</code> for the homeostasis matrix (Golubitsky&ndash;Stewart).</p></div>
+  <div class="card"><h3>Stochastic homeostasis</h3><p>What the chemical master equation keeps: stationary means (antithetic feedback) or nothing at all (extinction in ACR networks).</p></div>
+</div>
+<div class="flow">
+  <div class="box">ACR</div><div class="arrow">&rArr;</div>
+  <div class="box">zero derivative along any branch<small><code>HasACR.hasDerivAt_zero</code></small></div>
+  <div class="arrow">&lArr;</div>
+  <div class="box">perfect adaptation<small><code>HasPerfectAdaptation.infinitesimalHomeostasis</code></small></div>
+</div>
+
+<h2>A first example: EnvZ&ndash;OmpR</h2>
+<p class="lead">In the osmoregulation system EnvZ&ndash;OmpR of <i>E. coli</i>, the level of phosphorylated OmpR barely depends on the amounts of EnvZ and OmpR. Shinar and Feinberg (<i>Science</i>, 2010) explained this as ACR of the mass-action model. The value is proved in Lean for all positive rate constants, from a polynomial identity found by an untrusted oracle:</p>
 <pre class="lean"><code>/-- **ACR in OmpR-P for all positive rate constants**: every positive steady state has
 `[OmpR-P] = envzACRValue k`. -/
 theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 → ℝ}
     (hx : envzNet.IsPosSteadyState k x) : x 6 = envzACRValue k</code></pre>
-<p class="muted">Axioms: <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code> only. No <code>sorry</code>, no <code>decide</code>, no project axioms. The network is transcribed from the primary source and its deficiency (one) is computed in Lean.</p>
-
+<p class="muted">Axioms: <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code> only. No <code>sorry</code>, no <code>decide</code>, no project axioms.</p>
 <div class="flow">
-  <div class="box">Reaction network<small>complexes, reactions, deficiency</small></div><div class="arrow">&rarr;</div>
+  <div class="box">Reaction network<small>transcribed from the source</small></div><div class="arrow">&rarr;</div>
   <div class="box">Mass-action ODE<small><code>massActionField</code></small></div><div class="arrow">&rarr;</div>
   <div class="box">Oracle: cofactor identity<small>sympy, outside Lean</small></div><div class="arrow">&rarr;</div>
   <div class="box">Lean checks it<small><code>linear_combination</code></small></div><div class="arrow">&rarr;</div>
   <div class="box good">ACR for all positive rates</div>
 </div>
 
-<h2 id="explorer">Explore the networks</h2>
+<h2 id="explorer">Explore the case studies</h2>
 <p>Each simulation integrates the same mass-action equations that the Lean kernel defines. Trajectories start in different <em>compatibility classes</em> (different total amounts); the dashed line is the value proved in Lean. Change the rate constants with the sliders, plot other species, or draw new initial states.</p>
 <div class="chips" id="chips"></div>
 <div class="explorer">
@@ -212,12 +250,12 @@ theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 
   <div class="card"><h3>Research graph</h3><p>Goals, questions and notes with stable identifiers (G-*, Q-*, N-*); a claim becomes a dependency only when a named compiled theorem matches it.</p></div>
 </div>
 
-<h2>Open directions</h2>
+<h2>Next steps</h2>
 <div class="cards">
-  <div class="card"><span class="status open">next</span><h3>Class stability for all models</h3><p>Done for IDHKP&ndash;IDH at all rates (symbolic Routh&ndash;Hurwitz). Next: the ATP model and EnvZ&ndash;OmpR for general rates, where the restricted Jacobian is 5&times;5 or 6&times;6.</p></div>
-  <div class="card"><span class="status open">open</span><h3>The Shinar&ndash;Feinberg theorem</h3><p>The general deficiency-one theorem itself. In every case study, the certificate&rsquo;s multiplier is the common part of the two nonterminal complexes the theorem names.</p></div>
-  <div class="card"><span class="status open">open</span><h3>Dilution and approximate robustness</h3><p>Quantitative bounds on the loss of ACR and of perfect adaptation under growth dilution.</p></div>
-  <div class="card"><span class="status open">open</span><h3>Continuous-time stochastic laws</h3><p>The semigroup <code>e^{tQ}</code>, non-explosion, and stochastic persistence at low copy numbers.</p></div>
+  <div class="card"><span class="status open">next</span><h3>Class stability for all case studies</h3><p>Done for IDHKP&ndash;IDH at all rates. Next: the ATP model and EnvZ&ndash;OmpR at general rates (5&times;5 and 6&times;6 restricted Jacobians).</p></div>
+  <div class="card"><span class="status open">G-2</span><h3>General theorems</h3><p>The Shinar&ndash;Feinberg theorem (in every case study, the certificate&rsquo;s multiplier is the common part of the two nonterminal complexes it names) and the Deficiency Zero Theorem.</p></div>
+  <div class="card"><span class="status open">Q-2</span><h3>Multisite phosphorylation</h3><p>Multistationarity witnesses and monostability certificates for 2-site and <i>n</i>-site systems.</p></div>
+  <div class="card"><span class="status open">Q-3, Q-4, Q-8</span><h3>Dilution and noise</h3><p>Quantitative loss of robustness under dilution; continuous-time stochastic laws and persistence at low copy numbers.</p></div>
 </div>
 
 <h2>In numbers</h2>
