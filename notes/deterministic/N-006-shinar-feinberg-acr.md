@@ -10,13 +10,13 @@
 | Addresses | `G-2`, `G-4`, `Q-1` (baseline case) |
 | Depends on | `N-001`, `N-002`, `N-003` (compiled); fixture `F-acr` (N-004) |
 | Dependency requirement | deficiency, terminal complexes, `IsPosSteadyState`, `HasACR` compiled and audited |
-| Produces | `LeanTheory/Theory/CRN/ShinarFeinberg.lean` (planned): `acr_of_deficiency_one` |
+| Produces | `LeanTheory/Theory/CRN/ShinarFeinberg.lean`: `hasACR_of_deficiency_one`, `hasACRNonvacuous_of_deficiency_one` |
 | Difficulty | hard — the source proof (SOM of `S-SF10`) relies on deficiency-one structure theory; a self-contained linear-algebra proof must be extracted first |
-| Status | stated |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
+| Status | **verified** (2026-11-27) |
+| Implementation status | complete |
+| Implementation evidence | `Theory/CRN/ShinarFeinberg.lean`, `Design/ShinarFeinbergApplications.lean` |
+| Lean evidence | `ReactionNetwork.hasACR_of_deficiency_one` (all positive rates); applications `atp_hasACR_SF`, `envz_hasACR_SF`, `idh_hasACR_SF`; necessity of the nonterminal-pair hypothesis: `phos_not_hasACR` + `phos_deficiency` |
+| Audit evidence | axiom audit passed (7249 declarations); statement checked against the verbatim source (`C-SF`) |
 | Last updated | 2026-11-27 — seeded |
 
 ## Purpose and scope
@@ -68,3 +68,32 @@ nonterminality, multiples of `e_S`) is ready now if the user can supply the SOM 
 ## Outputs and next dependencies
 
 Feeds N-008, N-015, N-019.
+
+## Compiled proof (2026-11-27)
+
+`LeanTheory/Theory/CRN/ShinarFeinberg.lean`, **self-contained** (the SOM was not needed):
+
+1. `laplacian k`: `A_k v = Σ_r k_r v_{src r}(e_{tgt r} − e_{src r})`; `massActionField_eq`:
+   `f_k(x) = Y A_k ψ(x)` with `Y = complexMap`, `ψ(x) = (x^y)_y`.
+2. `eq_zero_of_laplacian_eq_zero`: for `k > 0`, every `v ∈ ker A_k` vanishes on nonterminal
+   complexes. Elementary sign argument: sum `A_k v` over `P = {nonterminal c : v_c > 0}`; each
+   reaction contributes `≤ 0` (reactions into nonterminal complexes come from nonterminal ones,
+   `IsTerminal.of_reacts`), so no reaction leaves `P`; a nonempty reaction-closed set contains a
+   terminal complex (`exists_isTerminal_of_closed`, minimal reachable set). Apply to `±v`.
+3. `finrank_edgeSpan_inf_ker_le`: `dim(Im ∂ ∩ ker Y) ≤ δ`, from rank–nullity for `Y` on
+   `Im ∂ = span{e_{tgt} − e_{src}}` (image `S`) and `dim Im ∂ ≤ m − ℓ` (class sums).
+4. `hasACR_of_deficiency_one`: with `δ = 1`, `A_kψ(x)`, `A_kψ(x')` are dependent
+   (`exists_dependence_of_finrank_le_one`); a dependence puts `αψ(x) + βψ(x')` in `ker A_k`, so
+   `ψ_y(x)ψ_{y'}(x') = ψ_y(x')ψ_{y'}(x)`; as `y, y'` agree off `S`, `x_S^a x'_S^{a'} =
+   x'^a_S x_S^{a'}` with `a ≠ a'`, hence `x_S = x'_S` (`eq_of_pow_cross`).
+
+Statement fidelity: hypotheses are deficiency one, positive rates, two distinct nonterminal
+complexes agreeing in every species except `S` (equivalently, differing by a nonzero multiple of
+`e_S`). The conclusion `HasACR` does not need existence of a positive steady state;
+`hasACRNonvacuous_of_deficiency_one` adds it, matching the source's definition of ACR. The proof
+uses only `δ ≤ 1` (via `dim(Im ∂ ∩ ker Y) ≤ 1`), so it also covers deficiency zero — where, with a
+nonterminal complex, there is no positive steady state at all.
+
+Observed pattern explained: the certificate multipliers (`x_{EnvZ-D}`, `x_{XT}`, `x_{EIp}`) are the
+common parts of the nonterminal pairs because the proof compares exactly the two monomials
+`ψ_y`, `ψ_{y'}`.

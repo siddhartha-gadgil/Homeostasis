@@ -186,7 +186,7 @@
   <div class="cols">
     <div>
       <div class="card"><h3>G-1 &middot; An auditable kernel</h3><p>Networks, deficiency, mass action, CME; homeostasis notions as separate predicates with sanity checks.</p></div>
-      <div class="card" style="margin-top: 8px"><h3>G-2 &middot; Structural theorems</h3><p>Determinant formula (done); Shinar&ndash;Feinberg; Deficiency Zero; persistence; RPA topology.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>G-2 &middot; Structural theorems</h3><p>Determinant formula (done); Shinar&ndash;Feinberg (done); Deficiency Zero; persistence; RPA topology.</p></div>
       <div class="card" style="margin-top: 8px"><h3>G-3 &middot; Oracles + small verifiers</h3><p>Cofactors, SOS, Lyapunov, Positivstellensatz, siphons, Foster&ndash;Lyapunov drift.</p></div>
       <div class="card" style="margin-top: 8px"><h3>G-4 &middot; Case studies</h3><p>EnvZ&ndash;OmpR, IDHKP&ndash;IDH, antithetic feedback, extinction; next, multisite phosphorylation, dilution.</p></div>
     </div>
@@ -296,7 +296,42 @@ theorem isoNet_not_hasACR … : ¬ isoNet.HasACR k 0     -- A ⇌ B</code></pre>
     <div class="card"><h3>EnvZ&ndash;OmpR, ADP (Fig. 2D)</h3><p>10 complexes, $\ell = 3$, $s = 6$, $\delta = 1$. Pair $\text{EnvZ-D} + \text{OmpR-P}$, $\text{EnvZ-D}$.</p></div>
     <div class="card"><h3>IDHKP&ndash;IDH (Fig. 3)</h3><p>6 complexes, $\ell = 2$, $s = 3$, $\delta = 1$. Pair $EIp + I$, $EIp$: ACR in $I$.</p></div>
   </div>
-  <p class="small mt">We do not (yet) formalize the general theorem. Each network gets its own <strong>certificate</strong>, and all the numbers above (deficiency, linkage classes, rank) are computed in Lean.</p>
+  <p class="small mt">The general theorem is now proved in Lean (next slides). Each network also gets its own <strong>certificate</strong>, which gives the ACR value; all the numbers above (deficiency, linkage classes, rank) are computed in Lean.</p>
+</section>
+
+<section>
+  <p class="kicker">The general theorem, in Lean</p>
+  <h2>Proof of the Shinar&ndash;Feinberg theorem</h2>
+  <div class="cols">
+    <div>
+      <ol class="pts" style="font-size: 0.6em">
+        <li><strong>Laplacian.</strong> $f_k(x) = Y A_k \psi(x)$, with $\psi(x) = (x^y)_y$ and $A_k v = \sum_r k_r v_{s(r)}(e_{t(r)} - e_{s(r)})$. At a steady state, $A_k\psi(x) \in \operatorname{Im}\partial \cap \ker Y$.</li>
+        <li><strong>Dimension.</strong> Rank&ndash;nullity for $Y$ on $\operatorname{Im}\partial$: $\dim(\operatorname{Im}\partial\cap\ker Y) \le \delta = 1$. So for two steady states, $\alpha A_k\psi(x) + \beta A_k\psi(x') = 0$.</li>
+        <li><strong>Kernel.</strong> Every $v \in \ker A_k$ vanishes on nonterminal complexes: summing $A_k v$ over $\{v > 0\}$, no reaction can leave that set, but every reaction-closed set contains a terminal complex.</li>
+        <li><strong>Conclusion.</strong> $\psi_y(x)\psi_{y'}(x') = \psi_y(x')\psi_{y'}(x)$; as $y, y'$ differ only in $S$, $x_S = x'_S$.</li>
+      </ol>
+      <p class="xsmall muted">Self-contained: the source&rsquo;s supplementary proof was not needed. The certificate multipliers $x_{XT}$, $x_{EIp}$, $x_{\text{EnvZ-D}}$ are the common parts of the two nonterminal complexes because the proof compares exactly $\psi_y$ and $\psi_{y'}$.</p>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem hasACR_of_deficiency_one {k : R → ℝ} (hk : ∀ r, 0 < k r)
+    (hδ : N.deficiency = 1) {y y' : C} (hy : ¬ N.IsTerminal y)
+    (hy' : ¬ N.IsTerminal y') (hne : y ≠ y') {s : ι}
+    (hdiff : ∀ i, i ≠ s → N.complex y i = N.complex y' i) :
+    N.HasACR k s
+
+theorem eq_zero_of_laplacian_eq_zero (hk : ∀ r, 0 < k r)
+    (hv : N.laplacian k v = 0) (hc : ¬ N.IsTerminal c) : v c = 0
+
+theorem finrank_edgeSpan_inf_ker_le :
+    (finrank ℝ (span (range N.edgeVector) ⊓ ker N.complexMap) : ℤ)
+      ≤ N.deficiency
+
+-- applications: the source's three networks
+theorem atp_hasACR_SF  (hk : ∀ r, 0 < k r) : atpNet.HasACR k 5
+theorem envz_hasACR_SF (hk : ∀ r, 0 < k r) : envzNet.HasACR k 6
+theorem idh_hasACR_SF  (hk : ∀ r, 0 < k r) : idhNet.HasACR k 3</code></pre>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -680,7 +715,8 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>Phosphatase variant: deficiency one but no ACR (hypothesis of Shinar&ndash;Feinberg needed)</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Determinant formula for infinitesimal homeostasis</td><td>along a differentiable branch</td><td class="ok">verified</td></tr>
 <tr><td>Q-11: EnvZ&ndash;OmpR class stability at general rates (numerically true)</td><td>sparse certificates; degree-6 Routh&ndash;Hurwitz</td><td class="open">next</td></tr>
-<tr><td>The Shinar&ndash;Feinberg theorem in general; Deficiency Zero Theorem</td><td></td><td class="open">open</td></tr>
+<tr><td><b>Shinar&ndash;Feinberg theorem</b> (general), applied to Figs. 2B, 2D, 3</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
+<tr><td>Deficiency Zero Theorem with local stability</td><td></td><td class="open">open</td></tr>
 <tr><td>ACR beyond deficiency one (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and persistence (Q-8)</td><td></td><td class="open">open</td></tr>
 </table>

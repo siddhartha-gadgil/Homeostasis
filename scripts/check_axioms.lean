@@ -165,3 +165,11 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.phos_not_hasACR
 #print axioms LeanTheory.CRN.Design.phos_Yp_surjective
 #print axioms LeanTheory.CRN.Design.phos_deficiency
+#print axioms LeanTheory.CRN.ReactionNetwork.massActionField_eq
+#print axioms LeanTheory.CRN.ReactionNetwork.eq_zero_of_laplacian_eq_zero
+#print axioms LeanTheory.CRN.ReactionNetwork.finrank_edgeSpan_inf_ker_le
+#print axioms LeanTheory.CRN.ReactionNetwork.hasACR_of_deficiency_one
+#print axioms LeanTheory.CRN.ReactionNetwork.hasACRNonvacuous_of_deficiency_one
+#print axioms LeanTheory.CRN.Design.atp_hasACR_SF
+#print axioms LeanTheory.CRN.Design.envz_hasACR_SF
+#print axioms LeanTheory.CRN.Design.idh_hasACR_SF

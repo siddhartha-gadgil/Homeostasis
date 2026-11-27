@@ -66,6 +66,7 @@ public import LeanTheory.Design.EnvZStability
 public import LeanTheory.Design.EnvZStabilityAll
 public import LeanTheory.Design.IDHKP
 public import LeanTheory.Design.IDHKPStability
+public import LeanTheory.Design.ShinarFeinbergApplications
 public import LeanTheory.Elaborate
 public import LeanTheory.Kernel.CME
 public import LeanTheory.Kernel.Example
@@ -97,6 +98,7 @@ public import LeanTheory.Theory.CRN.ConverseLyapunovPD
 public import LeanTheory.Theory.CRN.FiniteCME
 public import LeanTheory.Theory.CRN.FosterLyapunov
 public import LeanTheory.Theory.CRN.Linearization
+public import LeanTheory.Theory.CRN.ShinarFeinberg
 public import LeanTheory.Theory.Fields.FieldLineExistence
 public import LeanTheory.Theory.Homeostasis.DeterminantFormula
 public import LeanTheory.Theory.Fields.InvariantBarrier
