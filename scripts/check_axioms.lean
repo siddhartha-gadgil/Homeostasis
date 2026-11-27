@@ -121,3 +121,5 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.motif_quad_pos
 #print axioms LeanTheory.CRN.Design.aifNet_locallyExpStable
 #print axioms LeanTheory.CRN.Design.aifNet_rpa_locallyExpStable
+#print axioms LeanTheory.CRN.lyapOp_injective
+#print axioms LeanTheory.CRN.exists_lyapunov_solution

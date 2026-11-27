@@ -79,6 +79,7 @@ public import LeanTheory.SubsetSum
 public import LeanTheory.TaskHandlers
 public import LeanTheory.Theory.CRN.AntitheticCME
 public import LeanTheory.Theory.CRN.AntitheticFeedback
+public import LeanTheory.Theory.CRN.ConverseLyapunov
 public import LeanTheory.Theory.CRN.FiniteCME
 public import LeanTheory.Theory.CRN.FosterLyapunov
 public import LeanTheory.Theory.CRN.Linearization

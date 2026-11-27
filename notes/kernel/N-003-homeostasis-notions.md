@@ -110,6 +110,15 @@ Lyapunov certificate, not merely `IsHurwitz` (converse Lyapunov theorem not form
 class-relative — for conservative networks the Jacobian is singular and no full-space certificate
 exists (`quad_lyapunov_eq_zero_of_mulVec_eq_zero`, regression `Sanity.isoNet_no_lyapunov`).
 
+Converse Lyapunov theorem (partial, 2026-11-27, `Theory/CRN/ConverseLyapunov.lean`): for Hurwitz
+`J` the Lyapunov operator `X ↦ JᵀX + XJ` is injective (`lyapOp_injective`: intertwining over `ℂ`,
+Cayley–Hamilton, factorization of the characteristic polynomial over its roots), so
+`JᵀP + PJ = −I` has a unique solution, which is symmetric and nonsingular
+(`exists_lyapunov_solution`). **Missing**: positive definiteness of `P` — planned via the homotopy
+`J − sI` (`s ≥ 0`): solutions `P_s` stay nonsingular, are positive definite for large `s`, so a
+continuity / intermediate-value argument on `min_{‖v‖=1} vᵀP_s v` forces `P_0 ≻ 0`. Needs continuity
+of `s ↦ P_s` (inverse of `L₀ − 2s` on matrices). With it, `HasRPALinear` ⇒ nonlinear local stability.
+
 Still open: "ACR ⇏ linear stability" (needs an ACR network with an unstable positive steady
 state — search); linearization principle. Deterministic ACR ⇏ stochastic homeostasis is compiled
 for the toy network (N-015, `acrNet_extinction`).
