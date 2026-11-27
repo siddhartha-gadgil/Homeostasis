@@ -144,6 +144,20 @@ Parametric attempt (oracle): over 20 000 random rate constants (`10^{±2}`) and 
 ≈ 0⁻), but a **diagonal** Lyapunov certificate fails at 42 of 60 sampled points, and the symbolic
 characteristic polynomial is too large for a quick Routh–Hurwitz check. Barrier recorded as Q-11.
 
+**Every unit-rate steady state (2026-11-27)**: with the new `5 × 5` Routh–Hurwitz criterion (format
+8, N-011), `atp_classStable_unit_all`: at unit rates **every** positive steady state is locally
+exponentially stable within its class. At a steady state `x_{Yp} = 2` and `x_{XT} = x_Y x_{Xp}/2`,
+so the restricted Jacobian is a polynomial matrix in `b = x_Y`, `c = x_{Xp}` (`atpRU`); its
+characteristic polynomial and the Hurwitz quantities `a₁, a₅, Δ₂, Δ₃, D₄` (up to 63 terms) have
+positive coefficients (`atpRU_isHurwitz`). Module checks in ≈ 16 s.
+
+General rates (oracle, symbolic in all nine rate constants and the steady-state parameters):
+the Hurwitz quantities are rational functions with positive denominators; the numerators of
+`a₁`, `a₅`, `Δ₂` (797 terms) and `Δ₃` (18 160 terms) have **only positive coefficients**; `D₄` is
+too large to expand quickly. If `D₄` is also positive, the general-rate theorem reduces to
+checking very large polynomial identities — beyond `ring`, but a candidate for a sparse kernel
+certificate (G-3).
+
 Open: class stability for Fig. 2B and EnvZ–OmpR at general rates (Q-11); the source's remark that
 replacing `XT` by a separate phosphatase `Z` destroys ACR (a cheap adversarial check).
 

@@ -8,6 +8,7 @@ module
 public import LeanTheory.Design.EnvZOmpRATP
 public import LeanTheory.Theory.CRN.ClassStability
 public import LeanTheory.Certificates.LyapunovCert
+public import LeanTheory.Certificates.RouthHurwitz5
 
 /-!
 # Case study: the ATP EnvZ–OmpR model is stable within its compatibility class (note N-008)
@@ -26,12 +27,19 @@ The restricted Jacobian `atpR` (eigenvalues ≈ −5.69, −3.46, −1.10 ± 0.5
 certified Hurwitz by the integer Lyapunov matrix `atpP` with exact `LDLᵀ` factorizations of `P`
 and of `−(RᵀP + PR)`.
 
-Scope: one parameter point. Numerically (oracle, 20 000 random rate constants and steady
-states) the restricted Jacobian is always Hurwitz, but no diagonal Lyapunov certificate works
-across parameters; a parametric proof needs a `5 × 5` Routh–Hurwitz theorem or a parametric
-Lyapunov matrix (open).
+* `atp_classStable_unit_all`: at unit rate constants, **every** positive steady state is locally
+  exponentially stable within its compatibility class. A positive steady state has `x_{Yp} = 2`
+  and `x_{XT} = x_Y x_{Xp} / 2`, so the restricted Jacobian is `atpRU b c` with `b = x_Y`,
+  `c = x_{Xp}` (`atp_restrict_steady`). Its characteristic polynomial (`atp_charpoly`) has
+  coefficients `a₁, …, a₅` polynomial in `b, c`, and the Routh–Hurwitz quantities `a₁`, `a₅`,
+  `Δ₂`, `Δ₃`, `D₄` are polynomials with **positive coefficients** (sympy oracle; checked by
+  `ring` and `positivity`), so format 8 (`isHurwitz_of_charpoly5`) applies (`atpRU_isHurwitz`).
 
-Label: exact, idealized; unit rates.
+Scope: unit rate constants. Numerically (oracle, 20 000 random rate constants and steady states)
+the restricted Jacobian is always Hurwitz for general rates too; the symbolic Hurwitz quantities
+for general rates are open (Q-11).
+
+Label: exact, idealized; unit rates, all positive steady states.
 -/
 
 @[expose] public section
@@ -228,5 +236,133 @@ theorem atp_classStable_unit :
     (fun u hu => atp_proj hu) ?_
   rw [atp_restrict]
   exact atpR_isHurwitz
+
+/-! ### Every positive steady state at unit rates (Routh–Hurwitz, format 8) -/
+
+/-- The restricted Jacobian at a positive steady state at unit rates, in terms of `b = x_Y` and
+`c = x_{Xp}` (there `x_{Yp} = 2` and `x_{XT} = bc/2`). -/
+def atpRU (b c : ℝ) : Matrix (Fin 5) (Fin 5) ℝ :=
+  !![-5, -1, -1, -(b * c / 2), 1;
+     1, -b, c + 1, c, c;
+     0, b, -c - 2, -c, -c;
+     -2, 0, 1, -(b * c / 2), 1;
+     2, 0, 0, b * c / 2, -2]
+
+/-- At a positive steady state at unit rates the restricted Jacobian is `atpRU x_Y x_{Xp}`. -/
+theorem atp_restrict_steady {xs : Fin 7 → ℝ} (hxs : atpNet.IsPosSteadyState (fun _ => 1) xs) :
+    atpC * atpNet.massActionJacobian (fun _ => 1) xs * atpB = atpRU (xs 3) (xs 2) := by
+  have h5 : xs 5 = 2 := by
+    rw [atp_steady_Yp (fun _ => one_pos) hxs, atpACRValue]; norm_num
+  have h := hxs.2
+  rw [atp_field] at h
+  have e2 : 1 * xs 1 - 1 * xs 2 * xs 3 + 1 * xs 4 = 0 := congrFun h 2
+  have e4 : 1 * xs 2 * xs 3 - 1 * xs 4 - 1 * xs 4 = 0 := congrFun h 4
+  have h1 : xs 1 = xs 3 * xs 2 / 2 := by linear_combination e2 + (1 / 2) * e4
+  rw [atp_jacobian]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [atpB, atpC, atpRU, Matrix.mul_apply, Fin.sum_univ_succ, h5, h1] <;> ring
+
+/-- Coefficient of `λ⁴` of the characteristic polynomial of `atpRU b c`. -/
+def atpA1 (b c : ℝ) : ℝ :=
+    (1 / 2) * b * c + b + c + 9
+
+/-- Coefficient of `λ³` of the characteristic polynomial of `atpRU b c`. -/
+def atpA2 (b c : ℝ) : ℝ :=
+    (1 / 2) * b ^ 2 * c + (1 / 2) * b * c ^ 2 + 3 * b * c + 8 * b + 8 * c + 23
+
+/-- Coefficient of `λ²` of the characteristic polynomial of `atpRU b c`. -/
+def atpA3 (b c : ℝ) : ℝ :=
+    (5 / 2) * b ^ 2 * c + (5 / 2) * b * c ^ 2 + 6 * b * c + 16 * b + 16 * c + 20
+
+/-- Coefficient of `λ` of the characteristic polynomial of `atpRU b c`. -/
+def atpA4 (b c : ℝ) : ℝ :=
+    (9 / 2) * b ^ 2 * c + (7 / 2) * b * c ^ 2 + (9 / 2) * b * c + 10 * b + 11 * c + 4
+
+/-- Constant coefficient of the characteristic polynomial of `atpRU b c`. -/
+def atpA5 (b c : ℝ) : ℝ :=
+    (5 / 2) * b ^ 2 * c + b * c ^ 2 + b * c
+
+/-- The Hurwitz quantity `Δ₂ = a₁a₂ − a₃`, expanded (all coefficients positive). -/
+def atpD2poly (b c : ℝ) : ℝ :=
+    (1 / 4) * b ^ 3 * c ^ 2 + (1 / 2) * b ^ 3 * c + (1 / 4) * b ^ 2 * c ^ 3
+    + (5 / 2) * b ^ 2 * c ^ 2 + 9 * b ^ 2 * c + 8 * b ^ 2 + (1 / 2) * b * c ^ 3 + 9 * b * c ^ 2
+    + (97 / 2) * b * c + 79 * b + 8 * c ^ 2 + 79 * c + 187
+
+/-- The Hurwitz quantity `Δ₃ = a₃Δ₂ − a₁(a₁a₄ − a₅)`, expanded (all coefficients positive). -/
+def atpD3poly (b c : ℝ) : ℝ :=
+    (5 / 8) * b ^ 5 * c ^ 3 + (5 / 4) * b ^ 5 * c ^ 2 + (5 / 4) * b ^ 4 * c ^ 4
+    + (63 / 8) * b ^ 4 * c ^ 3 + 25 * b ^ 4 * c ^ 2 + (47 / 2) * b ^ 4 * c
+    + (5 / 8) * b ^ 3 * c ^ 5 + (65 / 8) * b ^ 3 * c ^ 4 + (471 / 8) * b ^ 3 * c ^ 3
+    + (379 / 2) * b ^ 3 * c ^ 2 + (613 / 2) * b ^ 3 * c + 118 * b ^ 3 + (5 / 4) * b ^ 2 * c ^ 5
+    + 26 * b ^ 2 * c ^ 4 + (397 / 2) * b ^ 2 * c ^ 3 + (1625 / 2) * b ^ 2 * c ^ 2
+    + (2957 / 2) * b ^ 2 * c + 1240 * b ^ 2 + (49 / 2) * b * c ^ 4 + 322 * b * c ^ 3
+    + 1536 * b * c ^ 2 + (7685 / 2) * b * c + 3690 * b + 117 * c ^ 3 + 1222 * c ^ 2 + 3609 * c
+    + 3416
+
+/-- The Hurwitz quantity `D₄ = (a₁a₄ − a₅)Δ₃ − a₅Δ₂²`, expanded (63 terms, all coefficients
+positive). -/
+def atpD4poly (b c : ℝ) : ℝ :=
+    (5 / 4) * b ^ 8 * c ^ 5 + 5 * b ^ 8 * c ^ 4 + 5 * b ^ 8 * c ^ 3 + (113 / 32) * b ^ 7 * c ^ 6
+    + (223 / 8) * b ^ 7 * c ^ 5 + (1859 / 16) * b ^ 7 * c ^ 4 + (793 / 4) * b ^ 7 * c ^ 3
+    + (393 / 4) * b ^ 7 * c ^ 2 + (53 / 16) * b ^ 6 * c ^ 7 + (89 / 2) * b ^ 6 * c ^ 6
+    + (5355 / 16) * b ^ 6 * c ^ 5 + (19829 / 16) * b ^ 6 * c ^ 4 + (21143 / 8) * b ^ 6 * c ^ 3
+    + 2563 * b ^ 6 * c ^ 2 + 606 * b ^ 6 * c + (33 / 32) * b ^ 5 * c ^ 8
+    + (205 / 8) * b ^ 5 * c ^ 7 + (5177 / 16) * b ^ 5 * c ^ 6 + (66519 / 32) * b ^ 5 * c ^ 5
+    + (16641 / 2) * b ^ 5 * c ^ 4 + (37867 / 2) * b ^ 5 * c ^ 3 + (98883 / 4) * b ^ 5 * c ^ 2
+    + 13235 * b ^ 5 * c + 1180 * b ^ 5 + (33 / 8) * b ^ 4 * c ^ 8 + (1667 / 16) * b ^ 4 * c ^ 7
+    + (19113 / 16) * b ^ 4 * c ^ 6 + (66113 / 8) * b ^ 4 * c ^ 5 + (540577 / 16) * b ^ 4 * c ^ 4
+    + (697317 / 8) * b ^ 4 * c ^ 3 + (509379 / 4) * b ^ 4 * c ^ 2 + (205951 / 2) * b ^ 4 * c
+    + 23492 * b ^ 4 + (33 / 8) * b ^ 3 * c ^ 8 + (1425 / 8) * b ^ 3 * c ^ 7
+    + (10209 / 4) * b ^ 3 * c ^ 6 + 19197 * b ^ 3 * c ^ 5 + (177701 / 2) * b ^ 3 * c ^ 4
+    + (1960213 / 8) * b ^ 3 * c ^ 3 + 420240 * b ^ 3 * c ^ 2 + 385641 * b ^ 3 * c + 157708 * b ^ 3
+    + (183 / 2) * b ^ 2 * c ^ 7 + (10031 / 4) * b ^ 2 * c ^ 6 + (50849 / 2) * b ^ 2 * c ^ 5
+    + (269929 / 2) * b ^ 2 * c ^ 4 + 438090 * b ^ 2 * c ^ 3 + (3255161 / 4) * b ^ 2 * c ^ 2
+    + (1708295 / 2) * b ^ 2 * c + 425660 * b ^ 2 + 615 * b * c ^ 6 + 13753 * b * c ^ 5
+    + 109882 * b * c ^ 4 + 418782 * b * c ^ 3 + 905927 * b * c ^ 2 + 1036177 * b * c + 453944 * b
+    + 1287 * c ^ 5 + 25493 * c ^ 4 + 169777 * c ^ 3 + 453295 * c ^ 2 + 481772 * c + 122976
+
+set_option maxHeartbeats 4000000 in
+-- Laplace expansion of a symbolic `5 × 5` determinant
+/-- The characteristic polynomial of `atpRU b c`. -/
+theorem atp_charpoly (b c : ℝ) (lam : ℂ) :
+    (lam • (1 : Matrix (Fin 5) (Fin 5) ℂ) - toComplex (atpRU b c)).det =
+      lam ^ 5 + (atpA1 b c : ℂ) * lam ^ 4 + (atpA2 b c : ℂ) * lam ^ 3 + (atpA3 b c : ℂ) * lam ^ 2
+        + (atpA4 b c : ℂ) * lam + (atpA5 b c : ℂ) := by
+  simp [det_succ_row_zero, Fin.sum_univ_succ, atpRU, atpA1, atpA2, atpA3, atpA4, atpA5,
+    toComplex_apply, Matrix.one_apply, Fin.succAbove]
+  ring
+
+/-- **The restricted Jacobian is Hurwitz at every positive steady state at unit rates** (format 8:
+all five Routh–Hurwitz quantities are polynomials in `b, c` with positive coefficients). -/
+theorem atpRU_isHurwitz {b c : ℝ} (hb : 0 < b) (hc : 0 < c) : IsHurwitz (atpRU b c) := by
+  refine isHurwitz_of_charpoly5 (atp_charpoly b c) ?_ ?_ ?_ ?_ ?_
+  · unfold atpA1; positivity
+  · unfold atpA5; positivity
+  · rw [show atpA1 b c * atpA2 b c - atpA3 b c = atpD2poly b c by
+      unfold atpA1 atpA2 atpA3 atpD2poly; ring]
+    unfold atpD2poly; positivity
+  · rw [show atpA3 b c * (atpA1 b c * atpA2 b c - atpA3 b c)
+        - atpA1 b c * (atpA1 b c * atpA4 b c - atpA5 b c) = atpD3poly b c by
+      unfold atpA1 atpA2 atpA3 atpA4 atpA5 atpD3poly; ring]
+    unfold atpD3poly; positivity
+  · rw [show (atpA1 b c * atpA4 b c - atpA5 b c) * (atpA3 b c * (atpA1 b c * atpA2 b c - atpA3 b c)
+        - atpA1 b c * (atpA1 b c * atpA4 b c - atpA5 b c))
+        - atpA5 b c * (atpA1 b c * atpA2 b c - atpA3 b c) ^ 2 = atpD4poly b c by
+      unfold atpA1 atpA2 atpA3 atpA4 atpA5 atpD4poly; ring]
+    unfold atpD4poly; positivity
+
+/-- **Every positive steady state of the ATP model at unit rates is locally exponentially stable
+within its compatibility class.** -/
+theorem atp_classStable_unit_all {xs : Fin 7 → ℝ}
+    (hxs : atpNet.IsPosSteadyState (fun _ => 1) xs) :
+    ∃ δ > 0, ∃ c > 0, ∃ K > 0, ∀ (x : ℝ → Fin 7 → ℝ) (T : ℝ),
+      atpNet.MassActionTrajectoryOn (fun _ => 1) x T → x 0 - xs ∈ atpNet.stoichSubspace →
+        ‖x 0 - xs‖ < δ →
+          ∀ t ∈ Ico 0 T, ‖x t - xs‖ ^ 2 ≤ K * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2 := by
+  refine atpNet.classLocallyExpStable_of_restrict hxs.2 (B := atpB) (C := atpC)
+    (fun u hu => atp_proj hu) ?_
+  rw [atp_restrict_steady hxs]
+  exact atpRU_isHurwitz (hxs.1 3) (hxs.1 2)
 
 end LeanTheory.CRN.Design

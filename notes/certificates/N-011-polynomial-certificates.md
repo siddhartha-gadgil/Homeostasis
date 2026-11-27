@@ -82,6 +82,18 @@ Format 7 (added 2026-11-27, `Certificates/RouthHurwitz.lean`): Routh–Hurwitz f
 inequalities, so they certify **families**. Accepted: antithetic motif for all parameters; rejected:
 boundary `z³ + z² + z + 1` has the root `i` (`routh_boundary_root`).
 
+Format 8 (added 2026-11-27, `Certificates/RouthHurwitz5.lean`): Routh–Hurwitz for quintics and
+`5 × 5` matrices. Proof via the **Schwarz tridiagonal form**: for `b₁, …, b₅ > 0`, the eigenvector
+`(1, z, z² + b₅, …)` and the diagonal Lyapunov weights `P = diag(b₂b₃b₄b₅, …, b₂, 1)` give the
+energy identity `Re z · Σ pᵢ|vᵢ|² = −b₁|v₅|²` (`schwarz5_energy`, a `linear_combination` of the
+recursion), so `Re z < 0` (`re_neg_of_schwarz5`) — no continuity or root counting. The Hurwitz
+form (`re_neg_of_quintic`): `a₁, a₅ > 0`, `Δ₂, Δ₃, D₄ > 0` give positive Schwarz parameters
+`b₁ = a₁, b₂ = Δ₂/a₁, b₃ = Δ₃/(a₁Δ₂), b₄ = D₄/(Δ₂Δ₃), b₅ = a₅Δ₂/Δ₃`. Matrix form
+`isHurwitz_of_charpoly5` takes the characteristic polynomial as a hypothesis (proved per matrix by
+Laplace expansion and `ring`). Accepted `(z + 1)⁵`; rejected `(z + 1)(z² + 1)²` (`Δ₂ = 0`, root `i`).
+First use: the ATP EnvZ–OmpR model at every unit-rate steady state (N-008). The same Schwarz
+argument extends to any degree.
+
 Open: Jacobian-sign / injectivity certificates (need the injectivity theorem, source not supplied);
 SOS and Psatz oracles (SDP solver + rational rounding); larger certificates (sparse checker).
 

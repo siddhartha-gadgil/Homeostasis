@@ -45,6 +45,7 @@ public import LeanTheory.Certificates.Kronecker2DWeighted
 public import LeanTheory.Certificates.PolyCert
 public import LeanTheory.Certificates.PolyInterval
 public import LeanTheory.Certificates.RouthHurwitz
+public import LeanTheory.Certificates.RouthHurwitz5
 public import LeanTheory.Certificates.RadiiPolynomial
 public import LeanTheory.Certificates.RationalIntervals
 public import LeanTheory.Certificates.SBP

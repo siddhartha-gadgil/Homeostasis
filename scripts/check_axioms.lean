@@ -147,3 +147,10 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.atp_jacobian
 #print axioms LeanTheory.CRN.Design.atpR_isHurwitz
 #print axioms LeanTheory.CRN.Design.atp_classStable_unit
+#print axioms LeanTheory.CRN.re_neg_of_schwarz5
+#print axioms LeanTheory.CRN.re_neg_of_quintic
+#print axioms LeanTheory.CRN.isHurwitz_of_charpoly5
+#print axioms LeanTheory.CRN.quintic_fixture_accept
+#print axioms LeanTheory.CRN.quintic_fixture_reject
+#print axioms LeanTheory.CRN.Design.atpRU_isHurwitz
+#print axioms LeanTheory.CRN.Design.atp_classStable_unit_all

@@ -198,7 +198,7 @@
         <li><strong>Q-4</strong> Which homeostatic networks survive at low copy numbers?</li>
         <li><strong>Q-5</strong> One certificate template for siphons, toric Lyapunov functions and drift.</li>
         <li><strong>Q-8</strong> The stochastic process in Lean: continuous time, non-explosion, persistence.</li>
-        <li><strong>Q-11</strong> Stability of the larger case studies for all rates: a $5\times5$ Routh&ndash;Hurwitz theorem?</li>
+        <li><strong>Q-11</strong> Stability of the larger case studies for all rates (5&times;5 Routh&ndash;Hurwitz now proved).</li>
       </ul>
       <div class="callout accent mt">A result is established only when a named Lean theorem compiles; everything else stays a conjecture, an observation or a sourced claim.</div>
     </div>
@@ -461,7 +461,7 @@ theorem idh_deficiency : idhNet.deficiency = 1 := by
   <div class="cols">
     <div>
       <p class="small">With conservation laws the Jacobian is singular, so no full-space Lyapunov function exists (<code class="inline">isoNet_no_lyapunov</code>). Instead, choose coordinates $B$, $C$ on $S$ ($CB = I$) and ask that the <strong>restricted Jacobian</strong> $CJB$ be Hurwitz.</p>
-      <p class="small">EnvZ&ndash;OmpR at unit rates, both models: integer restricted Jacobians ($6\times 6$, $5\times 5$), integer Lyapunov matrices, exact $LDL^\top$ factors (<code class="inline">envz_classStable_unit</code>, <code class="inline">atp_classStable_unit</code>). For general rates this is open (Q-11).</p>
+      <p class="small">EnvZ&ndash;OmpR at unit rates, both models: integer restricted Jacobians ($6\times 6$, $5\times 5$), integer Lyapunov matrices, exact $LDL^\top$ factors (<code class="inline">envz_classStable_unit</code>, <code class="inline">atp_classStable_unit</code>). For Fig.&nbsp;2B, every unit-rate steady state, by $5\times 5$ Routh&ndash;Hurwitz; general rates are open (Q-11).</p>
       <p class="small">The toy ACR network: restricted Jacobian $-\kappa_0 x_B < 0$, so <em>every</em> positive steady state is class-stable.</p>
     </div>
     <div>
@@ -503,6 +503,35 @@ theorem idh_classStable {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {xs : Fin 5 �
         ‖x 0 - xs‖ < δ →
           ∀ t ∈ Ico 0 T, ‖x t - xs‖ ^ 2 ≤ K * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2</code></pre>
       <p class="small mt">The Jacobian is computed from per-reaction tables (monomial gradients, reaction vectors): the module checks in about 7 seconds.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Certificate format 8</p>
+  <h2>Routh&ndash;Hurwitz for $5\times5$, by an energy identity</h2>
+  <div class="cols" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)">
+    <div>
+      <p class="small">For $b_1,\dots,b_5 > 0$ the tridiagonal <strong>Schwarz matrix</strong></p>
+      <div style="font-size: 0.6em">$$S = \begin{pmatrix} 0&1&&&\\ -b_5&0&1&&\\ &-b_4&0&1&\\ &&-b_3&0&1\\ &&&-b_2&-b_1\end{pmatrix}$$ $$P = \operatorname{diag}(b_2b_3b_4b_5,\ b_2b_3b_4,\ b_2b_3,\ b_2,\ 1)$$</div>
+      <p class="small">satisfies $PS + S^\top P = \operatorname{diag}(0,0,0,0,-2b_1)$. For an eigenvector $v$ with eigenvalue $z$:</p>
+      $$\operatorname{Re} z\cdot \textstyle\sum_i p_i |v_i|^2 = -b_1 |v_5|^2,$$
+      <p class="small">so $\operatorname{Re} z \le 0$, and $\operatorname{Re} z = 0$ forces $v_5 = 0$, then $v = 0$ by the recursion. No continuity or root counting.</p>
+      <p class="small">Positive Hurwitz quantities $a_1, a_5, \Delta_2, \Delta_3, D_4$ give positive $b_i$ with the same characteristic polynomial.</p>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem re_neg_of_quintic {a₁ a₂ a₃ a₄ a₅ : ℝ} (h₁ : 0 < a₁) (h₅ : 0 < a₅)
+    (hΔ₂ : 0 < a₁ * a₂ - a₃)
+    (hΔ₃ : 0 < a₃ * (a₁ * a₂ - a₃) - a₁ * (a₁ * a₄ - a₅))
+    (hD₄ : 0 < (a₁ * a₄ - a₅) * (a₃ * (a₁ * a₂ - a₃) - a₁ * (a₁ * a₄ - a₅))
+      - a₅ * (a₁ * a₂ - a₃) ^ 2) {z : ℂ}
+    (hz : z ^ 5 + a₁ * z ^ 4 + a₂ * z ^ 3 + a₃ * z ^ 2 + a₄ * z + a₅ = 0) :
+    z.re < 0
+
+-- first use: every unit-rate steady state of the ATP model (Fig. 2B)
+theorem atp_classStable_unit_all {xs : Fin 7 → ℝ}
+    (hxs : atpNet.IsPosSteadyState (fun _ => 1) xs) : ∃ δ > 0, ∃ c > 0, ∃ K > 0, …</code></pre>
+      <p class="small mt">At a steady state the restricted Jacobian is polynomial in $b = x_Y$, $c = x_{Xp}$; all five Hurwitz quantities have positive coefficients (the largest: 63 terms).</p>
     </div>
   </div>
 </section>
@@ -624,12 +653,13 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <table>
 <tr><th>Result</th><th>Scope</th><th></th></tr>
 <tr><td>ACR, steady-state families, nontrivial ACR, $\delta = 1$: EnvZ&ndash;OmpR (2B, 2D), IDHKP&ndash;IDH</td><td>all positive rates</td><td class="ok">verified</td></tr>
-<tr><td>EnvZ&ndash;OmpR (2D and 2B) class stability</td><td>unit rates</td><td class="ok">verified</td></tr>
+<tr><td>EnvZ&ndash;OmpR class stability: Fig.&nbsp;2B at every steady state, Fig.&nbsp;2D at one</td><td>unit rates</td><td class="ok">verified</td></tr>
+<tr><td>Routh&ndash;Hurwitz for quintics and $5\times5$ matrices</td><td>general</td><td class="ok">verified</td></tr>
 <tr><td>IDHKP&ndash;IDH class stability, every positive steady state</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Antithetic motif: RPA + linear stability; nonlinear stability for every $\gamma$</td><td>all rates; unit $\mu,\theta,\eta,a$</td><td class="ok">verified</td></tr>
 <tr><td>Stochastic extinction (toy ACR); stationary mean (antithetic)</td><td>uniformized chain; generator level</td><td class="ok">verified</td></tr>
 <tr><td>Determinant formula for infinitesimal homeostasis</td><td>along a differentiable branch</td><td class="ok">verified</td></tr>
-<tr><td>Q-11: class stability of EnvZ&ndash;OmpR at general rates (numerically true)</td><td>needs $5\times5$ Routh&ndash;Hurwitz or parametric Lyapunov</td><td class="open">next</td></tr>
+<tr><td>Q-11: EnvZ&ndash;OmpR class stability at general rates (numerically true)</td><td>sparse certificates; degree-6 Routh&ndash;Hurwitz</td><td class="open">next</td></tr>
 <tr><td>The Shinar&ndash;Feinberg theorem in general; Deficiency Zero Theorem</td><td></td><td class="open">open</td></tr>
 <tr><td>ACR beyond deficiency one (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and persistence (Q-8)</td><td></td><td class="open">open</td></tr>
