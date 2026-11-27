@@ -117,6 +117,20 @@ def vec(xs):
     return "![" + ", ".join(str(v) for v in xs) + "]"
 
 
+def wrap_list(items, indent):
+    """`![a, b, ...]` broken over lines of at most 100 characters."""
+    lines, cur = [], "!["
+    for k, it in enumerate(items):
+        piece = it + ("," if k < len(items) - 1 else "]")
+        if len(indent) + len(cur) + 1 + len(piece) > 98 and cur != "![":
+            lines.append(cur)
+            cur = piece
+        else:
+            cur = cur + ("" if cur == "![" else " ") + piece
+    lines.append(cur)
+    return ("\n" + indent).join(lines)
+
+
 def emit(spec, a, c, gs, xs):
     name = spec["name"]
     n = len(spec["species"])
@@ -134,7 +148,7 @@ def emit(spec, a, c, gs, xs):
         else:
             sys.exit(f"complex {ci} is unused")
     congr = "\n".join(f"    have h{j} := congrFun h {j}" for j in range(n))
-    rates = vec([lean_rat(k) for k in spec["rates"]])
+    rates = wrap_list([lean_rat(k) for k in spec["rates"]], "    ")
     gfuns = "![" + ",\n          ".join(
         f"fun {'x' if sp.sympify(g).free_symbols else '_'} => {lean_poly(g, xs)}" for g in gs) + "]"
     species = ", ".join(spec["species"])
@@ -151,7 +165,8 @@ public import LeanTheory.Bridge.CRNCertificates
 # Generated: cofactor ACR certificate for `{name}`
 
 Emitted by `scripts/oracles/crn_cofactor.py` (untrusted oracle; only the Lean check matters).
-Species `{species}`; ACR species index `{s}`; rate constants `{", ".join(spec["rates"])}`.
+Species `{species}`;
+ACR species index `{s}`; rate constants `{", ".join(spec["rates"])}`.
 Certificate: multiplier exponent `{list(a)}`, value `c = {c}`.
 -/
 
@@ -164,7 +179,7 @@ open ReactionNetwork
 
 /-- The network `{name}` (generated from its JSON specification). -/
 def {net} : ReactionNetwork (Fin {n}) (Fin {m}) (Fin {r}) where
-  complex := ![{", ".join(vec(c_) for c_ in cx)}]
+  complex := {wrap_list([vec(c_) for c_ in cx], "    ")}
   complex_injective := by
     intro a b h
 {congr}
@@ -178,7 +193,8 @@ def {net} : ReactionNetwork (Fin {n}) (Fin {m}) (Fin {r}) where
 {chr(10).join(used)}
 
 /-- The generated rate constants. -/
-def {net}K : Fin {r} → ℝ := {rates}
+def {net}K : Fin {r} → ℝ :=
+  {rates}
 
 /-- **Generated cofactor identity**: `x^a (x_s − c) = Σ_i g_i(x) f_i(x)`. -/
 theorem {net}_cofactor (x : Fin {n} → ℝ) :

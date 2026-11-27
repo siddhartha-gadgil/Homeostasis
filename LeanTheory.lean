@@ -20,6 +20,7 @@ public import LeanTheory.Certificates.FamPackCert
 public import LeanTheory.Certificates.FourierRegularity
 public import LeanTheory.Certificates.Generated.AcrToyGen
 public import LeanTheory.Certificates.Generated.AifGen
+public import LeanTheory.Certificates.Generated.EnvZOmpRGen
 public import LeanTheory.Certificates.IccListCert
 public import LeanTheory.Certificates.LyapunovCert
 public import LeanTheory.Certificates.KernelFact

@@ -12,7 +12,7 @@
 | Dependency requirement | compiled mass-action field, `HasACRNonvacuous`; either a compiled cofactor-certificate soundness theorem or a direct algebraic proof |
 | Produces | Lean model files `LeanTheory/Design/EnvZOmpR.lean`, `.../IDHKP.lean` (planned) with the exact source networks; theorems: deficiency value, existence of a positive steady state for all `k` (or the stated parameter set), ACR in the output species with explicit value |
 | Difficulty | moderate — the algebra is small; the risks are transcription errors and the existence part |
-| Status | exploratory |
+| Status | network transcribed (secondary source); ACR at sample rates compiled; general-rate ACR, existence, class stability open |
 | Implementation status | not started |
 | Implementation evidence | none |
 | Lean evidence | none |
@@ -34,6 +34,33 @@ Two independent proof routes, to cross-check:
 
 Existence of a positive steady state for every positive total must be proved separately (it is a
 hypothesis of the ACR theorem); stability and convergence are separate claims (N-012, N-017).
+
+## Transcription (2026-11-27, Q-10)
+
+Source: `S-CGK19` (arXiv:1910.05531v1, LaTeX source), Fig. 1 and supplementary section
+"EnvZ-OmpR osmoregulatory system", which attribute the model to `S-SF10` and Shinar et al. 2007.
+The primary `S-SF10` text is paywalled and was not read. ADP and ATP are held constant and absorbed
+into the rate constants (`κ₂[ADP]`, `κ₃[ATP]`). Verbatim (arrows: `⇌` reversible, `→`
+irreversible):
+
+```text
+EnvZ-D ⇌(κ₁, κ₂[ADP]) EnvZ ⇌(κ₃[ATP], κ₄) EnvZ-T →(κ₅) EnvZ-P
+EnvZ-P + OmpR ⇌(κ₆, κ₇) EnvZ-OmpR-P →(κ₈) EnvZ + OmpR-P
+EnvZ-D + OmpR-P ⇌(κ₉, κ₁₀) EnvZ-OmpR-D-P →(κ₁₁) EnvZ-D + OmpR
+```
+
+8 species (EnvZ-D, EnvZ, EnvZ-T, EnvZ-P, OmpR, EnvZ-OmpR-P, OmpR-P, EnvZ-OmpR-D-P), 10 complexes,
+11 reactions, conservation laws: total EnvZ and total OmpR; `dim S = 6`; `δ = 10 − 3 − 6 = 1`
+(supplement). Source discrepancy: the main text (Sec. 2.1) says `ℓ = 2` for this network, the
+supplement uses `ℓ = 3`; the figure has three separate lines with no shared complex, so `ℓ = 3`
+(to be confirmed by a Lean computation). ACR species: OmpR-P, via the non-terminal complexes EnvZ-D
+and EnvZ-D + OmpR-P. Stated ACR value (eq. `calculation_ex`):
+`[OmpR-P]* = κ₁κ₃κ₅(κ₁₀+κ₁₁)[ATP] / (κ₂(κ₄+κ₅)κ₉κ₁₁[ADP])`.
+
+**Cross-check (compiled)**: with `κ = (1, …, 11)` and `[ADP] = [ATP] = 1` the cofactor oracle
+(`scripts/oracles/specs/envz_ompr.json`) finds a certificate with multiplier `x_{EnvZ-D}` and value
+`c = 35/198`, equal to the source formula; Lean checks it
+(`Generated.envZOmpRGenNet_hasACR`, `LeanTheory/Certificates/Generated/EnvZOmpRGen.lean`).
 
 ## Claims and evidence
 

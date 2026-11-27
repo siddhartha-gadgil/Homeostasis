@@ -130,3 +130,4 @@ run_cmd do
 #print axioms LeanTheory.CRN.class_local_exp_stable
 #print axioms LeanTheory.CRN.ReactionNetwork.classLocallyExpStable
 #print axioms LeanTheory.CRN.Sanity.acrNet_classStable
+#print axioms LeanTheory.CRN.Generated.envZOmpRGenNet_hasACR

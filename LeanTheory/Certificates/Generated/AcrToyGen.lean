@@ -11,7 +11,8 @@ public import LeanTheory.Bridge.CRNCertificates
 # Generated: cofactor ACR certificate for `AcrToyGen`
 
 Emitted by `scripts/oracles/crn_cofactor.py` (untrusted oracle; only the Lean check matters).
-Species `A, B`; ACR species index `0`; rate constants `5, 7`.
+Species `A, B`;
+ACR species index `0`; rate constants `5, 7`.
 Certificate: multiplier exponent `[0, 1]`, value `c = 7/5`.
 -/
 
@@ -42,7 +43,8 @@ def acrToyGenNet : ReactionNetwork (Fin 2) (Fin 4) (Fin 2) where
     · exact ⟨1, by simp⟩
 
 /-- The generated rate constants. -/
-def acrToyGenNetK : Fin 2 → ℝ := ![(5 : ℝ), (7 : ℝ)]
+def acrToyGenNetK : Fin 2 → ℝ :=
+  ![(5 : ℝ), (7 : ℝ)]
 
 /-- **Generated cofactor identity**: `x^a (x_s − c) = Σ_i g_i(x) f_i(x)`. -/
 theorem acrToyGenNet_cofactor (x : Fin 2 → ℝ) :

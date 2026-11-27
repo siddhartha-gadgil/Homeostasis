@@ -11,7 +11,8 @@ public import LeanTheory.Bridge.CRNCertificates
 # Generated: cofactor ACR certificate for `AifGen`
 
 Emitted by `scripts/oracles/crn_cofactor.py` (untrusted oracle; only the Lean check matters).
-Species `Z1, Z2, X`; ACR species index `2`; rate constants `3, 4, 1, 2, 5`.
+Species `Z1, Z2, X`;
+ACR species index `2`; rate constants `3, 4, 1, 2, 5`.
 Certificate: multiplier exponent `[0, 0, 0]`, value `c = 3/4`.
 -/
 
@@ -45,7 +46,8 @@ def aifGenNet : ReactionNetwork (Fin 3) (Fin 6) (Fin 5) where
     · exact ⟨3, by simp⟩
 
 /-- The generated rate constants. -/
-def aifGenNetK : Fin 5 → ℝ := ![(3 : ℝ), (4 : ℝ), (1 : ℝ), (2 : ℝ), (5 : ℝ)]
+def aifGenNetK : Fin 5 → ℝ :=
+  ![(3 : ℝ), (4 : ℝ), (1 : ℝ), (2 : ℝ), (5 : ℝ)]
 
 /-- **Generated cofactor identity**: `x^a (x_s − c) = Σ_i g_i(x) f_i(x)`. -/
 theorem aifGenNet_cofactor (x : Fin 3 → ℝ) :
