@@ -26,7 +26,7 @@ contract states the model, the object, the quantifiers and what is controlled. A
 | `ComponentFeasible` | Geometry, loads, constitutive data, tolerances, degradation |
 | `DesignFeasible` | Explicit conjunction of the required contracts for the same candidate and operating states |
 
-‹replace: the contracts of your domain›. In the worked example the contract is "every trajectory
+For Homeostasis the contracts are the separate kernel predicates of N-002, N-003 and N-013 (`IsPosSteadyState`, `HasACRNonvacuous`, `InfinitesimalHomeostasis`, `HasRPALocal`/`HasRPAGlobal`, persistence, generator-level stationarity), composed only through proved implications. In the worked example the contract is "every trajectory
 obeying `OscillatorLaw params23` and starting in `initialStates` satisfies `3 x(t)² ≤ 1` for all
 `t`" (`Certificates/Example.amplitude_cert`): model, initial set, quantifiers and conclusion are
 all explicit.
@@ -57,7 +57,7 @@ inputs and remaining gaps. No result becomes established merely by appearing in 
 ## Corrections before formalizing
 
 Starting notes often contain statements that are true only under unstated hypotheses. Before
-formalizing, list each such claim with its precise replacement (‹replace: your corrections›).
+formalizing, list each such claim with its precise replacement (Homeostasis corrections X-1…X-10: `notes/implementation-plan.md` §5).
 Typical patterns:
 
 | Loose claim | Precise replacement |
@@ -69,7 +69,7 @@ Typical patterns:
 
 ## The model hierarchy
 
-Select the model by the phenomenon being certified (‹replace: your model ladder›). Every model
+Select the model by the phenomenon being certified (Homeostasis model ladder: `notes/implementation-plan.md` §6). Every model
 is a model: reduction arrows between levels require quantified theorems or explicitly supplied
 error envelopes.
 

@@ -6,8 +6,27 @@ stable identifiers when titles or priorities change; detailed work belongs in no
 
 ## 0. Current status
 
-‹Summarize the domain, verified foundation, active research, main barriers and the most useful
-ready choices. Separate compiled facts from conjectures, sources and observations.›
+Project: **Homeostasis** — mathematical homeostasis in biochemical reaction networks: chemical
+reaction network theory (CRNT), absolute concentration robustness (ACR), infinitesimal
+homeostasis, robust perfect adaptation (RPA), persistence and stability of deterministic
+mass-action ODEs `ẋ = Γ v(x)` on `ℝ_{>0}^n`, and stochastic counterparts (CME on `ℤ_{≥0}^n`).
+Spatial models are excluded in the initial phase.
+
+As of 2026-11-27 (seeded from the user's prompt):
+
+- **Verified (compiled and audited):** no domain results yet. The audited template library
+  (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
+  rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
+  `kernel_fact`) usable by G-3.
+- **Seeded:** 4 goals, 10 questions, 19 notes (below); source and assumption ledger in
+  [`sources-and-assumptions.md`](sources-and-assumptions.md). Every sourced claim there is
+  recalled, with locators TBD — none has been checked against its source.
+- **Main barriers:** kernel representation choices (Q-6) gate almost everything; no
+  continuous-time Markov chain theory in Mathlib/TauCeti (Q-8); the dilution question (Q-3) is
+  ill-posed until an input and a synthesis model are chosen (correction X-10).
+- **Ready now:** N-001 (kernel design, Q-6), N-007a (determinant formula, Mathlib-only), N-011
+  formats 1–2 (polynomial certificate checkers, template-only), and source-reading tasks for
+  N-006/N-008/N-015 when the user supplies PDFs.
 
 ## 1. Goal registry
 
@@ -15,7 +34,10 @@ Several goals may coexist. Goals may be independent or support other goals.
 
 | ID | Goal and success criterion | Supports / supported by | Status | Evidence needed |
 | --- | --- | --- | --- | --- |
-| `G-...` | ‹precise mathematical, scientific or engineering outcome› | ‹IDs› | ‹open / active / achieved / blocked / superseded› | ‹contracts and declarations› |
+| `G-1` | **Auditable CRN kernel.** Lean definitions of reaction networks, stoichiometric subspace, compatibility classes, linkage classes, weak reversibility, deficiency (N-001); mass-action field, steady states, conservation laws, dilution variant (N-002); homeostasis predicates ACR / infinitesimal homeostasis / RPA / approximate adaptation (N-003); CME propensities and generator (N-013). Success: all compile axiom-free; every law has the triad plus the five `U-SW` classes (N-004); a strict audit with no open kernel finding | supports G-2, G-3, G-4 | open | compiled declarations + N-004 sanity suite + audit record |
+| `G-2` | **Structural theorems, machine-checked.** At least: (a) determinant formula for infinitesimal homeostasis (N-007); (b) Shinar–Feinberg ACR theorem (N-006); (c) Deficiency Zero Theorem with local stability (N-005); stretch: persistence criteria (N-012), RPA topology (N-018). Success: each as a named compiled theorem whose hypotheses match the source statement, recorded in the ledger | supported by G-1; supports G-4 | open | compiled theorems; source-fidelity check per theorem |
+| `G-3` | **Untrusted oracle + small verifier pipeline.** Exact certificate formats and Lean soundness theorems for: coefficient-sign/injectivity, ideal-membership cofactors, SOS (`LDLᵀ` over `ℚ`), Positivstellensatz refutations (N-011), validated root enclosures (template), siphon covers (N-012), Foster–Lyapunov drift and moment bounds (N-014). Success: each format has a soundness theorem, an accepted and a rejected fixture, and one end-to-end use from an external oracle on a G-4 network | supported by G-1; supports G-2 (case checks), G-4 | open | compiled soundness theorems + fixtures + one documented oracle run per format |
+| `G-4` | **Machine-checked case studies**, separating exact idealized homeostasis from quantitative approximate bounds: EnvZ/OmpR (and IDHKP/IDH) ACR (N-008) and under dilution (N-009); 2-site / `n`-site phosphorylation (N-010); antithetic integral feedback, deterministic and stochastic-mean (N-016); stochastic extinction in ACR networks (N-015). Success: per network a compiled model transcribed from a cited source, plus compiled theorems, each labelled *exact-idealized* or *approximate-bound* with explicit parameter domain | supported by G-1, G-2, G-3 | open | compiled theorems; transcription check against source; assumption ledger entries |
 
 ## 2. Question registry
 
@@ -23,17 +45,62 @@ Questions may be primary research outputs or auxiliary prerequisites.
 
 | ID | Question | Needed by | Status | Current best answer / barrier |
 | --- | --- | --- | --- | --- |
-| `Q-...` | ‹precise question› | ‹`G-*`, `Q-*`, `N-*`› | ‹open / active / answered / blocked / refuted› | ‹summary and evidence level› |
+| `Q-1` | Necessary and sufficient graphical/algebraic conditions for ACR when `δ ≥ 2` or with several conservation laws | G-2; N-019 | open (research) | Deficiency-one sufficient condition `C-SF` (sourced, unverified). Ideal-membership certificates give a checkable sufficient condition (N-019) |
+| `Q-2` | For `n`-site phosphorylation (`n ≥ 3`): certify the boundary between monostability and multistationarity; prove global stability in the monostable regime | G-4; N-010, N-017 | open (research) | Multistationarity established in literature for `n ≥ 2` (sourced, unverified); witnesses are cheap, monostability certificates hard (X-7) |
+| `Q-3` | Sharp, uniform bounds `|dX_o*/dI| ≤ C(μ)` for ACR networks (EnvZ/OmpR) under dilution | G-4; N-009 | blocked (ill-posed) | Needs a choice of synthesis model and input `I` (X-10). Conjectured shape `O(μ)` on compact parameter boxes |
+| `Q-4` | Which deterministic homeostatic networks avoid stochastic extinction and keep stationary homeostasis under the CME at low copy numbers? | G-4; N-015, N-016 | open (research) | `F-acr` exhibits extinction (elementary). Antithetic feedback gives stationary-mean RPA under ergodicity (sourced) |
+| `Q-5` | How to unify siphon analysis, toric Lyapunov functions and Foster–Lyapunov drift into reusable Lean certificate templates? | G-3; N-011, N-012, N-014, N-017 | open | Proposed common shape: finite exact witness + polynomial identity/inequality checker + one soundness theorem per format |
+| `Q-6` | Kernel representation: how are species, complexes and reactions encoded (types vs finsets; self-loops; duplicate reactions; isolated complexes), and how are concrete deficiencies computed without `decide`? | G-1; N-001, N-002, N-013 and everything downstream | open — **ready, highest priority** | Draft proposal in N-001 |
+| `Q-7` | Precise quantifier structure of ACR, infinitesimal homeostasis, RPA and approximate adaptation, and the proved implication map between them; what is "the input" (rate parameter vs conserved total)? | G-1; N-003, N-007, N-009, N-018 | open | Draft definitions and separating examples in N-003 |
+| `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | open | Proposal: generator-level algebra first; process layer only for finite state spaces initially |
+| `Q-9` | Forward invariance of `ℝ_{>0}^n` for mass-action trajectories and existence/blow-up of solutions — what minimal ODE infrastructure is needed? | G-1; N-002, N-012 | open | Proof sketch (factor `x_i` out of consuming rates + Grönwall) in N-002 |
+| `Q-10` | Source fidelity: exact hypotheses and locators of `C-DZT`, `C-SF`, `C-GS`, `C-AL`, `C-BGK`, `C-AEJ`, `C-WS`, `C-CFMW`, and exact reaction lists of the case-study networks | all G-2/G-4 notes | open — needs source PDFs | See ledger; all locators TBD |
 
 ## 3. Note registry and dependency graph
 
 | ID | Note | Addresses | Depends on | Difficulty | Status / Lean readiness | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
-| `N-...` | ‹path and title› | ‹`G-*`, `Q-*`› | ‹notes and declarations› | ‹routine / moderate / hard / research› | ‹exploratory / stated / proof-ready / lean-ready / verified / blocked / refuted / superseded› | ‹one work unit› |
+| `N-001` | [kernel/N-001-network-syntax](kernel/N-001-network-syntax.md) | G-1, Q-6 | — | moderate | stated; **ready** | Resolve Q-6 by encoding `F-iso`, `F-acr`, `F-ab` in two candidate representations; then formalize |
+| `N-002` | [kernel/N-002-mass-action-ode](kernel/N-002-mass-action-ode.md) | G-1, Q-6, Q-7, Q-9 | N-001 | moderate | stated; blocked on N-001 | Formalize field, steady states, conservation; then positivity |
+| `N-003` | [kernel/N-003-homeostasis-notions](kernel/N-003-homeostasis-notions.md) | G-1, Q-7 | N-002, N-004 | moderate | exploratory; blocked on N-002 | Fix the input interface; draft predicates |
+| `N-004` | [kernel/N-004-sanity-suite](kernel/N-004-sanity-suite.md) | G-1 | N-001, N-002, N-003, N-013 | routine–moderate | stated; grows with the kernel | Write fixtures alongside N-001/N-002 |
+| `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
+| `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; blocked (source reading ready) | Extract a self-contained proof from the SOM |
+| `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | (a) proof-ready, **ready**; (b) blocked | Formalize Cramer/minor lemma, then the IFT wrapper |
+| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | exploratory; source transcription ready | Transcribe networks from `S-SF10` |
+| `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
+| `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
+| `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | proof-ready; **ready** (formats 1–2) | Choose sparse polynomial representation; soundness + fixtures |
+| `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | exploratory; blocked | Approve siphon source; design minimal-siphon cover certificate |
+| `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | stated; blocked on N-001 | Generator algebra + `F-bd`, `F-acr` sanity |
+| `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | stated; blocked | Drift checker; moment bound from generator stationarity |
+| `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | stated; source reading ready | `F-acr` reachability once N-013 compiles |
+| `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | proof-ready; blocked on kernel | Formalize after N-002/N-013 |
+| `N-017` | [deterministic/N-017-global-stability](deterministic/N-017-global-stability.md) | G-2, Q-2, Q-5 | N-005, N-012 | research | exploratory; blocked | Check publication status of `S-CRA15` |
+| `N-018` | [deterministic/N-018-rpa-topology](deterministic/N-018-rpa-topology.md) | G-2, Q-7 | N-003, N-007 | moderate–hard | exploratory; source reading ready | Read `S-AL18`; compare with `C-GSF` |
+| `N-019` | [deterministic/N-019-acr-higher-deficiency](deterministic/N-019-acr-higher-deficiency.md) | Q-1, G-2 | N-006, N-003 | research | exploratory; exploration ready (conditional) | `explore` Q-1 conditional on `C-SF` |
 
 A dependency is established only when its required output is a compiled Lean declaration. A note
 may explore a conditional dependency, but the edge and all downstream status must remain marked
 unverified.
+
+Dependency graph (edges `A → B`: B needs A):
+
+```text
+N-001 ─┬→ N-002 ─┬→ N-003 ─┬→ N-006 ─┬→ N-008 ─→ N-009
+       │         │         │         ├→ N-015
+       │         │         │         └→ N-019
+       │         │         ├→ N-007b ─→ N-009, N-018
+       │         │         ├→ N-016
+       │         │         └→ N-010
+       │         ├→ N-005 ─→ N-017 ←─ N-012
+       │         └→ N-012
+       └→ N-013 ─┬→ N-014 ─→ N-016, N-015
+                 └→ N-015
+N-007a (Mathlib only) ─→ N-007b
+N-011 (template only) ─→ N-008, N-009, N-010, N-014, N-019
+N-004 runs alongside N-001, N-002, N-003, N-013
+```
 
 ## 4. Strict audit status
 
@@ -41,12 +108,12 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | ‹commit hash or `not yet audited`› |
-| Scope | ‹full startup / changes since commit / affected modules› |
-| Kernel coverage | ‹every declaration reviewed, or exact gaps› |
-| Commands run | ‹builds, axiom audit and other checks with outcomes› |
-| Open findings | ‹severity, affected declarations/notes and owner› |
-| Missing sanity checks | ‹triad or risk-specific adversarial checks still required› |
+| Audited commit | `14f742d` (Initial commit), audited 2026-11-27 |
+| Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
+| Kernel coverage | Every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
+| Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
+| Open findings | None blocking. Info: (i) `amplitude_bound` is trivially true at `k = 0` (gives `0 ≤ 2E`); acceptable, scope noted. (ii) `theory_loop.lean`/`theory_server.lean` import `LeanTheory.Elaborate` at top level and load full `LeanTheory` via `importModules`; `LeanTheoryMeta` reaches them through `LeanTheory` — consistent with the template convention. (iii) Inherited Theory tracks (Fields, KAM, Stability) are unrelated to homeostasis; keep or prune when the domain is seeded |
+| Missing sanity checks | Example law has the triad (`free_velocity_const`, `instOscillatorLawCos`, `not_oscillatorLaw_exp`) plus risk-specific checks (time-shift, linearity in `Bridge/Example`; accepted/rejected certificate fixtures). Every future homeostasis law will need its own triad and adversarial checks |
 
 Previous code is in scope. A full startup audit inventories and red-teams every kernel declaration,
 then traces findings into dependent results. After a kernel or foundational change, update the
@@ -55,14 +122,38 @@ items from verified status.
 
 ## 5. Corrections and assumption ledger
 
-‹List false or underspecified starting claims with precise replacements. Record every model law,
-empirical input, parameter range, unit convention and validity envelope, together with its source.›
+Full ledger (sources, model assumptions, sourced claims, user ideas):
+[`sources-and-assumptions.md`](sources-and-assumptions.md). Corrections to loose starting claims:
+
+| ID | Loose claim | Precise replacement |
+| --- | --- | --- |
+| `X-1` | "Deficiency zero certifies global stability" | The DZT gives a unique positive equilibrium per class with **local** asymptotic stability (weakly reversible case). Global stability is the GAC (`S-CRA15`, preprint) — a separate dependency (N-017) |
+| `X-2` | "ACR network ⇒ homeostatic output" | ACR is a statement about the set of positive steady states; it is vacuous without one (`F-ab`), and implies neither stability nor convergence. Headline claims use `HasACRNonvacuous` plus separate stability results |
+| `X-3` | "`det H = 0` gives homeostasis / RPA" | `det H = 0` at a hyperbolic equilibrium gives a zero derivative at one input value (infinitesimal homeostasis), not RPA over an input range; it needs `det J ≠ 0` and an input entering one node with nonzero `f_{ι,I}` |
+| `X-4` | "ACR carries over to small copy numbers" | Deterministic ACR does not imply anything about the CME; for `F-acr` (and the class in `S-AEJ14`) the CME is absorbed at the boundary. Stochastic mass action uses falling factorials, not powers |
+| `X-5` | "Antithetic feedback gives RPA" | It gives stationary-**mean** RPA of the output assuming ergodicity and finite moments (`S-BGK16`); these are hypotheses. With dilution of controller species the exact identity fails (source to be supplied) |
+| `X-6` | "Drift `𝒜^* V ≤ −cV + b`" | The drift condition applies the generator `𝒜` to the test function `V`; its conclusions (non-explosion, positive recurrence) also need irreducibility and a finite/petite exceptional set. Moment bounds from generator stationarity need integrability hypotheses |
+| `X-7` | "A Positivstellensatz / SOS certificate rules out multistationarity" | Psatz certifies emptiness of a specified semialgebraic set; for multistationarity this set must encode two distinct positive steady states in one compatibility class, over the stated parameter region. SOS cannot directly express the `ln`-based complex-balanced Lyapunov function |
+| `X-8` | "Deficiency `δ = m − ℓ − s`" (representation-free) | Depends on conventions: no self-loops, complexes counted once, `s = dim span{ζ_r}`. Isolated complexes change `m` and `ℓ` equally. Fixed in N-001 |
+| `X-9` | "Persistence" | Distinguish persistence (`liminf x_i > 0`), permanence (uniform bounds), and absence of boundary equilibria; siphon conditions address the first for conservative networks |
+| `X-10` | "Add dilution `−μ x_i` to EnvZ/OmpR and bound `dx_o*/dI`" | With dilution on all species and no synthesis, all totals decay to 0. The diluted model needs synthesis terms, and the input `I` (synthesis rate, signal-dependent rate constant, or effective total) must be chosen before Q-3 is well posed |
 
 ## 6. Theory tracks and model ladder
 
-‹Group related notes into theory tracks. For each track give the current verified frontier,
-questions, proof or certificate techniques, and first useful deliverable. List model rungs from
-simple to realistic and the verified reduction or explicit error envelope needed between rungs.›
+| Track | Notes | Verified frontier | First useful deliverable |
+| --- | --- | --- | --- |
+| T1 Kernel | N-001–N-004, N-013 | none | network syntax + deficiency with fixtures `F-iso`, `F-acr`, `F-ab` |
+| T2 Structural deterministic theory | N-005, N-006, N-007, N-012, N-017, N-018, N-019 | none | N-007a determinant formula (Mathlib only) |
+| T3 Certificates (G-3) | N-011, N-014 (+ N-012 siphon cover, template contraction checkers) | template checkers only | coefficient-sign + cofactor identity checkers with fixtures |
+| T4 Case studies (G-4) | N-008, N-009, N-010, N-015, N-016 | none | antithetic deterministic set-point theorem; `F-acr` extinction combinatorics |
+
+Model ladder (each arrow needs a proved reduction or an explicit error envelope; none exists yet):
+
+1. idealized mass-action ODE (exact ACR / RPA) →
+2. mass action + dilution and synthesis (approximate adaptation, Q-3) →
+3. reduced Michaelis–Menten / Hill models (`A-MM`; QSSA error envelope required, not assumed) →
+4. CME generator-level statements (moments, absorbing sets) →
+5. CME process-level statements (finite state spaces first; then non-explosion via N-014).
 
 ## 7. Work selection
 
@@ -76,10 +167,19 @@ unblocks several dependants, closes a validity gap, tests a risky conjecture or 
 theorem. Continue across work units without waiting for a choice; stop for a genuine user decision,
 missing authorization or absence of useful ready work.
 
-Current priority order:
+Current priority order (provisional, 2026-11-27):
 
-1. ‹ready item and reason›
-2. ‹ready item and reason›
+1. **N-001 / Q-6** — kernel representation. Resolves the main model ambiguity and unblocks 14
+   notes. Write the representation memo with the `F-iso`, `F-acr`, `F-ab` encodings, then
+   formalize with sanity checks (N-004).
+2. **N-007a** — determinant formula for infinitesimal homeostasis. Ready now with Mathlib alone;
+   a reusable theorem feeding G-2, Q-3 and N-018. Good parallel strand.
+3. **N-011 formats 1–2** — polynomial certificate checkers (coefficient sign, cofactor identity).
+   Ready now; opens the G-3 pipeline and the direct ACR route for N-008/N-019.
+4. **Q-10 source reading** for `S-SF10` (+SOM) and `S-AEJ14` — needs the PDFs or permission to
+   fetch them; fixes exact hypotheses before N-006/N-008/N-015 are formalized.
+5. **N-009 / Q-3 model choice** — a user decision (synthesis model and input), cheap, and it turns
+   an ill-posed question into a precise one.
 
 ## 8. Running a work unit
 
@@ -108,13 +208,23 @@ the physical model.
 
 ## 10. Evidence gates
 
-‹For each goal or design, list which contracts must hold for the same witness and which evidence
-is required: compiled proof, exact certificate, empirical data or external model validation.›
+| Goal | Same-witness contracts | Evidence required |
+| --- | --- | --- |
+| G-1 | each kernel predicate with its sanity suite | compiled declarations, N-004 checks, strict audit |
+| G-2 | theorem hypotheses = source hypotheses | compiled theorem + source-fidelity record (Q-10) |
+| G-3 | certificate data ↔ soundness theorem ↔ semantic statement | compiled soundness, accepted/rejected fixtures, oracle output kept outside the trusted path |
+| G-4 | one model instance (same `k`, totals, input) for existence, homeostasis and stability claims | compiled theorems on a model transcribed from a cited source; exact vs approximate label; parameter domain |
 
 ## 11. Progress log
 
-‹One dated entry per work unit: selected item, theory or note changes, declarations proved, failed
-approaches and barriers, checks run, status changes, new dependencies and next ready choices.›
+- **2026-11-27 — startup audit** of template commit `14f742d`: build and axiom audit pass; see §4.
+- **2026-11-27 — seeding.** Created G-1…G-4, Q-1…Q-10, N-001…N-019 (notes under `notes/kernel`,
+  `notes/deterministic`, `notes/certificates`, `notes/stochastic`, `notes/cases`), the source and
+  assumption ledger, corrections X-1…X-10. No Lean code written; nothing verified. Library
+  reconnaissance: Mathlib has the implicit function theorem, Cramer's rule/adjugate, `MvPolynomial`,
+  Picard–Lindelöf, ω-limits; TauCeti has discrete-time Markov kernels, Lyapunov convergence for
+  flows on compact spaces, quiver strongly connected components. Neither has reaction networks,
+  siphons, SOS/Positivstellensatz or continuous-time Markov chains.
 
 ## 12. Implementation and workstation log
 

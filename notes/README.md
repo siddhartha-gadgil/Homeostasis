@@ -15,3 +15,12 @@ instructions.
 - [`goals/`](goals/README.md): generic guidance on choosing and stating goals.
 - [`reasoning/`](reasoning/README.md): one folder per proof attempt or exploration run by the
   `try-to-prove` and `explore-mathematics` skills.
+
+Homeostasis project notes (seeded 2026-11-27; registries in `implementation-plan.md`):
+
+- [`sources-and-assumptions.md`](sources-and-assumptions.md): source, assumption and claim ledger.
+- `kernel/` (N-001–N-004): network syntax, mass-action ODE, homeostasis predicates, sanity suite.
+- `deterministic/` (N-005–N-007, N-012, N-017–N-019): structural theorems and research questions.
+- `certificates/` (N-011): exact certificate formats for untrusted oracles.
+- `stochastic/` (N-013–N-016): CME kernel, Foster–Lyapunov, extinction, antithetic feedback.
+- `cases/` (N-008–N-010): EnvZ/OmpR, dilution bounds, multisite phosphorylation.
