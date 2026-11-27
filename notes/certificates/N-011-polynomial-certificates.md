@@ -71,6 +71,11 @@ network, proving the identity by `simp` + `ring`, concluding `HasACR`. Runs: `F-
 (`a = 0`, `c = 3/4 = μ/θ`, Lean check < 3 s), `A ⇌ B` (no certificate; exit 2). Note: the motif's
 ACR is the trivial kind (unique steady state, F-3); it is a pipeline test only.
 
+Format 6 (added 2026-11-27, `Certificates/LyapunovCert.lean`): Lyapunov-equation certificate for
+Hurwitz matrices — `P = L₁ᵀD₁L₁`, `JᵀP + PJ = −L₂ᵀD₂L₂` with positive diagonals and invertible
+`Lᵢ` (`isHurwitz_of_ldl`); accepted `cascade_isHurwitz`, antithetic motif Jacobian at unit rates
+(`aifNet_jacobian_one_isHurwitz`, data from sympy); rejected `unstable_not_isHurwitz`.
+
 Open: Jacobian-sign / injectivity certificates (need the injectivity theorem, source not supplied);
 SOS and Psatz oracles (SDP solver + rational rounding); larger certificates (sparse checker).
 

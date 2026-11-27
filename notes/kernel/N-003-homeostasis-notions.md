@@ -76,9 +76,15 @@ Two families of predicates, deliberately separate:
   no hyperbolicity built in), `HasPerfectAdaptation F U o c` (`U` nonempty; equilibria exist for every
   input; every positive equilibrium has output `c`), `HasAdaptationError F U o ε`. Inputs acting on
   rate constants enter through `massActionFamily N kfam`.
-- **Stability is not part of any predicate.** "Robust perfect adaptation" in the literature =
-  `HasPerfectAdaptation` + a stability contract; the stability contract (linear or Lyapunov) is
-  still to be defined (N-012/N-017, and N-016 for the antithetic motif).
+- **Stability contract (added 2026-11-27, `Kernel/Stability.lean`)**: `IsHurwitz J` (every complex
+  eigenvalue has negative real part; `isHurwitz_iff_det` gives the characteristic-polynomial form),
+  `IsHurwitzOn J S` (eigenvectors in the complexification of `S`), `IsLinearlyStable N k x`
+  (positive steady state + Jacobian Hurwitz on the stoichiometric subspace) and
+  `HasRPALinear N kfam U o c` (perfect adaptation + linear stability of every positive equilibrium
+  at every input). Finding F-8: for networks with a conservation law the Jacobian maps into
+  `S ≠ ⊤` and has eigenvalue 0, so plain `IsHurwitz` never holds (`isoNet_jacobian_not_isHurwitz`);
+  hence the class-relative definition (`isoNet_isLinearlyStable`). Linear stability ⇒ local
+  asymptotic stability (linearization principle) is not proved.
 
 Implication map (compiled):
 
@@ -95,9 +101,9 @@ Implication map (compiled):
 | Perfect adaptation over `∅` vacuous | finding F-4 → `U.Nonempty` in the definition; regression `not_hasPerfectAdaptation_empty` |
 | Input following | `lin_not_perfectAdaptation`, `lin_adaptationError` (`ẋ = I − x`) |
 
-Still open from the original plan: "ACR ⇏ stability / convergence" (needs a stability predicate and
-an ACR network with an unstable positive steady state); deterministic ACR ⇏ stochastic homeostasis
-(N-015).
+Still open: "ACR ⇏ linear stability" (needs an ACR network with an unstable positive steady
+state — search); linearization principle. Deterministic ACR ⇏ stochastic homeostasis is compiled
+for the toy network (N-015, `acrNet_extinction`).
 
 ## Outputs and next dependencies
 

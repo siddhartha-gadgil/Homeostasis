@@ -49,6 +49,11 @@ there is no positive steady state (the existence hypothesis is needed); with dil
 The motif's reaction list is the standard one as recalled; transcription against `S-BGK16` is still
 pending (Q-10).
 
+Linear stability (added 2026-11-27): at unit rate constants the motif's unique positive steady
+state `(1, 1, 1)` is linearly stable by an exact Lyapunov certificate, so
+`HasRPALinear` holds at `γ = 1` (`Sanity.aifNet_hasRPALinear_one`). Stability over a whole range of
+`γ` (parametric certificate, e.g. Routh–Hurwitz for the cubic) is open.
+
 ## Claims and evidence
 
 | Claim | Status |

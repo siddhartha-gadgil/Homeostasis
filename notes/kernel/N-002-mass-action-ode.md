@@ -94,11 +94,16 @@ before writing infrastructure.
   leaves the orthant (the sign hypothesis of `isPos` is needed); `A → B` has no positive steady state;
   **ACR preview**: every positive steady state of `F-acr` has `x_A = k₁/k₀`.
 
-Open items: the dilution ⇔ augmented-network lemma (needs a disjoint-union construction of
-complexes keeping injectivity); duplicate reactions ⇔ summed rate; invariance of the closed
-orthant from boundary initial data; a finite-horizon trajectory law (`MassActionTrajectoryOn T`)
-for networks that can blow up; existence of solutions (Picard–Lindelöf), needed only for
-statements that assert a trajectory exists.
+Added 2026-11-27 (stability work unit): finite-horizon law `MassActionTrajectoryOn k x T`
+(derivatives within `[0, T)`), with `sub_mem_stoichSubspace` and `isPos` on `[0, T)`; the global
+versions are now corollaries of local lemmas (`sub_mem_stoichSubspace_of_local`,
+`isPos_of_local`) and of `MassActionTrajectory.toOn`. Regression for F-2: `2A → 3A` with
+`x = 1/(1 − t)` satisfies the law on `[0, 1)` (`Sanity.blowUp_trajectoryOn`). The Jacobian
+`massActionJacobian` is proved to be the derivative of the field (`hasFDerivAt_massActionField`).
+
+Open items: the dilution ⇔ augmented-network lemma; duplicate reactions ⇔ summed rate;
+invariance of the closed orthant from boundary initial data; existence of solutions
+(Picard–Lindelöf), needed only for statements that assert a trajectory exists.
 
 ## Outputs and next dependencies
 

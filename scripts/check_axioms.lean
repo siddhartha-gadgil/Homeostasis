@@ -103,3 +103,10 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.tendsto_outMass_cme
 #print axioms LeanTheory.CRN.ReactionNetwork.isGenStationaryFor_of_vecMul_eq_zero
 #print axioms LeanTheory.CRN.Sanity.acrNet_extinction
+#print axioms LeanTheory.CRN.ReactionNetwork.hasFDerivAt_massActionField
+#print axioms LeanTheory.CRN.isHurwitz_iff_det
+#print axioms LeanTheory.CRN.isHurwitz_of_ldl
+#print axioms LeanTheory.CRN.ReactionNetwork.MassActionTrajectoryOn.isPos
+#print axioms LeanTheory.CRN.Sanity.isoNet_isLinearlyStable
+#print axioms LeanTheory.CRN.Sanity.aifNet_hasRPALinear_one
+#print axioms LeanTheory.CRN.Sanity.blowUp_trajectoryOn

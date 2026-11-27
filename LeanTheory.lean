@@ -21,6 +21,7 @@ public import LeanTheory.Certificates.FourierRegularity
 public import LeanTheory.Certificates.Generated.AcrToyGen
 public import LeanTheory.Certificates.Generated.AifGen
 public import LeanTheory.Certificates.IccListCert
+public import LeanTheory.Certificates.LyapunovCert
 public import LeanTheory.Certificates.KernelFact
 public import LeanTheory.Certificates.KronBall
 public import LeanTheory.Certificates.KronBallCheb
@@ -58,12 +59,15 @@ public import LeanTheory.Kernel.Example
 public import LeanTheory.Kernel.Homeostasis
 public import LeanTheory.Kernel.MassAction
 public import LeanTheory.Kernel.Network
+public import LeanTheory.Kernel.Stability
 public import LeanTheory.ResponseExt
+public import LeanTheory.Sanity.CRNBlowUp
 public import LeanTheory.Sanity.CRNCME
 public import LeanTheory.Sanity.CRNExtinction
 public import LeanTheory.Sanity.CRNHomeostasis
 public import LeanTheory.Sanity.CRNMassAction
 public import LeanTheory.Sanity.CRNNetwork
+public import LeanTheory.Sanity.CRNStability
 public import LeanTheory.Sanity.DeterminantFormula
 public import LeanTheory.Sanity.Example
 public import LeanTheory.Sanity.FosterLyapunov

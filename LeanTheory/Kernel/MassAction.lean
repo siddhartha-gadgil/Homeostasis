@@ -231,21 +231,22 @@ theorem field_ge_neg_mul [DecidableEq ι] {k : R → ℝ} (hk : ∀ r, 0 ≤ k r
 
 /-! ### Trajectories -/
 
-namespace MassActionTrajectory
+/-- **Model law, finite horizon**: `x` solves `ẋ = f_k(x)` on `[0, T)` (derivatives within
+`[0, T)`). Unlike `MassActionTrajectory`, this law is satisfiable by solutions that blow up at `T`
+(audit finding F-2). -/
+structure MassActionTrajectoryOn (k : R → ℝ) (x : ℝ → ι → ℝ) (T : ℝ) : Prop where
+  /-- The ODE holds at every `t ∈ [0, T)`. -/
+  hasDerivWithinAt : ∀ t ∈ Ico 0 T, HasDerivWithinAt x (N.massActionField k (x t)) (Ico 0 T) t
 
-variable {N} {k : R → ℝ} {x : ℝ → ι → ℝ} (h : MassActionTrajectory N k x)
-include h
+section LocalArguments
 
-/-- A trajectory is continuous on `[0, ∞)`. -/
-theorem continuousOn : ContinuousOn x (Ici 0) := fun t ht =>
-  (h.hasDerivWithinAt t ht).continuousWithinAt
+variable {N} {k : R → ℝ} {x : ℝ → ι → ℝ}
 
-/-- A trajectory has a genuine (two-sided) derivative at every `t > 0`. -/
-theorem hasDerivAt {t : ℝ} (ht : 0 < t) : HasDerivAt x (N.massActionField k (x t)) t :=
-  (h.hasDerivWithinAt t ht.le).hasDerivAt (Ici_mem_nhds ht)
-
-/-- **A trajectory stays in its stoichiometric compatibility class**: `x t − x 0 ∈ S`. -/
-theorem sub_mem_stoichSubspace {t : ℝ} (ht : 0 ≤ t) : x t - x 0 ∈ N.stoichSubspace := by
+/-- **Compatibility class, local form**: if `x` is continuous on `[0, t]` and solves the ODE with
+right derivatives on `[0, t)`, then `x t − x 0 ∈ S`. -/
+theorem sub_mem_stoichSubspace_of_local {t : ℝ} (ht : 0 ≤ t) (hc : ContinuousOn x (Icc 0 t))
+    (hd : ∀ s ∈ Ico 0 t, HasDerivWithinAt x (N.massActionField k (x s)) (Ici s) s) :
+    x t - x 0 ∈ N.stoichSubspace := by
   by_contra hmem
   obtain ⟨f, hf, hS⟩ := Submodule.exists_dual_map_eq_bot_of_notMem hmem inferInstance
   let F : (ι → ℝ) →L[ℝ] ℝ := LinearMap.toContinuousLinearMap f
@@ -254,31 +255,26 @@ theorem sub_mem_stoichSubspace {t : ℝ} (ht : 0 ≤ t) : x t - x 0 ∈ N.stoich
     rw [hS] at this
     exact this
   have hconst := constant_of_has_deriv_right_zero (f := fun s => F (x s)) (a := 0) (b := t)
-    ((F.continuous.comp_continuousOn (h.continuousOn.mono Icc_subset_Ici_self)))
+    (F.continuous.comp_continuousOn hc)
     (fun s hs => by
-      have hd := F.hasFDerivAt.comp_hasDerivWithinAt s (h.hasDerivWithinAt s hs.1)
-      rw [hF0 _ (N.massActionField_mem_stoichSubspace k _)] at hd
-      exact hd.mono (Ici_subset_Ici.mpr hs.1)) t ⟨ht, le_rfl⟩
+      have hd' := F.hasFDerivAt.comp_hasDerivWithinAt s (hd s hs)
+      rw [hF0 _ (N.massActionField_mem_stoichSubspace k _)] at hd'
+      exact hd') t ⟨ht, le_rfl⟩
   apply hf
   have : F (x t - x 0) = 0 := by rw [map_sub]; exact sub_eq_zero.mpr hconst
   exact this
 
-/-- **Conservation**: every conservation law is constant along a trajectory. -/
-theorem dotProduct_eq {w : ι → ℝ} (hw : N.IsConservationLaw w) {t : ℝ} (ht : 0 ≤ t) :
-    w ⬝ᵥ x t = w ⬝ᵥ x 0 := by
-  have := hw _ (h.sub_mem_stoichSubspace ht)
-  rwa [dotProduct_sub, sub_eq_zero] at this
-
-/-- **Forward invariance of the positive orthant.** With nonnegative rate constants, a
-trajectory starting at a positive state stays positive for all `t ≥ 0`. -/
-theorem isPos (hk : ∀ r, 0 ≤ k r) (h0 : IsPos (x 0)) {T : ℝ} (hT : 0 ≤ T) : IsPos (x T) := by
+/-- **Positivity, local form**: with nonnegative rate constants, if `x` is continuous on `[0, T]`,
+solves the ODE on `(0, T)` and starts positive, then `x T` is positive. -/
+theorem isPos_of_local (hk : ∀ r, 0 ≤ k r) (h0 : IsPos (x 0)) {T : ℝ} (hT : 0 ≤ T)
+    (hc : ContinuousOn x (Icc 0 T))
+    (hd : ∀ s ∈ Ioo 0 T, HasDerivAt x (N.massActionField k (x s)) s) : IsPos (x T) := by
   classical
   by_contra hTn
   -- the first time `τ ∈ [0, T]` at which some concentration is `≤ 0`
   set A : Set ℝ := ⋃ i, Icc 0 T ∩ (fun s => x s i) ⁻¹' Iic 0 with hA
   have hAclosed : IsClosed A := isClosed_iUnion_of_finite fun i =>
-    ((continuous_apply i).comp_continuousOn
-      (h.continuousOn.mono Icc_subset_Ici_self)).preimage_isClosed_of_isClosed isClosed_Icc
+    ((continuous_apply i).comp_continuousOn hc).preimage_isClosed_of_isClosed isClosed_Icc
       isClosed_Iic
   have hTA : T ∈ A := by
     simp only [IsPos, not_forall, not_lt] at hTn
@@ -302,16 +298,16 @@ theorem isPos (hk : ∀ r, 0 ≤ k r) (h0 : IsPos (x 0)) {T : ℝ} (hT : 0 ≤ T
   simp only [mem_preimage, mem_Iic, not_le]
   -- bound the loss coefficient on `[0, τ]`
   obtain ⟨B, hB⟩ := (isCompact_Icc (a := 0) (b := τ)).bddAbove_image
-    ((N.continuous_lossCoeff k i₀).comp_continuousOn (h.continuousOn.mono Icc_subset_Ici_self))
+    ((N.continuous_lossCoeff k i₀).comp_continuousOn (hc.mono (Icc_subset_Icc_right hτT)))
   set c := max B 0
   let v : ℝ → ℝ := fun s => Real.exp (c * s) * x s i₀
   have hvcont : ContinuousOn v (Icc 0 τ) := by
     apply ContinuousOn.mul (by fun_prop)
-    exact (continuous_apply i₀).comp_continuousOn (h.continuousOn.mono Icc_subset_Ici_self)
+    exact (continuous_apply i₀).comp_continuousOn (hc.mono (Icc_subset_Icc_right hτT))
   have hvderiv : ∀ s ∈ Ioo 0 τ, HasDerivAt v
       (c * Real.exp (c * s) * x s i₀ + Real.exp (c * s) * N.massActionField k (x s) i₀) s := by
     intro s hs
-    have hxi := hasDerivAt_pi.mp (h.hasDerivAt hs.1) i₀
+    have hxi := hasDerivAt_pi.mp (hd s ⟨hs.1, hs.2.trans_le hτT⟩) i₀
     have he : HasDerivAt (fun s => Real.exp (c * s)) (Real.exp (c * s) * c) s := by
       simpa using ((hasDerivAt_id s).const_mul c).exp
     convert he.mul hxi using 1
@@ -336,12 +332,72 @@ theorem isPos (hk : ∀ r, 0 ≤ k r) (h0 : IsPos (x 0)) {T : ℝ} (hT : 0 ≤ T
   have := lt_of_lt_of_le (h0 i₀) hv
   exact pos_of_mul_pos_right this (Real.exp_pos _).le
 
+end LocalArguments
+
+namespace MassActionTrajectory
+
+variable {N} {k : R → ℝ} {x : ℝ → ι → ℝ} (h : MassActionTrajectory N k x)
+include h
+
+/-- A trajectory is continuous on `[0, ∞)`. -/
+theorem continuousOn : ContinuousOn x (Ici 0) := fun t ht =>
+  (h.hasDerivWithinAt t ht).continuousWithinAt
+
+/-- A trajectory has a genuine (two-sided) derivative at every `t > 0`. -/
+theorem hasDerivAt {t : ℝ} (ht : 0 < t) : HasDerivAt x (N.massActionField k (x t)) t :=
+  (h.hasDerivWithinAt t ht.le).hasDerivAt (Ici_mem_nhds ht)
+
+/-- A global trajectory is a trajectory on every finite horizon. -/
+theorem toOn (T : ℝ) : N.MassActionTrajectoryOn k x T where
+  hasDerivWithinAt t ht := (h.hasDerivWithinAt t ht.1).mono Ico_subset_Ici_self
+
+/-- **A trajectory stays in its stoichiometric compatibility class**: `x t − x 0 ∈ S`. -/
+theorem sub_mem_stoichSubspace {t : ℝ} (ht : 0 ≤ t) : x t - x 0 ∈ N.stoichSubspace :=
+  sub_mem_stoichSubspace_of_local ht (h.continuousOn.mono Icc_subset_Ici_self)
+    fun s hs => (h.hasDerivWithinAt s hs.1).mono (Ici_subset_Ici.mpr hs.1)
+
+/-- **Conservation**: every conservation law is constant along a trajectory. -/
+theorem dotProduct_eq {w : ι → ℝ} (hw : N.IsConservationLaw w) {t : ℝ} (ht : 0 ≤ t) :
+    w ⬝ᵥ x t = w ⬝ᵥ x 0 := by
+  have := hw _ (h.sub_mem_stoichSubspace ht)
+  rwa [dotProduct_sub, sub_eq_zero] at this
+
+/-- **Forward invariance of the positive orthant.** With nonnegative rate constants, a
+trajectory starting at a positive state stays positive for all `t ≥ 0`. -/
+theorem isPos (hk : ∀ r, 0 ≤ k r) (h0 : IsPos (x 0)) {T : ℝ} (hT : 0 ≤ T) : IsPos (x T) :=
+  isPos_of_local hk h0 hT (h.continuousOn.mono Icc_subset_Ici_self) fun _ hs => h.hasDerivAt hs.1
+
 /-- A trajectory starting at a positive state stays in its positive compatibility class. -/
 theorem mem_compatClass (hk : ∀ r, 0 ≤ k r) (h0 : IsPos (x 0)) {t : ℝ} (ht : 0 ≤ t) :
     x t ∈ N.compatClass (x 0) :=
   ⟨h.isPos hk h0 ht, h.sub_mem_stoichSubspace ht⟩
 
 end MassActionTrajectory
+
+namespace MassActionTrajectoryOn
+
+variable {N} {k : R → ℝ} {x : ℝ → ι → ℝ} {T' : ℝ} (h : N.MassActionTrajectoryOn k x T')
+include h
+
+/-- A finite-horizon trajectory is continuous on `[0, T)`. -/
+theorem continuousOn : ContinuousOn x (Ico 0 T') := fun t ht =>
+  (h.hasDerivWithinAt t ht).continuousWithinAt
+
+/-- **Compatibility class on a finite horizon**: `x t − x 0 ∈ S` for `t ∈ [0, T)`. -/
+theorem sub_mem_stoichSubspace {t : ℝ} (ht : t ∈ Ico 0 T') : x t - x 0 ∈ N.stoichSubspace :=
+  sub_mem_stoichSubspace_of_local ht.1 (h.continuousOn.mono (Icc_subset_Ico_right ht.2))
+    fun s hs => (h.hasDerivWithinAt s ⟨hs.1, hs.2.trans ht.2⟩).mono_of_mem_nhdsWithin
+      (Filter.mem_of_superset (Ico_mem_nhdsGE (hs.2.trans ht.2)) (Ico_subset_Ico_left hs.1))
+
+/-- **Positivity on a finite horizon**: with nonnegative rate constants, a solution on `[0, T)`
+starting at a positive state stays positive on `[0, T)`. -/
+theorem isPos (hk : ∀ r, 0 ≤ k r) (h0 : IsPos (x 0)) {t : ℝ} (ht : t ∈ Ico 0 T') :
+    IsPos (x t) :=
+  isPos_of_local hk h0 ht.1 (h.continuousOn.mono (Icc_subset_Ico_right ht.2)) fun s hs =>
+    (h.hasDerivWithinAt s ⟨hs.1.le, hs.2.trans ht.2⟩).hasDerivAt
+      (Ico_mem_nhds hs.1 (hs.2.trans ht.2))
+
+end MassActionTrajectoryOn
 
 /-- A steady state gives a constant trajectory (non-vacuity of the trajectory law). -/
 theorem massActionTrajectory_const {k : R → ℝ} {x₀ : ι → ℝ}
