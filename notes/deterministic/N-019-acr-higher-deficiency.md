@@ -37,7 +37,7 @@ dynamically equivalent networks.
 
 | Claim | Status |
 | --- | --- |
-| Ideal-membership cofactor identity ⇒ ACR | complete elementary argument (evaluate the identity at a positive steady state); not formalized |
+| Ideal-membership cofactor identity ⇒ ACR | **compiled** `ReactionNetwork.hasACR_of_cofactor` (N-011); oracle `scripts/oracles/crn_cofactor.py` |
 
 ## Difficulty, barriers and readiness
 

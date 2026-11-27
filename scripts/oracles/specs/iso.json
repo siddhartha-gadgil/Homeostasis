@@ -1,0 +1,3 @@
+{"name": "IsoGen", "species": ["A", "B"],
+ "complexes": [[1, 0], [0, 1]], "reactions": [[0, 1], [1, 0]],
+ "rates": ["1", "1"], "acr_species": 0, "max_mult": 2, "max_cofactor": 2}

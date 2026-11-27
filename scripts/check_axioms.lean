@@ -88,3 +88,9 @@ run_cmd do
 #print axioms LeanTheory.Homeostasis.massAction_infinitesimalHomeostasis_iff_det
 #print axioms LeanTheory.Homeostasis.Sanity.ffl_homeostatic
 #print axioms LeanTheory.Homeostasis.Sanity.cascade_not_homeostatic
+#print axioms LeanTheory.CRN.ReactionNetwork.hasACR_of_cofactor
+#print axioms LeanTheory.CRN.ReactionNetwork.not_isPosSteadyState_of_posComb
+#print axioms LeanTheory.Certificates.Poly.psatz_empty
+#print axioms LeanTheory.CRN.Sanity.acrNet_hasACR_cert
+#print axioms LeanTheory.CRN.Generated.acrToyGenNet_hasACR
+#print axioms LeanTheory.CRN.Generated.aifGenNet_hasACR

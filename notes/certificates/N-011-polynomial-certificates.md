@@ -10,14 +10,14 @@
 | Addresses | `G-3`, `Q-5`, `Q-2` |
 | Depends on | Mathlib `MvPolynomial`; existing template certificate infrastructure (`LeanTheory/Certificates/PolyInterval.lean`, `RationalIntervals.lean`, `BoolCert.lean`, `EvalCert.lean`, `KernelFact.lean`) |
 | Dependency requirement | compiled template checkers (already in the audited build at `14f742d`) |
-| Produces | `LeanTheory/Certificates/MvPolyCert.lean` (planned): a computable sparse polynomial type over `ℚ` with a proved evaluation map; checkers for (i) identity `p = Σ g_j f_j` (ideal membership / cofactor), (ii) SOS `p = mᵀ Q m` with `Q = L D Lᵀ`, `D ≥ 0` rational, (iii) Positivstellensatz refutations of semialgebraic systems, (iv) sign patterns of Jacobian determinant coefficients; soundness theorems for each; accepted and rejected fixtures |
+| Produces | `LeanTheory/Certificates/PolyCert.lean`, `LeanTheory/Bridge/CRNCertificates.lean`, `LeanTheory/Sanity/PolyCert.lean`, oracle `scripts/oracles/crn_cofactor.py`, generated `LeanTheory/Certificates/Generated/*` |
 | Difficulty | moderate — the soundness proofs are algebra; performance of kernel-checked polynomial arithmetic is the real risk |
-| Status | proof-ready |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Status | verified (formats 1–4 with soundness and fixtures; one end-to-end oracle format); Jacobian-sign / injectivity format open |
+| Implementation status | formats 1–4 complete; oracles for format 2 only |
+| Implementation evidence | modules above, in `lake build`; oracle runs recorded in `scripts/oracles/README.md` |
+| Lean evidence | `Certificates.Poly.posComb`, `posComb_nonneg`, `posComb_pos`, `eq_zero_of_cofactor`, `sosComb`, `sosComb_nonneg`, `psatz_empty`; bridge `ReactionNetwork.eq_of_cofactor`, `hasACR_of_cofactor`, `not_isPosSteadyState_of_posComb`; fixtures `Sanity.acrNet_hasACR_cert`, `isoNet_no_cofactor`, `abNet_no_posSteadyState_cert`, `isoNet_no_posComb`, `sos_fixture`, `sos_rejected`, `psatz_fixture`, `psatz_rejected`; generated `Generated.acrToyGenNet_hasACR`, `Generated.aifGenNet_hasACR` |
+| Audit evidence | strict audit 2026-11-27 (implementation plan §4); no findings |
+| Last updated | 2026-11-27 — four formats, CRN bridge, fixtures and a cofactor oracle |
 
 ## Purpose and scope
 
@@ -50,11 +50,35 @@ Reuse: `PolyInterval.lean` handles univariate interval positivity — check how 
 polynomials and whether `eval_cert` scales to multivariate identity checks of the expected size
 (dozens of monomials, degree ≤ 6).
 
+## Compiled results and design decision (2026-11-27)
+
+**Design decision.** The polynomial identity in each certificate is checked at the use site by
+Mathlib's `ring` (kernel-checked normal form; `linear_combination` for cofactor identities). This
+replaces the planned custom sparse-polynomial checker, which is deferred until a certificate is too
+large for `ring`. Certificate data are rationals; no floating point enters Lean.
+
+| Format | Soundness | Accepted fixture | Rejected fixture |
+| --- | --- | --- | --- |
+| 1 nonnegative coefficients | `posComb_nonneg`, `posComb_pos`; CRN: `not_isPosSteadyState_of_posComb` | `abNet_no_posSteadyState_cert` (`A → B`) | `isoNet_no_posComb` |
+| 2 cofactors | `eq_zero_of_cofactor`; CRN: `hasACR_of_cofactor` | `acrNet_hasACR_cert` (`F-acr`, `k = (2, 3)`) | `isoNet_no_cofactor` |
+| 3 SOS | `sosComb_nonneg` | `sos_fixture` | `sos_rejected` |
+| 4 Positivstellensatz | `psatz_empty` | `psatz_fixture` (`x² + 1 = 0`) | `psatz_rejected` (`x² − 1 = 0`) |
+
+**Oracle** `scripts/oracles/crn_cofactor.py` (untrusted): JSON network + rational rates →
+exact sympy ansatz for `x^a (x_s − c) = Σ g_i f_i` → exact re-validation → Lean file defining the
+network, proving the identity by `simp` + `ring`, concluding `HasACR`. Runs: `F-acr` with
+`k = (5, 7)` (certificate `a = e_B`, `c = 7/5`), antithetic motif with `k = (3, 4, 1, 2, 5)`
+(`a = 0`, `c = 3/4 = μ/θ`, Lean check < 3 s), `A ⇌ B` (no certificate; exit 2). Note: the motif's
+ACR is the trivial kind (unique steady state, F-3); it is a pipeline test only.
+
+Open: Jacobian-sign / injectivity certificates (need the injectivity theorem, source not supplied);
+SOS and Psatz oracles (SDP solver + rational rounding); larger certificates (sparse checker).
+
 ## Claims and evidence
 
 | Claim | Status |
 | --- | --- |
-| Soundness of formats 1–4 | elementary; not formalized |
+| Soundness of formats 1–4 | **compiled** (see table) |
 
 ## Difficulty, barriers and readiness
 

@@ -32,7 +32,9 @@ As of 2026-11-27 (seeded from the user's prompt):
   `m = κ_μ/κ_θ` (`IsAntitheticController.stationary_mean`, ergodicity as a hypothesis).
   First structural theorem (G-2(a), N-007): the Golubitsky–Stewart criterion — infinitesimal
   homeostasis ⇔ `det H = 0` (`Homeostasis.infinitesimalHomeostasis_iff_det`), also for mass-action
-  networks. The audited template library
+  networks. Certificate pipeline (G-3, N-011): four polynomial certificate formats with
+  soundness and accepted/rejected fixtures; cofactor certificates ⇒ ACR; an untrusted sympy oracle
+  emitting Lean (`scripts/oracles/crn_cofactor.py`, two generated certificates checked). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -42,7 +44,7 @@ As of 2026-11-27 (seeded from the user's prompt):
 - **Main barriers:** kernel representation choices (Q-6) gate almost everything; no
   continuous-time Markov chain theory in Mathlib/TauCeti (Q-8); the dilution question (Q-3) is
   ill-posed until an input and a synthesis model are chosen (correction X-10).
-- **Ready now:** N-011 (polynomial certificates; unblocks N-014, N-019, N-008 direct route), finite-state CTMC absorption (N-015, Q-8), N-009 once the dilution model is chosen (X-10) (determinant formula, Mathlib-only), N-011
+- **Ready now:** N-014 (Foster–Lyapunov drift certificates), N-019 exploration, finite-state CTMC absorption (N-015, Q-8), N-008 once the source network is transcribed, N-009 once the dilution model is chosen (X-10) (determinant formula, Mathlib-only), N-011
   formats 1–2 (polynomial certificate checkers, template-only), and source-reading tasks for
   N-006/N-008/N-015 when the user supplies PDFs.
 
@@ -54,7 +56,7 @@ Several goals may coexist. Goals may be independent or support other goals.
 | --- | --- | --- | --- | --- |
 | `G-1` | **Auditable CRN kernel.** Lean definitions of reaction networks, stoichiometric subspace, compatibility classes, linkage classes, weak reversibility, deficiency (N-001); mass-action field, steady states, conservation laws, dilution variant (N-002); homeostasis predicates ACR / infinitesimal homeostasis / RPA / approximate adaptation (N-003); CME propensities and generator (N-013). Success: all compile axiom-free; every law has the triad plus the five `U-SW` classes (N-004); a strict audit with no open kernel finding | supports G-2, G-3, G-4 | open | compiled declarations + N-004 sanity suite + audit record |
 | `G-2` | **Structural theorems, machine-checked.** At least: (a) determinant formula for infinitesimal homeostasis (N-007); (b) Shinar–Feinberg ACR theorem (N-006); (c) Deficiency Zero Theorem with local stability (N-005); stretch: persistence criteria (N-012), RPA topology (N-018). Success: each as a named compiled theorem whose hypotheses match the source statement, recorded in the ledger | supported by G-1; supports G-4 | active ((a) determinant formula done; (b), (c) open) | compiled theorems; source-fidelity check per theorem |
-| `G-3` | **Untrusted oracle + small verifier pipeline.** Exact certificate formats and Lean soundness theorems for: coefficient-sign/injectivity, ideal-membership cofactors, SOS (`LDLᵀ` over `ℚ`), Positivstellensatz refutations (N-011), validated root enclosures (template), siphon covers (N-012), Foster–Lyapunov drift and moment bounds (N-014). Success: each format has a soundness theorem, an accepted and a rejected fixture, and one end-to-end use from an external oracle on a G-4 network | supported by G-1; supports G-2 (case checks), G-4 | open | compiled soundness theorems + fixtures + one documented oracle run per format |
+| `G-3` | **Untrusted oracle + small verifier pipeline.** Exact certificate formats and Lean soundness theorems for: coefficient-sign/injectivity, ideal-membership cofactors, SOS (`LDLᵀ` over `ℚ`), Positivstellensatz refutations (N-011), validated root enclosures (template), siphon covers (N-012), Foster–Lyapunov drift and moment bounds (N-014). Success: each format has a soundness theorem, an accepted and a rejected fixture, and one end-to-end use from an external oracle on a G-4 network | supported by G-1; supports G-2 (case checks), G-4 | active (formats 1–4 compiled; cofactor oracle end-to-end) | compiled soundness theorems + fixtures + one documented oracle run per format |
 | `G-4` | **Machine-checked case studies**, separating exact idealized homeostasis from quantitative approximate bounds: EnvZ/OmpR (and IDHKP/IDH) ACR (N-008) and under dilution (N-009); 2-site / `n`-site phosphorylation (N-010); antithetic integral feedback, deterministic and stochastic-mean (N-016); stochastic extinction in ACR networks (N-015). Success: per network a compiled model transcribed from a cited source, plus compiled theorems, each labelled *exact-idealized* or *approximate-bound* with explicit parameter domain | supported by G-1, G-2, G-3 | active (antithetic motif, deterministic, done) | compiled theorems; transcription check against source; assumption ledger entries |
 
 ## 2. Question registry
@@ -67,7 +69,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `Q-2` | For `n`-site phosphorylation (`n ≥ 3`): certify the boundary between monostability and multistationarity; prove global stability in the monostable regime | G-4; N-010, N-017 | open (research) | Multistationarity established in literature for `n ≥ 2` (sourced, unverified); witnesses are cheap, monostability certificates hard (X-7) |
 | `Q-3` | Sharp, uniform bounds `|dX_o*/dI| ≤ C(μ)` for ACR networks (EnvZ/OmpR) under dilution | G-4; N-009 | blocked (ill-posed) | Needs a choice of synthesis model and input `I` (X-10). Conjectured shape `O(μ)` on compact parameter boxes |
 | `Q-4` | Which deterministic homeostatic networks avoid stochastic extinction and keep stationary homeostasis under the CME at low copy numbers? | G-4; N-015, N-016 | open (research) | `F-acr` exhibits extinction (elementary). Antithetic feedback gives stationary-mean RPA under ergodicity (sourced) |
-| `Q-5` | How to unify siphon analysis, toric Lyapunov functions and Foster–Lyapunov drift into reusable Lean certificate templates? | G-3; N-011, N-012, N-014, N-017 | open | Proposed common shape: finite exact witness + polynomial identity/inequality checker + one soundness theorem per format |
+| `Q-5` | How to unify siphon analysis, toric Lyapunov functions and Foster–Lyapunov drift into reusable Lean certificate templates? | G-3; N-011, N-012, N-014, N-017 | active | Common shape realized for polynomial formats (N-011): exact rational data + identity checked by `ring` + one soundness theorem + bridge to a CRN statement + oracle emitting Lean. Siphon and drift formats still to follow it |
 | `Q-6` | Kernel representation: how are species, complexes and reactions encoded (types vs finsets; self-loops; duplicate reactions; isolated complexes), and how are concrete deficiencies computed without `decide`? | G-1; N-001, N-002, N-013 and everything downstream | **answered** (2026-11-27) | Type-parametrized `ReactionNetwork ι C R`; no self-loops or isolated complexes; duplicates allowed; labelling certificate for `ℓ`, multiples lemma for rank 1 (general rank certificate open). See N-001 |
 | `Q-7` | Precise quantifier structure of ACR, infinitesimal homeostasis, RPA and approximate adaptation, and the proved implication map between them; what is "the input" (rate parameter vs conserved total)? | G-1; N-003, N-007, N-009, N-018 | **answered at the equilibrium level** (2026-11-27) | ACR: fixed `k`, robustness across compatibility classes; GS/RPA: input-parametrized family `F I`; stability kept as a separate (not yet defined) contract. Implication map compiled (N-003) |
 | `Q-8` | Semantics of the CME in Lean: generator-level vs process-level statements; non-explosion; meaning of stochastic persistence and stationary homeostasis | G-1, G-3; N-013, N-014, N-015, N-016 | partly answered | Generator-level layer compiled (N-013): pointwise master equation, stationary distributions, integrability-explicit generator stationarity. Process layer (finite state spaces first) still open |
@@ -88,15 +90,15 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | exploratory; source transcription ready | Transcribe networks from `S-SF10` |
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
-| `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | proof-ready; **ready** (formats 1–2) | Choose sparse polynomial representation; soundness + fixtures |
+| `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
 | `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | exploratory; blocked | Approve siphon source; design minimal-siphon cover certificate |
 | `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | **verified** (algebraic layer: `LeanTheory.Kernel.CME`) | Prove `IsStationaryDistribution ⇒ IsGenStationaryFor` for finite support; process layer (Q-8) |
-| `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | stated; blocked on N-011 only | Drift checker; moment bound from generator stationarity |
+| `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | stated; **ready** (drift checker + moment bound) | Drift checker; moment bound from generator stationarity |
 | `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | combinatorial part **verified** for `F-acr`; source reading ready | Finite-state absorption theorem (Q-8); read `S-AEJ14` |
 | `N-016` | [stochastic/N-016-antithetic-feedback](stochastic/N-016-antithetic-feedback.md) | G-4, Q-3, Q-4 | N-002, N-003, N-013, N-014 | routine (exact parts) | **verified** (deterministic; stochastic mean at generator level) | Quantify dilution error (Q-3); stability | Formalize after N-002/N-013 |
 | `N-017` | [deterministic/N-017-global-stability](deterministic/N-017-global-stability.md) | G-2, Q-2, Q-5 | N-005, N-012 | research | exploratory; blocked | Check publication status of `S-CRA15` |
 | `N-018` | [deterministic/N-018-rpa-topology](deterministic/N-018-rpa-topology.md) | G-2, Q-7 | N-003, N-007 | moderate–hard | exploratory; **Lean prerequisites verified**, source reading ready | Read `S-AL18`; compare with `C-GSF` |
-| `N-019` | [deterministic/N-019-acr-higher-deficiency](deterministic/N-019-acr-higher-deficiency.md) | Q-1, G-2 | N-006, N-003 | research | exploratory; exploration ready (conditional) | `explore` Q-1 conditional on `C-SF` |
+| `N-019` | [deterministic/N-019-acr-higher-deficiency](deterministic/N-019-acr-higher-deficiency.md) | Q-1, G-2 | N-006, N-003 | research | exploratory; cofactor sufficient condition **compiled**; exploration ready | `explore` Q-1 conditional on `C-SF` |
 
 A dependency is established only when its required output is a compiled Lean declaration. A note
 may explore a conditional dependency, but the edge and all downstream status must remain marked
@@ -126,7 +128,7 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
@@ -187,8 +189,8 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **N-011** — polynomial certificate checkers (coefficient sign, cofactor identity, then SOS);
-   G-3; unblocks N-014, N-019 and the direct ACR route for N-008.
+1. **N-014** — Foster–Lyapunov drift certificates and moment bounds on the CME generator (uses
+   N-011 formats on the lattice); the stochastic half of G-3.
 2. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
    N-007, block factorization), Anderson–Enciso–Johnston (N-015). Needs the PDFs or permission to
    fetch them.
@@ -286,6 +288,13 @@ the physical model.
   `LeanTheory/Sanity/DeterminantFormula.lean` (linear systems; cascade not homeostatic; incoherent
   feedforward loop homeostatic by cancellation). Build clean, axiom audit passed for 6313
   declarations. G-2(a) achieved conditionally on a differentiable branch.
+
+- **2026-11-27 — N-011 (work unit).** Design decision: polynomial identities checked by `ring`
+  at the use site. New `LeanTheory/Certificates/PolyCert.lean` (formats: nonnegative coefficients,
+  cofactors, SOS, Positivstellensatz), `LeanTheory/Bridge/CRNCertificates.lean` (cofactor ⇒ ACR;
+  positive combination ⇒ no positive steady state), `LeanTheory/Sanity/PolyCert.lean` (accepted and
+  rejected fixture per format), oracle `scripts/oracles/crn_cofactor.py` with specs and two generated,
+  Lean-checked certificates. Build clean, axiom audit passed for 6361 declarations. G-3 active.
 
 ## 12. Implementation and workstation log
 

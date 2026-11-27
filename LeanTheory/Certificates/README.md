@@ -44,6 +44,8 @@ SubsetSum pattern. `eval_decide` and `fiv_decide` are evaluation certificates of
 | [`KronProof2D`](KronProof2D.lean) | Two-dimensional Kronecker ball checks as explicit proof terms (`kron2_proof`) | `kron2_proof` |
 | [`Kronecker2D`](Kronecker2D.lean) | Exact ℓ¹ norms of bivariate integer polynomials by Kronecker substitution |  |
 | [`Kronecker2DWeighted`](Kronecker2DWeighted.lean) | Weighted ℓ¹ norms of trigonometric polynomials by Kronecker substitution |  |
+| [`PolyCert`](PolyCert.lean) | Polynomial certificates for untrusted oracles: nonnegative coefficients, cofactors, SOS, Positivstellensatz refutations (identities checked by `ring`) | |
+| [`Generated/`](Generated) | Oracle-emitted certificates (`scripts/oracles/`): cofactor ACR certificates | |
 | [`PolyInterval`](PolyInterval.lean) | Exact polynomial positivity certificates on intervals |  |
 | [`RadiiPolynomial`](RadiiPolynomial.lean) | The radii polynomial theorem (Newton-like form) |  |
 | [`RationalIntervals`](RationalIntervals.lean) | Exact rational enclosure core |  |
