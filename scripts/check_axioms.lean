@@ -84,3 +84,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.Sanity.acrNet_reaches_extinction
 #print axioms LeanTheory.CRN.Design.aifNet_stationary_mean
 #print axioms LeanTheory.CRN.Sanity.bdNet_poisson_isStationaryDistribution
+#print axioms LeanTheory.Homeostasis.infinitesimalHomeostasis_iff_det
+#print axioms LeanTheory.Homeostasis.massAction_infinitesimalHomeostasis_iff_det
+#print axioms LeanTheory.Homeostasis.Sanity.ffl_homeostatic
+#print axioms LeanTheory.Homeostasis.Sanity.cascade_not_homeostatic

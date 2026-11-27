@@ -10,14 +10,14 @@
 | Addresses | `G-2`, `Q-3` (tool), `Q-7` |
 | Depends on | Mathlib only for the abstract theorem (implicit function theorem `Mathlib/Analysis/Calculus/Implicit*`, Cramer's rule `Matrix.cramer`, `Matrix.det`); `N-003` for the CRN instantiation |
 | Dependency requirement | none from the project for part (a); compiled `InfinitesimalHomeostasis` (N-003) for part (b) |
-| Produces | (a) `LeanTheory/Theory/Homeostasis/DeterminantFormula.lean`: an abstract theorem for `F : ℝ^n × ℝ → ℝ^n`, `C¹`; (b) instantiation to mass-action networks with an input parameter |
+| Produces | `LeanTheory/Theory/Homeostasis/DeterminantFormula.lean`, `LeanTheory/Sanity/DeterminantFormula.lean` |
 | Difficulty | moderate — linear algebra (Cramer's rule on the linearized system) plus the implicit function theorem; sign bookkeeping |
-| Status | proof-ready (part a) |
-| Implementation status | not started |
-| Implementation evidence | none |
-| Lean evidence | none |
-| Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Status | verified (formula and `det H` criterion, conditional on a differentiable branch; CRN instantiation); block factorization `C-GSF` and IFT existence of the branch open |
+| Implementation status | complete for parts (a), (b) |
+| Implementation evidence | modules above, in `lake build` |
+| Lean evidence | `Homeostasis.det_smul_eq_adjugate_mulVec`, `mulVec_eq_single`, `homeostasisMatrix`, `adjugate_eq_homeostasisMatrix`, `stateJacobian`, `inputDeriv`, `stateJacobian_mulVec_branch`, `branch_output_mul_det`, `infinitesimalHomeostasis_iff_adjugate`, `infinitesimalHomeostasis_iff_det`, `differentiable_massActionFamily`, `massAction_infinitesimalHomeostasis_iff_det`; sanity `Sanity.cascade_not_homeostatic`, `Sanity.ffl_homeostatic` |
+| Audit evidence | strict audit 2026-11-27 (implementation plan §4); no findings |
+| Last updated | 2026-11-27 — determinant formula and `det H` criterion compiled |
 
 ## Purpose and scope
 
@@ -47,11 +47,31 @@ Sanity: `F-lin` (`x* = I/k`, `det H` of a 1×1 system is the empty determinant `
 homeostasis); a 2-node feedforward example with `det H = 0` (find one, e.g. the opposer motif);
 the `(x − I₀)²` example (N-003) to show infinitesimal ≠ RPA.
 
+## Compiled results (2026-11-27)
+
+- **Linear algebra**: `J u = v ⇒ det J • u = adj J v`; single input `J u = c e_i ⇒ u_o det J =
+  c adj(J)_{oi}`; for `Fin (n + 1)`, `adj(J)_{oi} = (−1)^{i+o} det H` with `H` = `J` minus row `i`,
+  column `o` (`homeostasisMatrix`).
+- **Calculus**: from the joint derivative `L` of `(I, x) ↦ F I x` at `(I₀, X I₀)`, a differentiable
+  branch with `F I (X I) = 0` near `I₀` satisfies `J X' = −∂_I F`. Hence
+  `X_o' det J = −c adj(J)_{oi}`, and (for `det J ≠ 0`, `c ≠ 0`)
+  `InfinitesimalHomeostasis F X o I₀ ↔ det H = 0` — the Golubitsky–Stewart criterion, stated with
+  the N-003 predicate.
+- **CRNs**: mass-action families with differentiable rate-constant inputs are jointly
+  differentiable, so the criterion holds with `L = fderiv`.
+- **Sanity**: linear systems `ẋ = Ax + Ie` (`stateJacobian = A`, `inputDeriv = e`). Cascade
+  `ẋ₀ = I − x₀, ẋ₁ = x₀ − x₁`: `det H = 1`, not homeostatic. Incoherent feedforward loop with
+  output `ẋ₂ = x₀ − x₁ − x₂`: `det H = 0` (two cancelling paths), homeostatic.
+
+Scope: the branch and its differentiability are hypotheses (the implicit function theorem would
+supply them when `det J ≠ 0`; not invoked). The source's exact convention is still to be checked
+(Q-10); the vanishing criterion does not depend on the sign.
+
 ## Claims and evidence
 
 | Claim | Status |
 | --- | --- |
-| Determinant formula | complete mathematical proof sketched above (standard); sign convention to match `S-GS`; not formalized |
+| Determinant formula and `det H` criterion | **compiled** (see above) |
 | Block factorization `C-GSF` | sourced (`S-GS`), not studied |
 
 ## Difficulty, barriers and readiness
