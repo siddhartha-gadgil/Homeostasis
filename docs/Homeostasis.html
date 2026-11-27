@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homeostasis in Lean</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+:root {
+  --ink: #172033; --muted: #5b6578; --line: #dfe2e8; --paper: #fbfaf6; --card: #ffffff;
+  --accent: #0b7285; --accent-soft: #e6f4f6; --plasma: #d9480f; --plasma-soft: #fff1e7;
+  --good: #2b8a3e; --good-soft: #ebf7ee; --bad: #c92a2a; --bad-soft: #fdecec;
+  --gold: #b7791f; --gold-soft: #fdf6e3;
+  --night: #0b1220; --night-2: #131d33; --night-ink: #e8edf6; --night-muted: #9aa6bd; --cyan: #66d9e8;
+  --r-background-color: var(--paper);
+  --r-main-font: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --r-main-font-size: 36px;
+  --r-main-color: var(--ink);
+  --r-heading-font: "Source Serif 4", Georgia, serif;
+  --r-heading-color: var(--ink);
+  --r-heading-text-transform: none;
+  --r-heading-font-weight: 600;
+  --r-heading-letter-spacing: -0.01em;
+  --r-heading1-size: 2.1em;
+  --r-heading2-size: 1.4em;
+  --r-link-color: var(--accent);
+  --r-link-color-hover: var(--plasma);
+  --r-code-font: "JetBrains Mono", ui-monospace, monospace;
+  --r-selection-background-color: var(--accent-soft);
+}
+.reveal .slides section { text-align: left; }
+.reveal h1, .reveal h2, .reveal h3 { text-wrap: balance; }
+.reveal h2 { margin: 0 0 0.5em; }
+.reveal .kicker { font-size: 0.5em; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0 0 0.35em; }
+.reveal ul, .reveal ol { margin-left: 1.1em; display: block; }
+.reveal li { margin: 0.32em 0; line-height: 1.3; }
+.reveal li::marker { color: var(--accent); }
+.reveal p { line-height: 1.35; margin: 0.45em 0; }
+.reveal strong { color: inherit; font-weight: 700; }
+.muted { color: var(--muted); }
+.small { font-size: 0.8em; }
+.xsmall { font-size: 0.66em; }
+.mt { margin-top: 0.8em !important; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start; }
+.cols.wide-left { grid-template-columns: 1.25fr 1fr; }
+.cols.wide-right { grid-template-columns: 1fr 1.25fr; }
+.cols.center { align-items: center; }
+.cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 0.6em 0.8em; box-shadow: 0 1px 2px rgba(23, 32, 51, 0.05); }
+.card h3 { font-family: var(--r-main-font); font-size: 0.82em; font-weight: 700; color: var(--accent); margin: 0 0 0.3em; letter-spacing: 0; }
+.card p, .card li { font-size: 0.66em; margin: 0.2em 0; }
+.card.plasma h3 { color: var(--plasma); }
+.card.good h3 { color: var(--good); }
+.card.bad h3 { color: var(--bad); }
+.card.gold h3 { color: var(--gold); }
+.callout { border-left: 5px solid var(--plasma); background: var(--plasma-soft); padding: 0.5em 0.8em; border-radius: 0 12px 12px 0; font-size: 0.8em; }
+.callout.accent { border-color: var(--accent); background: var(--accent-soft); }
+.callout.good { border-color: var(--good); background: var(--good-soft); }
+.caption { font-size: 0.5em; color: var(--muted); margin-top: 0.45em !important; line-height: 1.3; }
+.reveal section.divider { padding-top: 260px; }
+.reveal section.divider h1 { color: var(--night-ink); font-size: 2.2em; max-width: 15em; }
+.reveal section.divider .kicker { color: #66d9e8; font-size: 0.6em; }
+.reveal section.divider p.sub { color: var(--night-muted); font-size: 0.8em; max-width: 34em; }
+.reveal section.title-slide { padding-top: 220px; }
+.title-bg { position: absolute; left: -64px; top: -36px; width: 1728px; height: 972px; z-index: 0; pointer-events: none; opacity: 0.5; }
+.title-bg canvas { width: 100%; height: 100%; display: block; }
+.title-text { position: relative; z-index: 1; max-width: 760px; }
+.reveal section.title-slide h1 { color: var(--night-ink); font-size: 2.05em; line-height: 1.08; }
+.reveal section.title-slide .kicker { color: #66d9e8; font-size: 0.55em; }
+.reveal section.title-slide .subtitle { color: var(--night-muted); font-size: 0.85em; }
+.reveal section.title-slide .author { color: var(--night-ink); font-size: 0.8em; margin-top: 2em; font-weight: 600; }
+.flow { display: flex; align-items: center; gap: 0.45em; }
+.flow.wrap { flex-wrap: wrap; row-gap: 0.6em; }
+.flow .box { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 0.45em 0.7em; font-size: 0.66em; text-align: center; line-height: 1.22; flex: 0 1 auto; }
+.flow .box small { display: block; color: var(--muted); font-size: 0.82em; margin-top: 0.15em; }
+.flow .arrow { color: var(--muted); font-size: 0.85em; flex: 0 0 auto; }
+.box.accent { border-color: var(--accent); background: var(--accent-soft); }
+.box.plasma { border-color: var(--plasma); background: var(--plasma-soft); }
+.box.good { border-color: var(--good); background: var(--good-soft); color: var(--good); font-weight: 700; }
+.box.dark { background: var(--night); border-color: var(--night); color: var(--night-ink); }
+.box.dark small { color: var(--night-muted); }
+.stack { display: flex; flex-direction: column-reverse; gap: 8px; }
+.stack .layer { display: grid; grid-template-columns: 7.2em 1fr; align-items: center; gap: 0.6em; border-radius: 10px; padding: 0.38em 0.75em; font-size: 0.6em; background: #fff; border: 1px solid var(--line); }
+.stack .layer b { color: var(--accent); font-size: 1.08em; }
+.stack .layer.kernel { background: var(--night); color: var(--night-ink); border-color: var(--night); }
+.stack .layer.kernel b { color: #66d9e8; }
+.reveal pre.lean { width: 100%; box-shadow: none; margin: 0; font-size: 0.44em; }
+.reveal pre.lean.s { font-size: 0.38em; }
+.reveal pre.lean.xs { font-size: 0.33em; }
+.reveal pre.lean code { background: #0f1626; color: #e6ebf5; border-radius: 14px; padding: 0.8em 1.05em; max-height: none; line-height: 1.5; white-space: pre; display: block; overflow: visible; }
+.reveal pre.scheme { box-shadow: none; margin: 0.2em 0 0.4em; font-size: 0.5em; width: 100%; }
+.reveal pre.scheme code { background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 0.55em 0.9em; line-height: 1.5; display: block; }
+.tok-kw { color: #ff9e64; font-weight: 600; }
+.tok-com { color: #8392ab; font-style: italic; }
+.tok-ty { color: #7dcfff; }
+.tok-tac { color: #c3e88d; }
+.reveal code.inline { font-size: 0.85em; background: #eef0f4; padding: 0.05em 0.3em; border-radius: 5px; }
+.codehead { font-size: 0.42em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin: 0.55em 0 0.25em !important; color: var(--muted); }
+.codehead.def { color: var(--accent); }
+.codehead.ok { color: var(--good); }
+.codehead.sanity { color: var(--gold); }
+.codehead:first-child { margin-top: 0 !important; }
+.pts { font-size: 0.62em; }
+.pts li { margin: 0.22em 0; }
+.reveal table { font-size: 0.5em; border-collapse: collapse; width: 100%; }
+.reveal table th, .reveal table td { border-bottom: 1px solid var(--line); padding: 0.36em 0.55em; text-align: left; vertical-align: top; }
+.reveal table th { color: var(--muted); font-weight: 600; font-size: 0.82em; text-transform: uppercase; letter-spacing: 0.06em; }
+.reveal table td.ok { color: var(--good); font-weight: 700; white-space: nowrap; }
+.reveal table td.open { color: var(--plasma); font-weight: 700; white-space: nowrap; }
+.reveal table code { font-size: 0.9em; }
+.stat { font-family: var(--r-heading-font); font-weight: 700; font-size: 1.5em; color: var(--accent); line-height: 1; }
+.statcap { font-size: 0.5em; color: var(--muted); margin: 0.1em 0 0 !important; }
+.reveal .slide-number { font-family: var(--r-main-font); background: transparent; color: var(--muted); font-size: 14px; }
+.reveal .progress { color: var(--accent); }
+
+/* the simulation widget (crn-sim.js) */
+.cs { background: var(--night); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(11, 18, 32, 0.22); color: var(--night-ink); font-family: var(--r-main-font); }
+.cs-canvas { display: block; width: 100%; height: 430px; }
+.cs-bar { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: var(--night-2); flex-wrap: wrap; }
+.cs-btn { font: 600 15px/1 var(--r-main-font); color: var(--night-ink); background: #1d2a45; border: 1px solid #2c3b5c; border-radius: 7px; min-width: 30px; height: 28px; padding: 0 9px; cursor: pointer; }
+.cs-btn:hover { background: #26375a; border-color: #66d9e8; }
+.cs-play { background: #0b7285; border-color: #0b7285; }
+.cs-sel { font: 14px var(--r-main-font); color: var(--night-ink); background: #1d2a45; border: 1px solid #2c3b5c; border-radius: 7px; height: 28px; max-width: 260px; margin-left: auto; }
+.cs-sliders { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 2px 14px; padding: 6px 12px 8px; background: var(--night-2); border-top: 1px solid #1f2b44; }
+.cs-slider { display: flex; flex-direction: column; font: 13px var(--r-main-font); color: var(--night-muted); }
+.cs-slider input { accent-color: #66d9e8; width: 100%; }
+.cs-info { font-size: 14px; color: var(--night-muted); padding: 6px 12px 10px; background: var(--night-2); line-height: 1.35; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================ TITLE ============================ -->
+<section class="title-slide" data-background-color="#0b1220">
+  <div class="title-bg"><canvas id="titleBg"></canvas></div>
+  <div class="title-text">
+    <p class="kicker">Mathematical homeostasis, verified in Lean 4</p>
+    <h1>Homeostasis in chemical reaction networks</h1>
+    <p class="subtitle">Absolute concentration robustness, perfect adaptation and stochastic extinction: precise notions, classic case studies, machine-checked proofs</p>
+    <p class="author">Siddhartha Gadgil</p>
+  </div>
+  <aside class="notes">Background: trajectories of the EnvZ–OmpR (ATP) model from many compatibility classes; the phosphorylated response regulator converges to the same value from all of them.</aside>
+</section>
+
+<!-- ============================ PART 0 ============================ -->
+<section class="divider" data-background-color="#0b1220">
+  <p class="kicker">Part 0</p>
+  <h1>Homeostasis</h1>
+  <p class="sub">Keeping an output fixed while everything else varies.</p>
+</section>
+
+<section>
+  <p class="kicker">The phenomenon</p>
+  <h2>Robust outputs in biochemistry</h2>
+  <div class="cols wide-left">
+    <div>
+      <p class="small">Cells hold some concentrations almost constant despite large changes in protein amounts, temperature or external signals.</p>
+      <ul class="pts" style="font-size: 0.66em">
+        <li><strong>EnvZ&ndash;OmpR</strong> (<i>E. coli</i> osmoregulation): the level of phosphorylated OmpR barely depends on the total amounts of EnvZ and OmpR (Batchelor&ndash;Goulian 2003).</li>
+        <li><strong>IDHKP&ndash;IDH</strong> (glyoxylate bypass): the active IDH level is robust to enzyme levels.</li>
+        <li><strong>Integral feedback</strong>: an output returns exactly to its set-point after a disturbance (bacterial chemotaxis; synthetic antithetic controllers).</li>
+      </ul>
+      <div class="callout accent mt">Goal: make the notions precise, prove the classic results <em>for all parameter values</em>, and check every step in Lean.</div>
+    </div>
+    <div class="card">
+      <h3>Several distinct notions</h3>
+      <p><strong>ACR</strong>: every positive steady state has the same value of a species (Shinar&ndash;Feinberg).</p>
+      <p><strong>Perfect adaptation</strong>: the output at equilibrium does not depend on an input.</p>
+      <p><strong>Infinitesimal homeostasis</strong>: the derivative of the output with respect to the input vanishes (Golubitsky&ndash;Stewart).</p>
+      <p><strong>Stochastic</strong>: what survives at low copy numbers?</p>
+      <p class="muted">In Lean these are separate predicates, linked only by proved implications.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Mass-action kinetics</p>
+  <h2>Reaction networks and their ODEs</h2>
+  <div class="cols">
+    <div>
+      <p class="small">A network has species, complexes (formal sums of species) and reactions $y \to y'$ between complexes. Under mass action, each reaction fires at rate $\kappa\, x^{y}$:</p>
+      $$\dot x \;=\; f_\kappa(x) \;=\; \sum_{y \to y'} \kappa_{y\to y'}\, x^{y}\,(y' - y).$$
+      <p class="small">Trajectories stay in a <strong>compatibility class</strong> $x_0 + S$, $S = \operatorname{span}\{y' - y\}$: conservation laws fix the totals.</p>
+      <p class="small"><strong>Deficiency</strong> $\delta = n - \ell - s$: complexes, minus linkage classes, minus the rank of $S$.</p>
+    </div>
+    <div>
+<pre class="lean s"><code>structure ReactionNetwork (ι C R : Type*) where
+  complex : C → ι → ℕ
+  complex_injective : Function.Injective complex
+  src : R → C
+  tgt : R → C
+  src_ne_tgt : ∀ r, src r ≠ tgt r
+  complex_used : ∀ c, ∃ r, src r = c ∨ tgt r = c
+
+def massActionField (k : R → ℝ) (x : ι → ℝ) : ι → ℝ :=
+  ∑ r, N.rate k x r • N.reactionVector r
+
+def IsPosSteadyState (k : R → ℝ) (x : ι → ℝ) : Prop :=
+  IsPos x ∧ N.massActionField k x = 0
+
+def deficiency : ℤ := (Nat.card C : ℤ) - N.numLinkageClasses - N.rank</code></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Definitions</p>
+  <h2>Absolute concentration robustness, made honest</h2>
+  <div class="cols wide-right">
+    <div>
+      <p class="small">ACR in species $s$: all positive steady states agree in $x_s$. Two traps:</p>
+      <div class="card bad"><h3>Vacuous</h3><p>With no positive steady state, ACR holds for every species (<code class="inline">abNet_hasACR_vacuous</code>).</p></div>
+      <div class="card gold" style="margin-top: 10px"><h3>Trivial</h3><p>With a unique positive steady state, ACR holds for every species (<code class="inline">bdNet_hasACRNonvacuous</code>).</p></div>
+      <p class="small mt">So headline claims use <strong>nontrivial ACR</strong>: two distinct positive steady states exist, and all share the value.</p>
+    </div>
+    <div>
+<pre class="lean s"><code>def HasACR (k : R → ℝ) (s : ι) : Prop :=
+  ∀ x x', N.IsPosSteadyState k x → N.IsPosSteadyState k x' → x s = x' s
+
+def HasACRNonvacuous (k : R → ℝ) (s : ι) : Prop :=
+  (∃ x, N.IsPosSteadyState k x) ∧ N.HasACR k s
+
+def HasACRNontrivial (k : R → ℝ) (s : ι) : Prop :=
+  N.HasACRNonvacuous k s ∧
+    ∃ x x', N.IsPosSteadyState k x ∧ N.IsPosSteadyState k x' ∧ x ≠ x'</code></pre>
+      <p class="codehead sanity">Sanity checks</p>
+<pre class="lean s"><code>theorem acrNet_hasACRNontrivial (hk0 : 0 < k 0) (hk1 : 0 < k 1) :
+    acrNet.HasACRNontrivial k 0          -- A + B → 2B, B → A
+theorem acrNet_not_hasACR_B … : ¬ acrNet.HasACR k 1   -- species-specific
+theorem isoNet_not_hasACR … : ¬ isoNet.HasACR k 0     -- A ⇌ B</code></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">The smallest example</p>
+  <h2>A + B &rarr; 2B, &nbsp;B &rarr; A</h2>
+  <div class="cols wide-right center">
+    <div>
+      <p class="small">At steady state $\kappa_0 x_A x_B = \kappa_1 x_B$; with $x_B > 0$ this forces</p>
+      $$x_A = \kappa_1/\kappa_0$$
+      <p class="small">in every compatibility class, while $x_B = T - \kappa_1/\kappa_0$ depends on the total $T$.</p>
+      <p class="xsmall muted">The simulation: six totals, one limit. Plot B to see the classes differ. Drag the sliders to change the rates.</p>
+    </div>
+    <div class="simbox" data-scene="toy"></div>
+  </div>
+</section>
+
+<!-- ============================ PART 1 ============================ -->
+<section class="divider" data-background-color="#0b1220">
+  <p class="kicker">Part 1</p>
+  <h1>Shinar&ndash;Feinberg networks</h1>
+  <p class="sub">EnvZ&ndash;OmpR and IDHKP&ndash;IDH, transcribed from <i>Science</i> 327:1389 (2010), with ACR proved for all positive rate constants.</p>
+</section>
+
+<section>
+  <p class="kicker">The theorem being illustrated</p>
+  <h2>Deficiency one and two nonterminal complexes</h2>
+  <div class="callout accent">
+    <strong>Shinar&ndash;Feinberg (2010).</strong> Consider a mass-action system with a deficiency-one network that admits a positive steady state. If, in the network, there are two nonterminal complexes that differ only in species $S$, then the system has absolute concentration robustness in $S$.
+  </div>
+  <div class="cols-3 mt">
+    <div class="card"><h3>EnvZ&ndash;OmpR, ATP (Fig. 2B)</h3><p>9 complexes, $\ell = 3$, $s = 5$, $\delta = 1$. Nonterminal pair $XT + Yp$, $XT$: ACR in $Yp$.</p></div>
+    <div class="card"><h3>EnvZ&ndash;OmpR, ADP (Fig. 2D)</h3><p>10 complexes, $\ell = 3$, $s = 6$, $\delta = 1$. Pair $\text{EnvZ-D} + \text{OmpR-P}$, $\text{EnvZ-D}$.</p></div>
+    <div class="card"><h3>IDHKP&ndash;IDH (Fig. 3)</h3><p>6 complexes, $\ell = 2$, $s = 3$, $\delta = 1$. Pair $EIp + I$, $EIp$: ACR in $I$.</p></div>
+  </div>
+  <p class="small mt">We do not (yet) formalize the general theorem. Each network gets its own <strong>certificate</strong>, and all the numbers above (deficiency, linkage classes, rank) are computed in Lean.</p>
+</section>
+
+<section>
+  <p class="kicker">Certificates</p>
+  <h2>ACR from one polynomial identity</h2>
+  <div class="cols wide-left">
+    <div>
+      <p class="small">If for all $x$</p>
+      $$x^{a}\,(x_s - c) \;=\; \sum_i g_i(x)\, f_i(x)$$
+      <p class="small">then at any positive steady state ($f = 0$, $x > 0$) we get $x_s = c$. The cofactors $g_i$ are found by an <strong>untrusted oracle</strong> (sympy, symbolic in the rate constants) and checked by Lean.</p>
+<pre class="lean s"><code>theorem hasACR_of_cofactor {k : R → ℝ} {s : ι} {c : ℝ} {a : ι → ℕ}
+    {g : ι → (ι → ℝ) → ℝ}
+    (hid : ∀ x, monomial a x * (x s - c) = ∑ i, g i x * N.massActionField k x i) :
+    N.HasACR k s</code></pre>
+    </div>
+    <div>
+      <div class="flow wrap">
+        <div class="box dark">Network from the source<small>transcribed by hand</small></div>
+        <div class="arrow">&rarr;</div>
+        <div class="box accent">sympy oracle<small>solves for $c$, $g_i$</small></div>
+        <div class="arrow">&rarr;</div>
+        <div class="box plasma">Lean: <code class="inline">linear_combination</code><small>checks the identity</small></div>
+        <div class="arrow">&rarr;</div>
+        <div class="box good">ACR for all $\kappa > 0$</div>
+      </div>
+      <p class="small mt">In all three networks the cofactors are <em>constants in $x$</em>, and the multiplier $x^{a}$ is the common part of the two nonterminal complexes the theorem names: EnvZ-D, XT, EIp.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Fig. 2B: the source&rsquo;s main model</p>
+  <h2>EnvZ&ndash;OmpR with ATP</h2>
+  <div class="cols wide-right">
+    <div>
+<pre class="scheme"><code>X ⇌(κ₁,κ₂) XT →(κ₃) Xp
+Xp + Y ⇌(κ₄,κ₅) XpY →(κ₆) X + Yp
+XT + Yp ⇌(κ₇,κ₈) XTYp →(κ₉) XT + Y</code></pre>
+<pre class="lean xs"><code>theorem atp_steady_Yp {k : Fin 9 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 7 → ℝ}
+    (hx : atpNet.IsPosSteadyState k x) : x 5 = atpACRValue k := by
+  …
+  have key : x 1 * (k 6 * k 8 * x 5 - k 2 * (k 7 + k 8)) = 0 := by
+    linear_combination (-k 8) * e0 + (-k 8) * e1
+      + (-(k 7 + 2 * k 8)) * e2 + (k 7 + k 8) * e3 + (-k 8) * e4
+  …
+theorem atp_hasACRNontrivial (hk : ∀ r, 0 < k r) : atpNet.HasACRNontrivial k 5
+theorem atp_deficiency : atpNet.deficiency = 1</code></pre>
+      <p class="small">$[Yp] = \dfrac{\kappa_3(\kappa_8 + \kappa_9)}{\kappa_7\kappa_9}$, i.e. $k_2(k_{-5}+k_6)/(k_5k_6)$ in the source.</p>
+    </div>
+    <div class="simbox" data-scene="atp"></div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Fig. 2D</p>
+  <h2>EnvZ&ndash;OmpR with ADP as cofactor</h2>
+  <div class="cols wide-right">
+    <div>
+<pre class="scheme"><code>EnvZ-D ⇌ EnvZ ⇌ EnvZ-T → EnvZ-P
+EnvZ-P + OmpR ⇌ EnvZ-OmpR-P → EnvZ + OmpR-P
+EnvZ-D + OmpR-P ⇌ EnvZ-OmpR-D-P → EnvZ-D + OmpR</code></pre>
+      $$[\text{OmpR-P}] = \frac{\kappa_1\kappa_3\kappa_5(\kappa_{10}+\kappa_{11})}{\kappa_2(\kappa_4+\kappa_5)\kappa_9\kappa_{11}}$$
+<pre class="lean xs"><code>theorem envz_steady_OmpRP {k : Fin 11 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 8 → ℝ}
+    (hx : envzNet.IsPosSteadyState k x) : x 6 = envzACRValue k
+theorem envz_numLinkageClasses : envzNet.numLinkageClasses = 3
+theorem envz_rank : envzNet.rank = 6
+theorem envz_deficiency : envzNet.deficiency = 1</code></pre>
+      <p class="xsmall muted">The secondary source states $\ell = 2$; Lean settles $\ell = 3$, which the primary source confirms.</p>
+    </div>
+    <div class="simbox" data-scene="envzD"></div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Fig. 3</p>
+  <h2>IDHKP&ndash;IDH: a bifunctional enzyme</h2>
+  <div class="cols wide-right">
+    <div>
+<pre class="scheme"><code>E + Ip ⇌(κ₁,κ₂) EIp →(κ₃) E + I
+EIp + I ⇌(κ₄,κ₅) EIpI →(κ₆) EIp + Ip</code></pre>
+      <p class="small">$E$ is the kinase&ndash;phosphatase IDHKP; $I$ is active IDH, $Ip$ the inactive form. The complex $EIp$ acts both as phosphatase and, bound to $I$, as kinase.</p>
+      $$[I] = \frac{\kappa_3(\kappa_5 + \kappa_6)}{\kappa_4 \kappa_6}$$
+<pre class="lean xs"><code>theorem idh_steady_I {k : Fin 6 → ℝ} (hk : ∀ r, 0 < k r) {x : Fin 5 → ℝ}
+    (hx : idhNet.IsPosSteadyState k x) : x 3 = idhACRValue k := by
+  …
+  have key : x 2 * (k 3 * k 5 * x 3 - k 2 * (k 4 + k 5)) = 0 := by
+    linear_combination (-(k 4 + 2 * k 5)) * e0 + (k 4 + k 5) * e1 + (-k 5) * e2
+  …</code></pre>
+    </div>
+    <div class="simbox" data-scene="idh"></div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Deficiency in Lean</p>
+  <h2>Computing $\ell$, $s$ and $\delta$ without <code>decide</code></h2>
+  <div class="cols">
+    <div>
+      <ul class="pts" style="font-size: 0.64em">
+        <li><strong>Linkage classes</strong>: a labelling certificate. Give a class label per complex and a representative per class; prove each reaction preserves the label and each complex is linked to its representative.</li>
+        <li><strong>Rank, lower bound</strong>: exhibit $s$ reaction vectors and prove them linearly independent (a triangular coordinate argument, closed by <code class="inline">linarith</code>).</li>
+        <li><strong>Rank, upper bound</strong>: the conservation laws give a surjective linear map whose kernel contains $S$; rank&ndash;nullity.</li>
+      </ul>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem idh_numLinkageClasses : idhNet.numLinkageClasses = 2 := by
+  rw [idhNet.numLinkageClasses_eq_of_labelling ![0, 0, 0, 1, 1, 1] ![0, 3] …]
+  …
+
+/-- The two conservation laws (total E, total I). -/
+def idhCons : (Fin 5 → ℝ) →ₗ[ℝ] (Fin 2 → ℝ) where
+  toFun v := ![v 0 + v 2 + v 4, v 1 + v 2 + v 3 + 2 * v 4]
+  …
+
+theorem idh_rank : idhNet.rank = 3 := by
+  apply le_antisymm
+  · -- S ⊆ ker idhCons, and idhCons is onto ℝ²
+    …
+  · -- three independent reaction vectors
+    …
+
+theorem idh_deficiency : idhNet.deficiency = 1 := by
+  simp [deficiency, idh_numLinkageClasses, idh_rank]</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PART 2 ============================ -->
+<section class="divider" data-background-color="#0b1220">
+  <p class="kicker">Part 2</p>
+  <h1>Stability</h1>
+  <p class="sub">A steady state no trajectory approaches is no explanation of robustness. Stability is a separate contract, proved separately.</p>
+</section>
+
+<section>
+  <p class="kicker">Linearization</p>
+  <h2>From a Hurwitz Jacobian to exponential stability</h2>
+  <div class="cols">
+    <div>
+      <ul class="pts" style="font-size: 0.64em">
+        <li><strong>Lyapunov certificate</strong>: $P \succ 0$ and $J^\top P + PJ \prec 0$ give local exponential stability of $\dot x = F(x)$ when $F$ is differentiable at $x^\star$.</li>
+        <li><strong>Converse Lyapunov</strong>: if $J$ is Hurwitz, such a $P$ exists ($P = \int_0^\infty e^{tJ^\top} e^{tJ}\,dt$), so a Hurwitz Jacobian suffices.</li>
+        <li><strong>Certificates</strong>: exact $LDL^\top$ factorizations over $\mathbb{Q}$; Routh&ndash;Hurwitz for $3\times 3$ matrices, symbolic in the parameters.</li>
+      </ul>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem ReactionNetwork.locallyExpStable_of_isHurwitz
+    (N : ReactionNetwork ι C R) {k : R → ℝ} {xs : ι → ℝ}
+    (hxs : N.massActionField k xs = 0)
+    (hJ : IsHurwitz (N.massActionJacobian k xs)) :
+    ∃ δ > 0, ∃ c > 0, ∃ C > 0, ∀ (x : ℝ → ι → ℝ) (T : ℝ),
+      N.MassActionTrajectoryOn k x T → ‖x 0 - xs‖ < δ →
+        ∀ t ∈ Ico 0 T,
+          ‖x t - xs‖ ^ 2 ≤ C * Real.exp (-c * t) * ‖x 0 - xs‖ ^ 2</code></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Conservation laws</p>
+  <h2>Stability within a compatibility class</h2>
+  <div class="cols">
+    <div>
+      <p class="small">With conservation laws the Jacobian is singular, so no full-space Lyapunov function exists (<code class="inline">isoNet_no_lyapunov</code>). Instead, choose coordinates $B$, $C$ on $S$ ($CB = I$) and ask that the <strong>restricted Jacobian</strong> $CJB$ be Hurwitz.</p>
+      <p class="small">EnvZ&ndash;OmpR at unit rates: an $6\times 6$ integer restricted Jacobian, an integer Lyapunov matrix, exact $LDL^\top$ factors.</p>
+      <p class="small">The toy ACR network: restricted Jacobian $-\kappa_0 x_B < 0$, so <em>every</em> positive steady state is class-stable.</p>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem envz_classStable_unit :
+    ∃ δ > 0, ∃ c > 0, ∃ K > 0, ∀ (x : ℝ → Fin 8 → ℝ) (T : ℝ),
+      envzNet.MassActionTrajectoryOn (fun _ => 1) x T →
+      x 0 - envzXs ∈ envzNet.stoichSubspace →
+        ‖x 0 - envzXs‖ < δ →
+          ∀ t ∈ Ico 0 T, ‖x t - envzXs‖ ^ 2 ≤
+            K * Real.exp (-c * t) * ‖x 0 - envzXs‖ ^ 2
+
+theorem acrNet_classStable {k xs : Fin 2 → ℝ} (h0 : 0 < k 0)
+    (hxs : acrNet.IsPosSteadyState k xs) : …</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PART 3 ============================ -->
+<section class="divider" data-background-color="#0b1220">
+  <p class="kicker">Part 3</p>
+  <h1>Perfect adaptation</h1>
+  <p class="sub">The antithetic integral feedback motif: an output that returns exactly to its set-point, whatever the disturbance.</p>
+</section>
+
+<section>
+  <p class="kicker">Antithetic integral feedback</p>
+  <h2>Robust perfect adaptation, with stability</h2>
+  <div class="cols wide-right">
+    <div>
+<pre class="scheme"><code>∅ →(μ) Z₁    X →(θ) X + Z₂    Z₁ + Z₂ →(η) ∅
+Z₁ →(a) Z₁ + X    X →(γ) ∅   (γ: the disturbance)</code></pre>
+      <p class="small">$\dot z_1 - \dot z_2 = \mu - \theta x$: an integrator. At every positive equilibrium $x = \mu/\theta$, for every $\gamma > 0$; Routh&ndash;Hurwitz proves linear stability for all parameters.</p>
+<pre class="lean xs"><code>theorem aifNet_hasRPALinear {μ θ η a : ℝ} (hμ : 0 < μ) (hθ : 0 < θ)
+    (hη : 0 < η) (ha : 0 < a) :
+    aifNet.HasRPALinear (fun γ => aifK μ θ η a γ) (Ioi 0) 2 (μ / θ)
+
+theorem aifNet_dilution_breaks_setpoint :
+    aifNet.dilutedField (aifK 3 4 1 2 1) 1 ![1, 2, 1] = 0 ∧
+      (![1, 2, 1] : Fin 3 → ℝ) 2 ≠ 3 / 4</code></pre>
+      <p class="xsmall muted">Curves: five disturbances $\gamma$. Raise the dilution slider to see the set-point break.</p>
+    </div>
+    <div class="simbox" data-scene="motif"></div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Infinitesimal homeostasis</p>
+  <h2>The determinant formula</h2>
+  <div class="cols">
+    <div>
+      <p class="small">Golubitsky&ndash;Stewart: input $I$ enters node $\iota$, output node $o$, branch of equilibria $X(I)$. Then</p>
+      $$X_o'(I_0)\,\det J \;=\; -f_{\iota,I}\;\operatorname{adj}(J)_{o\iota} \;=\; \pm f_{\iota,I}\,\det H$$
+      <p class="small">where the <strong>homeostasis matrix</strong> $H$ is $J$ with row $\iota$ and column $o$ deleted. So the output is infinitesimally homeostatic iff $\det H = 0$.</p>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem det_smul_eq_adjugate_mulVec (J : Matrix ι ι ℝ) {u v : ι → ℝ}
+    (h : J *ᵥ u = v) : J.det • u = J.adjugate *ᵥ v
+
+theorem massAction_infinitesimalHomeostasis_iff_det
+    (N : ReactionNetwork (Fin (n + 1)) C R) {kfam : ℝ → R → ℝ}
+    (hk : ∀ r, Differentiable ℝ fun I => kfam I r)
+    (hX : HasDerivAt X X' I₀)
+    (heq : ∀ᶠ I in 𝓝 I₀, N.massActionFamily kfam I (X I) = 0)
+    (hin : inputDeriv L = Pi.single i c) (hc : c ≠ 0)
+    (hdet : (stateJacobian L).det ≠ 0) (o : Fin (n + 1)) :
+    InfinitesimalHomeostasis (N.massActionFamily kfam) X o I₀ ↔
+      (homeostasisMatrix (stateJacobian L) i o).det = 0
+-- L: the derivative of (I, x) ↦ F I x at (I₀, X I₀), written out in full in Lean</code></pre>
+      <p class="small mt">And ACR implies infinitesimal homeostasis along any branch of positive steady states (<code class="inline">HasACR.hasDerivAt_zero</code>).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PART 4 ============================ -->
+<section class="divider" data-background-color="#0b1220">
+  <p class="kicker">Part 4</p>
+  <h1>Copy numbers</h1>
+  <p class="sub">The chemical master equation: what deterministic homeostasis becomes when molecules are counted.</p>
+</section>
+
+<section>
+  <p class="kicker">Stochastic extinction</p>
+  <h2>The ACR species ends at the total</h2>
+  <div class="cols wide-right">
+    <div>
+      <p class="small">Toy network on the level set $x_A + x_B = N$. The state $(N, 0)$ is absorbing and reachable from every state, so every run is eventually absorbed: $x_A \to N$, not $\kappa_1/\kappa_0$ (Anderson&ndash;Enciso&ndash;Johnston 2014).</p>
+<pre class="lean xs"><code>theorem acrNet_extinction {κ : Fin 2 → ℝ} (hκ : ∀ r, 0 ≤ κ r)
+    (h1 : 0 < κ 1) (N : ℕ) {μ : levelSet N → ℝ} (hμ : ∀ x, 0 ≤ μ x) :
+    Tendsto (fun n => outMass {![N, 0]}
+      (μ ᵥ* acrNet.cmeChain κ (levelSet N) ^ n)) atTop (𝓝 0)</code></pre>
+      <p class="small">For antithetic feedback, the stationary <em>mean</em> survives:</p>
+<pre class="lean xs"><code>theorem aifNet_stationary_mean (hθ : κ 1 ≠ 0) (hπ : HasSum π 1)
+    (hm : HasSum (fun x => π x * x 2) m)
+    (hst : aifNet.IsGenStationaryFor κ π (fun z => aifW ⬝ᵥ toReal z)) :
+    m = κ 0 / κ 1</code></pre>
+    </div>
+    <div class="simbox" data-scene="extinction"></div>
+  </div>
+</section>
+
+<!-- ============================ WRAP-UP ============================ -->
+<section>
+  <p class="kicker">How it is built</p>
+  <h2>Layers and trust</h2>
+  <div class="cols wide-right">
+    <div class="stack">
+      <div class="layer kernel"><b>Kernel</b><span>networks, mass action, deficiency, homeostasis predicates, CME generator, stability contracts</span></div>
+      <div class="layer"><b>Sanity</b><span>degenerate case, instance, counterexample for every notion</span></div>
+      <div class="layer"><b>Theory</b><span>linearization, converse Lyapunov, class stability, determinant formula, finite CTMCs</span></div>
+      <div class="layer"><b>Certificates</b><span>cofactor identities, Lyapunov / LDLᵀ, Routh&ndash;Hurwitz, positive combinations</span></div>
+      <div class="layer"><b>Design</b><span>EnvZ&ndash;OmpR (2B, 2D), IDHKP&ndash;IDH, antithetic motif</span></div>
+    </div>
+    <div>
+      <ul class="pts" style="font-size: 0.62em">
+        <li>Axioms: <code class="inline">propext</code>, <code class="inline">Classical.choice</code>, <code class="inline">Quot.sound</code>, checked for every entry point.</li>
+        <li>No <code class="inline">sorry</code>, no <code class="inline">decide</code> or <code class="inline">native_decide</code>, no project axioms.</li>
+        <li>Oracles (sympy) are outside the trusted path: they propose, Lean checks.</li>
+        <li>Networks transcribed from the primary source and cross-checked (one discrepancy in a secondary source found and settled).</li>
+        <li>Research notes with stable IDs; a claim is a dependency only when a named compiled theorem matches it.</li>
+      </ul>
+      <div class="cols-2 mt">
+        <div><p class="stat">&asymp; 6,700</p><p class="statcap">lines of Lean for networks and homeostasis</p></div>
+        <div><p class="stat">&asymp; 330</p><p class="statcap">theorems</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Status</p>
+  <h2>What is proved, and what is next</h2>
+<table>
+<tr><th>Result</th><th>Scope</th><th></th></tr>
+<tr><td>ACR, steady-state families, nontrivial ACR, $\delta = 1$: EnvZ&ndash;OmpR (2B, 2D), IDHKP&ndash;IDH</td><td>all positive rates</td><td class="ok">verified</td></tr>
+<tr><td>EnvZ&ndash;OmpR (2D) class stability</td><td>unit rates</td><td class="ok">verified</td></tr>
+<tr><td>Antithetic motif: RPA + linear stability; nonlinear stability for every $\gamma$</td><td>all rates; unit $\mu,\theta,\eta,a$</td><td class="ok">verified</td></tr>
+<tr><td>Stochastic extinction (toy ACR); stationary mean (antithetic)</td><td>uniformized chain; generator level</td><td class="ok">verified</td></tr>
+<tr><td>Determinant formula for infinitesimal homeostasis</td><td>along a differentiable branch</td><td class="ok">verified</td></tr>
+<tr><td>Class stability for IDHKP&ndash;IDH and the ATP model; general rates</td><td>parametric Routh&ndash;Hurwitz</td><td class="open">next</td></tr>
+<tr><td>The Shinar&ndash;Feinberg theorem in general; Deficiency Zero Theorem</td><td></td><td class="open">open</td></tr>
+<tr><td>Dilution bounds; continuous-time CME; persistence</td><td></td><td class="open">open</td></tr>
+</table>
+  <p class="small mt"><a href="index.html">Website</a> &middot; <a href="https://github.com/siddhartha-gadgil/Homeostasis">Repository</a> &middot; <a href="LeanTheory.html">LeanTheory</a></p>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="crn-sim.js"></script>
+<script>
+(function () {
+  "use strict";
+  /* ---------------- Lean syntax highlighting ---------------- */
+  const KW = /^(def|theorem|lemma|by|have|fun|structure|where|let|if|then|else|apply|rw|simp|refine)$/;
+  const TAC = /^(linear_combination|simp|omega|norm_num|rfl|linarith|ring|le_antisymm)$/;
+  const TY = /^(Prop|Type|Fin|Matrix|ReactionNetwork|Ioi|Ico|Tendsto|Differentiable|HasDerivAt|HasSum)$/;
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function highlightLean(el) {
+    const src = el.textContent;
+    let out = "", i = 0;
+    while (i < src.length) {
+      if (src.startsWith("/-", i)) { const j = src.indexOf("-/", i + 2); const end = j < 0 ? src.length : j + 2; out += '<span class="tok-com">' + esc(src.slice(i, end)) + "</span>"; i = end; continue; }
+      if (src.startsWith("--", i)) { const j = src.indexOf("\n", i); const end = j < 0 ? src.length : j; out += '<span class="tok-com">' + esc(src.slice(i, end)) + "</span>"; i = end; continue; }
+      const m = /^[A-Za-z_][A-Za-z0-9_'.!?]*/.exec(src.slice(i));
+      if (m) {
+        const w = m[0];
+        if (KW.test(w)) out += '<span class="tok-kw">' + w + "</span>";
+        else if (TAC.test(w)) out += '<span class="tok-tac">' + w + "</span>";
+        else if (TY.test(w)) out += '<span class="tok-ty">' + w + "</span>";
+        else out += esc(w);
+        i += w.length; continue;
+      }
+      out += esc(src[i]); i++;
+    }
+    el.innerHTML = out;
+  }
+  document.querySelectorAll("pre.lean code").forEach(highlightLean);
+
+  /* ---------------- Math ---------------- */
+  renderMathInElement(document.querySelector(".slides"), {
+    delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
+    ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+    throwOnError: false
+  });
+
+  /* ---------------- Simulations: built when their slide is first shown ---------------- */
+  const OPTS = { extinction: { T: 20, runs: 4 }, envzD: { sliders: [0, 2, 4, 8, 10] }, atp: { sliders: [0, 2, 6, 7, 8] } };
+  const plots = new Map();
+  let current = [];
+  function activate(slide) {
+    for (const p of current) p.setActive(false);
+    current = [];
+    if (!slide) return;
+    slide.querySelectorAll("[data-scene]").forEach(div => {
+      if (!plots.has(div)) plots.set(div, CRNPlot(div, div.dataset.scene, OPTS[div.dataset.scene] || {}));
+      const p = plots.get(div);
+      p.setActive(true);
+      current.push(p);
+    });
+  }
+
+  /* ---------------- Title background ---------------- */
+  function titleBg() {
+    const cv = document.getElementById("titleBg");
+    const W = 1728, H = 972; cv.width = W; cv.height = H;
+    const g = cv.getContext("2d");
+    const net = CRN_NETS.atp, k = net.k, n = net.species.length;
+    let s = 4242; const rand = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+    const T = 60, steps = 3000, ymax = 4.4;
+    for (let c = 0; c < 30; c++) {
+      const sc = 1 + 2 * rand(), x = Array.from({ length: n }, () => sc * (0.3 + rand()));
+      const d1 = new Array(n), h = T / steps;
+      g.strokeStyle = c % 3 ? "#2a8a9a" : "#d9480f"; g.lineWidth = 2; g.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const X = W * i / steps, Y = H * (1 - Math.min(x[5], ymax) / ymax);
+        if (i === 0) g.moveTo(X, Y); else g.lineTo(X, Y);
+        for (let j = 0; j < n; j++) d1[j] = 0;
+        net.reactions.forEach(([a, b], ri) => { const A = net.complexes[a], B = net.complexes[b]; let rt = k[ri];
+          for (let j = 0; j < n; j++) if (A[j]) rt *= Math.pow(Math.max(x[j], 0), A[j]);
+          for (let j = 0; j < n; j++) d1[j] += rt * (B[j] - A[j]); });
+        for (let j = 0; j < n; j++) x[j] += h * d1[j];
+      }
+      g.stroke();
+    }
+  }
+  titleBg();
+
+  Reveal.initialize({
+    hash: true,
+    slideNumber: "c/t",
+    width: 1600,
+    height: 900,
+    margin: 0.04,
+    maxScale: 1.0,
+    center: false,
+    transition: "slide",
+    backgroundTransition: "fade",
+    plugins: [RevealNotes]
+  });
+  Reveal.on("ready", e => activate(e.currentSlide));
+  Reveal.on("slidechanged", e => activate(e.currentSlide));
+})();
+</script>
+</body>
+</html>

@@ -1,4 +1,12 @@
-# LeanTheory
+# Homeostasis (built on LeanTheory)
+
+**This project**: machine-checked homeostasis in chemical reaction networks (absolute
+concentration robustness, perfect adaptation, stochastic extinction). See the
+[website](https://siddhartha-gadgil.github.io/Homeostasis/) and the
+[slides](https://siddhartha-gadgil.github.io/Homeostasis/Homeostasis.html) (sources in `docs/`).
+The rest of this README describes the LeanTheory template.
+
+## LeanTheory
 
 A general workspace for developing mathematical theory across science and engineering, with
 **Lean 4 as the validity gate**. Work may be autonomous or interactive: users can pose several
