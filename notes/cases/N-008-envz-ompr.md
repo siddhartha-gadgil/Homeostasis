@@ -12,7 +12,7 @@
 | Dependency requirement | compiled mass-action field, `HasACRNonvacuous`; either a compiled cofactor-certificate soundness theorem or a direct algebraic proof |
 | Produces | Lean model files `LeanTheory/Design/EnvZOmpR.lean`, `.../IDHKP.lean` (planned) with the exact source networks; theorems: deficiency value, existence of a positive steady state for all `k` (or the stated parameter set), ACR in the output species with explicit value |
 | Difficulty | moderate — the algebra is small; the risks are transcription errors and the existence part |
-| Status | **verified** for all positive rates: ACR value, nontrivial ACR, positive steady-state family, deficiency 1; class stability open |
+| Status | **verified** for all positive rates: ACR value, nontrivial ACR, positive steady-state family, deficiency 1; class-relative local exponential stability verified at unit rates |
 | Implementation status | not started |
 | Implementation evidence | none |
 | Lean evidence | none |
@@ -86,8 +86,16 @@ For **all positive rate constants** (`κ_{r+1} = k r`, ADP/ATP absorbed):
   the two conservation laws bound `s ≤ 6`), `envz_deficiency` (`δ = 1`) — settles the source
   discrepancy (`ℓ = 3`, not `2`).
 
-Label: exact, idealized. Open: stability within compatibility classes (6-dimensional restricted
-Jacobian; certificate at sample rates or a parametric argument); dilution (Q-3); stochastic model.
+**Stability within the class (2026-11-27, `LeanTheory/Design/EnvZStability.lean`)**: at unit rates
+the steady state `(1, 1, ½, 1, 1, ½, 1, ½)` is locally exponentially stable within its
+compatibility class (`envz_classStable_unit`). Coordinates `B, C` on `S` (from the two
+conservation laws), integer restricted Jacobian `envzR = C J B`, integer Lyapunov matrix `envzP`
+(rounded from the oracle's exact solution), `P ≻ 0` and `−(RᵀP + PR) ≻ 0` via exact `LDLᵀ`
+factorizations (`envzR_isHurwitz`). Build cost ≈ 4.5 min, mostly the 64-entry Jacobian check —
+speed-up target: closed-form Jacobian columns for unit and binary source complexes.
+
+Label: exact, idealized. Open: stability for general rates and the whole steady-state family
+(parametric certificate); dilution (Q-3); stochastic model; source's main model Fig. 2B.
 
 ## Claims and evidence
 

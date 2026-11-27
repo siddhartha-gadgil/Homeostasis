@@ -56,7 +56,8 @@ As of 2026-11-27 (seeded from the user's prompt):
   exponential stability within the compatibility class; the toy ACR network's steady states are
   stable in their classes (`Sanity.acrNet_classStable`). **EnvZ/OmpR** (N-008): nontrivial ACR in
   OmpR-P with the source's value for all positive rates, explicit steady states, `δ = 1`
-  (`Design.envz_hasACRNontrivial`, `envz_deficiency`). The audited template library
+  (`Design.envz_hasACRNontrivial`, `envz_deficiency`); its steady state at unit rates is locally
+  exponentially stable within its compatibility class (`Design.envz_classStable_unit`). The audited template library
   (commit `14f742d`) supplies generic certificate checkers (`LeanTheory/Certificates/*`:
   rational intervals, polynomial intervals, contraction / radii polynomial, `eval_cert`,
   `kernel_fact`) usable by G-3.
@@ -109,7 +110,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-005` | [deterministic/N-005-deficiency-zero](deterministic/N-005-deficiency-zero.md) | G-2 | N-001, N-002 | hard | stated; blocked | After kernel: Birch lemma + Horn–Jackson Lyapunov |
 | `N-006` | [deterministic/N-006-shinar-feinberg-acr](deterministic/N-006-shinar-feinberg-acr.md) | G-2, G-4, Q-1 | N-001–N-003 | hard | stated; **kernel ready** (source reading still needed) | Extract a self-contained proof from the SOM |
 | `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | **verified** (`LeanTheory.Theory.Homeostasis.DeterminantFormula`) | Optional: IFT branch existence; block factorization `C-GSF` |
-| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`) | Class stability of the steady states; dilution |
+| `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates) | Parametric class stability; Fig. 2B model; dilution |
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
@@ -150,7 +151,7 @@ The canonical first command is `start`. Record the audit before new theory build
 
 | Audit | Value |
 | --- | --- |
-| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of class-relative stability (`Theory/CRN/ClassStability.lean`, `Sanity/CRNClassStability.lean`; no findings), of converse Lyapunov part 2 (`Theory/CRN/ConverseLyapunovPD.lean`, additions to `Design/AntitheticStability.lean`; no findings), of the converse-Lyapunov unit (`Theory/CRN/ConverseLyapunov.lean`; no findings), of family-wide motif stability (additions to `Design/AntitheticStability.lean`, oracle `scripts/oracles/motif_lyapunov.py`; no findings), of the linearization unit (`Theory/CRN/Linearization.lean`, additions to `Design/AntitheticStability.lean`, `Sanity/CRNStability.lean`; scope limit recorded: full-space certificates only, regression `isoNet_no_lyapunov`), of parametric motif stability (`Certificates/RouthHurwitz.lean`, `Design/AntitheticStability.lean`; no findings), of the stability contract (`Kernel/Stability.lean`, `Certificates/LyapunovCert.lean`, `Sanity/CRNStability.lean`, `Sanity/CRNBlowUp.lean`, refactored `Kernel/MassAction.lean`; F-2 and F-8 resolved), of the finite-chain layer (`Theory/Markov/FiniteChain.lean`, `Theory/CRN/FiniteCME.lean`, `Sanity/CRNExtinction.lean`; no findings), of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
+| Audited commit | `14f742d` (Initial commit), full startup audit 2026-11-27. Incremental audits 2026-11-27 of EnvZ class stability (`Design/EnvZStability.lean`; no findings), of class-relative stability (`Theory/CRN/ClassStability.lean`, `Sanity/CRNClassStability.lean`; no findings), of converse Lyapunov part 2 (`Theory/CRN/ConverseLyapunovPD.lean`, additions to `Design/AntitheticStability.lean`; no findings), of the converse-Lyapunov unit (`Theory/CRN/ConverseLyapunov.lean`; no findings), of family-wide motif stability (additions to `Design/AntitheticStability.lean`, oracle `scripts/oracles/motif_lyapunov.py`; no findings), of the linearization unit (`Theory/CRN/Linearization.lean`, additions to `Design/AntitheticStability.lean`, `Sanity/CRNStability.lean`; scope limit recorded: full-space certificates only, regression `isoNet_no_lyapunov`), of parametric motif stability (`Certificates/RouthHurwitz.lean`, `Design/AntitheticStability.lean`; no findings), of the stability contract (`Kernel/Stability.lean`, `Certificates/LyapunovCert.lean`, `Sanity/CRNStability.lean`, `Sanity/CRNBlowUp.lean`, refactored `Kernel/MassAction.lean`; F-2 and F-8 resolved), of the finite-chain layer (`Theory/Markov/FiniteChain.lean`, `Theory/CRN/FiniteCME.lean`, `Sanity/CRNExtinction.lean`; no findings), of N-014 (`Theory/CRN/FosterLyapunov.lean`, `Sanity/FosterLyapunov.lean`; F-7 resolved), of N-011 (`Certificates/PolyCert.lean`, `Bridge/CRNCertificates.lean`, `Sanity/PolyCert.lean`, `Certificates/Generated/*`; no findings), of N-007 (`Theory/Homeostasis/DeterminantFormula.lean`, `Sanity/DeterminantFormula.lean`; no findings), of N-013 (`Kernel/CME.lean`, `Sanity/CRNCME.lean`, `Theory/CRN/AntitheticCME.lean`; findings F-5, F-6 resolved), of N-016 (`Theory/CRN/AntitheticFeedback.lean`, `Design/AntitheticMotif.lean`; no findings), of the N-003 kernel (`Kernel/Homeostasis.lean`, `Sanity/CRNHomeostasis.lean`; findings F-3, F-4 resolved), of the N-002 kernel (`Kernel/MassAction.lean`, `Sanity/CRNMassAction.lean`; every declaration reviewed; finding F-2) and of the N-001 kernel (`LeanTheory/Kernel/Network.lean`, `LeanTheory/Sanity/CRNNetwork.lean`) on top of `ce30608`: every declaration reviewed, no findings |
 | Scope | Full startup audit of the template checkout; no domain-specific code exists yet |
 | Kernel coverage | CRN kernel: every declaration in `Kernel/Network.lean` reviewed (definitions match `S-FEI19` conventions as recalled; `deficiency` uses `Nat.card C`, junk value for infinite `C`, all theorems assume `Finite C`; terminal = lies in a terminal strong linkage class). Template: every kernel declaration reviewed: `LeanTheory/Kernel/Example.lean` (`OscParams`, `energy`, `OscillatorLaw`, `energy_nonneg`, `hasDerivAt_energy`, `energy_conserved`, `potential_le_energy`). No homeostasis kernel exists |
 | Commands run | `scripts/setup.sh --no-build` (elan/Lean 4.36.0 already present; Mathlib cache decompressed, nothing downloaded) — OK. `lake build` — OK, 6528 jobs, no errors. `lake env lean scripts/check_axioms.lean` — passed for 5924 `LeanTheory` declarations, only `propext`/`Classical.choice`/`Quot.sound`. Repository grep for `axiom`/`sorry`/`admit`/`native_decide`: matches only in task-server string templates and docstrings, and Bool-valued `decide` inside computable checkers (no `decide` tactic proofs) |
@@ -211,9 +212,9 @@ missing authorization or absence of useful ready work.
 
 Current priority order (provisional, 2026-11-27):
 
-1. **EnvZ/OmpR stability within classes (N-008)** — restricted 6×6 Jacobian at the steady-state
-   family; certificate at sample rates first, parametric later. Also formalize the source's main
-   model (Fig. 2B, ATP cofactor) and the IDHKP–IDH module (Fig. 3) with the same tooling.
+1. **Source's main model and IDHKP–IDH** — formalize Shinar–Feinberg Fig. 2B (ATP cofactor) and
+   Fig. 3 (IDHKP–IDH) with the same tooling (ACR value, steady states, deficiency, class stability).
+   Then parametric class stability for EnvZ–OmpR, and a faster Jacobian computation.
 2. **Antithetic motif with dilution** (N-009/Q-3 analogue): quantify the set-point error, now with a
    stable baseline.
 3. **Q-10 source reading** — Shinar–Feinberg SOM (N-006/N-008), Golubitsky–Stewart (conventions of
@@ -399,6 +400,11 @@ the physical model.
 - **2026-11-27 — Primary source (Q-10).** The user supplied Shinar–Feinberg 2010 (institutional access,
   `iisc-sources/`, added to `.gitignore`). Verified: N-008's network is Fig. 2D; theorem statement
   recorded verbatim; Fig. 2B and Fig. 3 networks transcribed into the notes.
+
+- **2026-11-27 — EnvZ class stability (work unit).** New `LeanTheory/Design/EnvZStability.lean`:
+  Jacobian at the unit-rate steady state, coordinates on `S`, integer restricted Jacobian, rounded
+  integer Lyapunov certificate with exact `LDLᵀ` factors, `envz_classStable_unit`. Build clean
+  (≈ 4.5 min for this module), axiom audit passed for 6747 declarations.
 
 ## 12. Implementation and workstation log
 
