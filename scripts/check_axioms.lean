@@ -126,3 +126,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.converse_lyapunov
 #print axioms LeanTheory.CRN.hurwitz_local_exp_stable
 #print axioms LeanTheory.CRN.Design.aifNet_rpa_locallyExpStable_all
+#print axioms LeanTheory.CRN.isHurwitz_restrict
+#print axioms LeanTheory.CRN.class_local_exp_stable
+#print axioms LeanTheory.CRN.ReactionNetwork.classLocallyExpStable
+#print axioms LeanTheory.CRN.Sanity.acrNet_classStable

@@ -123,6 +123,14 @@ linearized stability** `hurwitz_local_exp_stable` (Hurwitz Jacobian ⇒ local ex
 stability) and its mass-action form `ReactionNetwork.locallyExpStable_of_isHurwitz`; so
 `HasRPALinear` with a full-space Hurwitz Jacobian implies nonlinear local stability.
 
+Class-relative stability (2026-11-27, `Theory/CRN/ClassStability.lean`): with coordinates
+`B, C` of the stoichiometric subspace, `IsHurwitzOn J S` ⇒ the restricted Jacobian `C J B` is
+Hurwitz (`isHurwitz_restrict`), and a Hurwitz restricted Jacobian gives local exponential
+stability **within the compatibility class** (`class_local_exp_stable`;
+`ReactionNetwork.classLocallyExpStable` for mass action, using that the Jacobian maps into `S`).
+So `IsLinearlyStable` (class-relative) now implies nonlinear stability within the class. Fixtures:
+`A ⇌ B` and the toy ACR network (restricted Jacobian `−k₀x_B`).
+
 Still open: "ACR ⇏ linear stability" (needs an ACR network with an unstable positive steady
 state — search); linearization principle. Deterministic ACR ⇏ stochastic homeostasis is compiled
 for the toy network (N-015, `acrNet_extinction`).

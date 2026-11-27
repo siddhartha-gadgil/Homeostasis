@@ -38,6 +38,10 @@ quantity `(y' − y) · ln x` is the same at every positive steady state. With `
 Before the general theorem, prove ACR directly for `F-acr` (one line of algebra) and for the
 EnvZ/OmpR network (N-008) — cheap, and they become regression tests for the general theorem.
 
+Stability of the toy ACR network (2026-11-27): every positive steady state of `F-acr` (ACR value
+`x_A = k₁/k₀`) is locally exponentially stable within its compatibility class
+(`Sanity.acrNet_classStable`), while the stochastic model goes extinct (`Sanity.acrNet_extinction`).
+
 ## Claims and evidence
 
 | Claim | Status |
