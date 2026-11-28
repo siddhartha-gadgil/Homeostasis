@@ -33,8 +33,8 @@ symmetric under `S₀ ↔ S₂`, `E ↔ F` at the witness rates (`twoSwap`), whi
 `E_tot ≥ 2F_tot` has exactly one positive steady state.**
 
 For `E_tot < F_tot < 2E_tot` the class is multistationary for large `S_tot`, so the ratio 2 is sharp
-(`Design/TwoSiteRatio`, `two_monostable_iff`). Stability of the unique state for unequal totals is
-not formalized.
+(`Design/TwoSiteRatio`, `two_monostable_iff`). The unique state is locally exponentially stable in
+its class (`Design/TwoSiteStability`, `two_totals_classStable`).
 
 Label: exact, idealized; witness rates `twoK`; all classes with `max/min ≥ 2` enzyme ratio.
 -/

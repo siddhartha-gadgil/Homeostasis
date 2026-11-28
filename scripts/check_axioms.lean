@@ -250,3 +250,5 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.two_totals_atMostThree
 #print axioms LeanTheory.CRN.Design.quartic_five_roots
 #print axioms LeanTheory.CRN.Design.two_totals_exactly_three
+#print axioms LeanTheory.CRN.Design.twoRS_isHurwitz
+#print axioms LeanTheory.CRN.Design.two_totals_classStable

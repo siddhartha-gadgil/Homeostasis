@@ -14,8 +14,8 @@
 | Difficulty | (2) moderate; (3) hard; (4) research |
 | Status | active: 2-site multistationarity, persistence, bistability and a **certified monostable region verified** (2026-11-28) |
 | Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3) done on the slice `E_tot = F_tot` at the witness rates; (4) open |
-| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean`, `Design/TwoSiteOuterStability.lean`, `Design/TwoSiteUnequal.lean`, `Design/TwoSiteRatio.lean`, `Design/TwoSiteCount.lean` |
-| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable`, `two_slice_outer_classStable`, `two_slice_bistable`; `two_totals_existsUnique`; `two_monostable_iff`, `two_totals_multistationary`; `two_totals_atMostThree`, `two_totals_exactly_three` |
+| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean`, `Design/TwoSiteOuterStability.lean`, `Design/TwoSiteUnequal.lean`, `Design/TwoSiteRatio.lean`, `Design/TwoSiteCount.lean`, `Design/TwoSiteStability.lean` |
+| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable`, `two_slice_outer_classStable`, `two_slice_bistable`; `two_totals_existsUnique`; `two_monostable_iff`, `two_totals_multistationary`; `two_totals_atMostThree`, `two_totals_exactly_three`; `twoRS_isHurwitz`, `two_totals_classStable_of_K`, `two_totals_classStable` |
 | Audit evidence | not audited |
 | Last updated | 2026-11-28 — bistability compiled |
 
@@ -48,6 +48,8 @@ emptiness certificate parametrized by the region.
 | For `E_tot < F_tot < 2E_tot`, at least three steady states for all large `S_tot`; the multistationary set is an up-set in `S_tot` | **compiled** `Design.two_totals_multistationary`, `Design.two_totals_three_of_neg`, `Design.twoQ_neg_mono` |
 | **The ratio 2 is sharp**: monostable for every `S_tot > 0` iff `F_tot ≥ 2E_tot` or `E_tot ≥ 2F_tot` | **compiled** `Design.two_monostable_iff` |
 | **At most three** positive steady states in every class, for all totals (witness rates); exactly three for ratios in `(1/2, 2)` and large `S_tot` | **compiled** `Design.two_totals_atMostThree`, `Design.two_totals_exactly_three` |
+| **Stability criterion for every steady state**: with `(S₀, r, F)` coordinates, `Δ₂…Δ₅` have positive coefficients and `a₆ = 144F²K`; `K > 0` ⇒ locally exponentially stable in the class | **compiled** `Design.twoRS_isHurwitz`, `Design.two_totals_classStable_of_K` |
+| Unique state stable when one enzyme total is at least twice the other | **compiled** `Design.two_totals_classStable` |
 | Threshold `S_tot*`: 6.46 (ratio 1.05), 8.24 (1.1), 16.0 (1.25), 52.5 (1.5), 289 (1.75), 2149 (1.9), with `E_tot = 1` | numerical observation (minimizing `−A/B` on `(ρ₁, ∞)`) |
 | Monostability for all totals under the rate condition `K₁a₂b₁ ≥ K₂a₁b₂`, `K₁(a₂ + b₁) ≥ K₂(a₁ + b₂)` | observation (Jacobian determinant of the totals map has nonnegative coefficients); not formalized — the sign-vector injectivity test fails |
 | The class contains exactly three positive steady states, two stable and one unstable | **compiled** `Design.two_class_steady`, `Design.two_class_trichotomy` |
@@ -176,5 +178,12 @@ At the witness rates a steady state is `(S₀, F, r)` with `r = E/F`, `S₁ = rS
 (`quartic_five_roots`, Mathlib `card_le_degree_of_subset_roots`). Other ratios: uniqueness, the
 slice classification and the symmetry.
 
+**Stability for all totals** (`Design/TwoSiteStability.lean`). At a steady state `(S₀, r, F) = (a, r, F)`
+the restricted Jacobian `twoRS a r F` has Hurwitz determinants `Δ₂, …, Δ₅` with 38, 167, 513 and 1054
+terms, **all positive** for every positive state, and constant coefficient `a₆ = 144F²K`,
+`K = (1 + r + r²)(1 − 3a²r²) + 2a(1 + r − r² + r³ + r⁴) + 3Fr(1 + r)(1 − ar)`. So stability is
+decided by the sign of `K` alone; `K` is swap-invariant up to `r⁻²`. `F_tot ≥ 2E_tot` ⇔
+`r(2 + 3a) ≤ 1` and `E_tot ≥ 2F_tot` ⇔ `2 + 3ar² ≤ r`; both force `K > 0`.
+
 Open: a closed form for `S_tot*`; the count at `S_tot = S_tot*` (a double root: two states);
-stability of the unique state for unequal totals; other rates.
+instability when `K < 0` for general totals (proved on the slice); other rates.

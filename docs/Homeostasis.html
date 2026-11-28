@@ -849,6 +849,31 @@ theorem twoH_pos (hE : 0 &lt; Et) (hF : 2 * Et ≤ Ft)
   </div>
 </section>
 
+<section>
+  <p class="kicker">Q-2 &middot; Multisite phosphorylation</p>
+  <h2>One sign decides stability</h2>
+  <div class="cols">
+    <div>
+      <ul class="pts" style="font-size: 0.6em">
+        <li><strong>Every steady state</strong> is $(S_0, r, F)$ with $S_1 = rS_0$, $S_2 = r^2S_0$, $E = rF$. Its restricted $6\times 6$ Jacobian has Hurwitz determinants $\Delta_2,\dots,\Delta_5$ that are polynomials with <em>positive coefficients</em> (38, 167, 513, 1054 terms) &mdash; for all positive states.</li>
+        <li><strong>Constant coefficient</strong> $a_6 = 144F^2K$, $K = (1+r+r^2)(1-3S_0^2r^2) + 2S_0(1+r-r^2+r^3+r^4) + 3Fr(1+r)(1-S_0r)$. So $K &gt; 0$ &rArr; locally exponentially stable in the class.</li>
+        <li><strong>Monostable region</strong>: $F_{\rm tot} \ge 2E_{\rm tot} \iff r(2+3S_0) \le 1$, and then every bracket of $K$ is positive; $E_{\rm tot} \ge 2F_{\rm tot}$ by the symmetry ($K$ is invariant up to $r^{-2}$).</li>
+      </ul>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem twoRS_isHurwitz (ha : 0 &lt; a) (hr : 0 &lt; r)
+    (hF : 0 &lt; F) (hK : 0 &lt; twoKs a r F) :
+    IsHurwitz (twoRS a r F)
+
+theorem two_totals_classStable
+    (h : 2 * Et ≤ Ft ∨ 2 * Ft ≤ Et)
+    (hy : TwoTotals Et Ft St y) :
+    ∃ δ > 0, ∃ κ > 0, ∃ K > 0, …  -- local exp. stability</code></pre>
+      <p class="small mt">With the earlier results: whenever one enzyme total is at least twice the other, every class has exactly one steady state, and it is stable.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============================ PART 3 ============================ -->
 <section class="divider" data-background-color="#0b1220">
   <p class="kicker">Part 3</p>
@@ -982,6 +1007,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>Two-site phosphorylation: multistationary (exact witness) and persistent</td><td>witness rates; all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site bistability: exactly three steady states in a class, two class-stable, one unstable</td><td>witness rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site: at most three steady states in every class (all totals)</td><td>witness rates</td><td class="ok">verified</td></tr>
+<tr><td>Two-site: stability decided by one sign $K$; the unique state is stable when one enzyme total is at least twice the other</td><td>witness rates; all totals</td><td class="ok">verified</td></tr>
 <tr><td>Two-site, unequal enzyme totals: monostable for all $S_{\rm tot}$ <em>iff</em> one total is at least twice the other</td><td>witness rates; all $S_{\rm tot}$</td><td class="ok">verified</td></tr>
 <tr><td>Two-site monostable region: one stable state iff $S_{\rm tot} &lt; 3 + \tfrac32 c$ on the slice $E_{\rm tot} = F_{\rm tot} = c$; bistable (two stable, one unstable) beyond</td><td>witness rates</td><td class="ok">verified</td></tr>
 <tr><td>A general ACR criterion (Q-1); monostability regions and <i>n</i> &ge; 3 sites (Q-2)</td><td></td><td class="open">open</td></tr>
