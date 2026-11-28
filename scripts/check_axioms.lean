@@ -225,3 +225,6 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.atp_siphon_not_covered
 #print axioms LeanTheory.CRN.Design.envz_siphon_not_covered
 #print axioms LeanTheory.CRN.Design.envz_total_gt
+#print axioms LeanTheory.CRN.Design.two_multistationary
+#print axioms LeanTheory.CRN.Design.two_persistent
+#print axioms LeanTheory.CRN.Design.two_deficiency
