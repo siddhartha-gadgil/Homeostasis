@@ -115,7 +115,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
 | `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | exploratory; source reading ready | Read `S-WS08`, `S-CFMW17`; plan a 2-site witness |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
-| `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | **verified**: siphon criterion (ω-limit zero sets are siphons; covered siphons ⇒ uniform persistence) | Complete-siphon certificates for case studies; endotactic persistence |
+| `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | **verified**: siphon criterion (ω-limit zero sets are siphons; covered siphons ⇒ uniform persistence); siphon certificates (format 9); futile cycle persistent; the source's ACR networks fail the criterion (uncovered siphons, boundary equilibria) | Endotactic persistence; trajectory-level non-persistence in low-total classes |
 | `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | **verified** (algebraic layer: `LeanTheory.Kernel.CME`) | Prove `IsStationaryDistribution ⇒ IsGenStationaryFor` for finite support; process layer (Q-8) |
 | `N-014` | [stochastic/N-014-foster-lyapunov](stochastic/N-014-foster-lyapunov.md) | G-3, Q-4, Q-5, Q-8 | N-013, N-011 | moderate–hard | **verified** at generator level (drift certificate, moment bound) | Process-level consequences (Q-8); drift oracle | Drift checker; moment bound from generator stationarity |
 | `N-015` | [stochastic/N-015-stochastic-extinction](stochastic/N-015-stochastic-extinction.md) | Q-4, G-4 | N-013, N-006, finite-CTMC theory | routine–research | **verified** for `F-acr` in the uniformized chain | Continuous-time version (uniformization identity); read `S-AEJ14`; Q-4 exploration |
@@ -493,6 +493,13 @@ the physical model.
   ω-limit invariance, siphon criterion ⇒ ω-limit positivity and uniform persistence, boundedness
   from positive conservation laws) and `Sanity/CRNPersistence.lean` (`A ⇌ B` persistent; toy ACR
   siphon `{B}` uncovered). Build clean, axiom audit passed for 7439 declarations.
+
+- **2026-11-28 — Siphon certificates (work unit, N-012, N-011, N-010, N-008).** New
+  `Certificates/SiphonCert.lean` (format 9, soundness, persistence corollary),
+  `Design/FutileCycle.lean` (one-site futile cycle persistent for all rates, generated
+  certificate), `Design/ACRBoundary.lean` (uncovered siphons, boundary steady states and total
+  thresholds for Figs. 2B, 2D, 3), oracle `scripts/oracles/siphon_cert.py`. Build clean, axiom
+  audit passed for 7479 declarations.
 
 ## 12. Implementation and workstation log
 

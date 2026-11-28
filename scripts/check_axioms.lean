@@ -217,3 +217,11 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.bounded_of_pos_conservationLaw
 #print axioms LeanTheory.CRN.Sanity.isoNet_persistent
 #print axioms LeanTheory.CRN.Sanity.acrNet_siphon_not_covered
+#print axioms LeanTheory.CRN.ReactionNetwork.SiphonCert.sound
+#print axioms LeanTheory.CRN.ReactionNetwork.isPersistent_of_siphonCert
+#print axioms LeanTheory.CRN.Design.fut_siphonCert
+#print axioms LeanTheory.CRN.Design.fut_persistent
+#print axioms LeanTheory.CRN.Design.idh_siphon_not_covered
+#print axioms LeanTheory.CRN.Design.atp_siphon_not_covered
+#print axioms LeanTheory.CRN.Design.envz_siphon_not_covered
+#print axioms LeanTheory.CRN.Design.envz_total_gt

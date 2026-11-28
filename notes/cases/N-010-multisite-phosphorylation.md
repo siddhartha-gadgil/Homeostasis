@@ -41,3 +41,10 @@ Source reading ready now; the witness (2) becomes lean-ready with N-002.
 ## Outputs and next dependencies
 
 Answers part of Q-2; exercises the G-3 pipeline end to end.
+
+## Progress (2026-11-28)
+
+The one-site futile cycle `S + E ⇌ ES → E + P`, `P + F ⇌ FP → F + S` is formalized
+(`Design/FutileCycle.lean`) and proved **persistent for all positive rates** via a siphon
+certificate (`fut_persistent`). Next: the 2-site system (multistationarity witness) and its
+siphon certificate.

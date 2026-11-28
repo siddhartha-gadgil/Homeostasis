@@ -712,6 +712,7 @@ theorem envz_classStable_unit_all (hxs : envzNet.IsPosSteadyState (fun _ => 1) x
         <li><strong>Angeli&ndash;De Leenheer&ndash;Sontag:</strong> for a bounded positive trajectory, the zero set of every $\omega$-limit point $p$ is a siphon. Otherwise some absent species has $f_i(p) > 0$, so $f_i > c$ near $p$; with bounded speed the trajectory spends time $\tau$ near $p$ before each visit, and $x_i(t_n) \ge c\tau \not\to 0$. (No $\omega$-limit invariance needed.)</li>
         <li><strong>Siphon criterion:</strong> if every nonempty siphon contains the support of a conservation law $w \ge 0$, then $\langle w, x(t)\rangle$ is constant and positive, so no $\omega$-limit point lies on the boundary, and $x_i(t) \ge \varepsilon > 0$ for all $t$.</li>
       </ul>
+      <p class="xsmall"><strong>Certificates</strong> (<code class="inline">SiphonCert</code>): an oracle enumerates siphons and emits a branching proof; Lean checks each node. The one-site futile cycle is persistent for all rates. The Shinar&ndash;Feinberg networks <em>fail</em> the criterion: an uncovered siphon whose face has a steady state in every class, and positive steady states only when total OmpR (IDH) exceeds the ACR value.</p>
       <p class="xsmall muted">Sanity: $A \rightleftharpoons B$ is persistent; in $A + B \to 2B,\ B \to A$ the siphon $\{B\}$ supports no conservation law, and $B$ can indeed die out (total below $\kappa_1/\kappa_0$; not formalized).</p>
     </div>
     <div>
@@ -867,6 +868,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>ACR beyond deficiency one: independent unions; the linkage-class form of Shinar&ndash;Feinberg; coupled &delta; = 2 example</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>A general ACR criterion (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Persistence via siphons (Angeli&ndash;De Leenheer&ndash;Sontag; siphon criterion &rArr; uniform persistence)</td><td>every network, bounded trajectories</td><td class="ok">verified</td></tr>
+<tr><td>Siphon certificates: futile cycle persistent; ACR networks fail the criterion (boundary equilibria)</td><td>all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and stochastic persistence (Q-8)</td><td></td><td class="open">open</td></tr>
 </table>
   <p class="small mt"><a href="index.html">Website</a> &middot; <a href="https://github.com/siddhartha-gadgil/Homeostasis">Repository</a> &middot; <a href="LeanTheory.html">LeanTheory</a></p>

@@ -83,3 +83,22 @@ Hypotheses: trajectories exist for all `t ≥ 0` (`MassActionTrajectory`) and ar
 certifying that a family of siphons is complete for a network (the combinatorial barrier above),
 endotactic persistence (`S-CNP13`), and applying the criterion to the case studies (EnvZ–OmpR
 needs a siphon enumeration).
+
+## Siphon certificates and the case studies (2026-11-28)
+
+**Format 9** (`Certificates/SiphonCert.lean`): `SiphonCert N W S` — a branching proof that every
+siphon containing `S` contains the support of some `W j` (leaf: support inside `S`; branch: a
+reaction producing a species of `S`, recurse on `S ∪ {k}` for every reactant `k`).
+`SiphonCert.sound` (induction) and `isPersistent_of_siphonCert`. This removes the
+"complete-enumeration" barrier: the oracle (`scripts/oracles/siphon_cert.py`) enumerates siphons
+and emits the tree as a Lean tactic proof; every node is a local check.
+
+- **One-site futile cycle** (`Design/FutileCycle.lean`): minimal siphons `{E, ES}`, `{F, FP}`,
+  `{S, ES, P, FP}`, all supports of conservation laws; `fut_persistent`: uniformly persistent for all
+  positive rates.
+- **The source's ACR networks fail the criterion** (`Design/ACRBoundary.lean`): each has a minimal
+  siphon supporting no nonzero nonnegative conservation law (`idh_/atp_/envz_siphon_not_covered`),
+  whose face carries a steady state in every class (`*_boundary_steady`); and positive steady
+  states require the output total above the ACR value (`*_total_gt`). So in low-total classes there
+  is no positive steady state; persistence genuinely fails there as a statement about equilibria
+  (the trajectory-level non-persistence is not formalized).

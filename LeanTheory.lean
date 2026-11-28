@@ -47,6 +47,7 @@ public import LeanTheory.Certificates.PolyInterval
 public import LeanTheory.Certificates.RouthHurwitz
 public import LeanTheory.Certificates.RouthHurwitz5
 public import LeanTheory.Certificates.RouthHurwitz6
+public import LeanTheory.Certificates.SiphonCert
 public import LeanTheory.Certificates.RadiiPolynomial
 public import LeanTheory.Certificates.RationalIntervals
 public import LeanTheory.Certificates.SBP
@@ -56,6 +57,7 @@ public import LeanTheory.Certificates.ValidatedQuadratureArcs
 public import LeanTheory.Certificates.ValidatedTrig
 public import LeanTheory.Certificates.ValidatedTrigFast
 public import LeanTheory.Certificates.WeightedEll1
+public import LeanTheory.Design.ACRBoundary
 public import LeanTheory.Design.AntitheticMotif
 public import LeanTheory.Design.AntitheticStability
 public import LeanTheory.Design.EnvZOmpR
@@ -64,6 +66,7 @@ public import LeanTheory.Design.EnvZOmpRATPStability
 public import LeanTheory.Design.EnvZOmpRPhosphatase
 public import LeanTheory.Design.EnvZStability
 public import LeanTheory.Design.EnvZStabilityAll
+public import LeanTheory.Design.FutileCycle
 public import LeanTheory.Design.IDHKP
 public import LeanTheory.Design.IDHKPStability
 public import LeanTheory.Design.ShinarFeinbergApplications

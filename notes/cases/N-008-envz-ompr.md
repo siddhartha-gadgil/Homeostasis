@@ -190,3 +190,11 @@ Source transcription is ready now (needs the paper and SOM). Lean work after N-0
 ## Outputs and next dependencies
 
 Baseline for N-009 (dilution) and N-015 (stochastic version).
+
+## Persistence (2026-11-28)
+
+The siphon criterion **fails** for all three source networks (`Design/ACRBoundary.lean`): uncovered
+minimal siphons (ATP: `{X, XT, Y, XpY, XTYp}`; ADP: `{EnvZ-D, EnvZ, EnvZ-T, OmpR, EnvZ-OmpR-P,
+EnvZ-OmpR-D-P}`; IDHKP: `{Ip, EIp, EIpI}`), boundary steady states in every class, and positive
+steady states only when the output total exceeds the ACR value. ACR and persistence are in
+tension: classes with too little OmpR (or IDH) have no positive steady state.

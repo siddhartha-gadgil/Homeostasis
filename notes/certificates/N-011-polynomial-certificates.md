@@ -82,6 +82,12 @@ Format 7 (added 2026-11-27, `Certificates/RouthHurwitz.lean`): Routh–Hurwitz f
 inequalities, so they certify **families**. Accepted: antithetic motif for all parameters; rejected:
 boundary `z³ + z² + z + 1` has the root `i` (`routh_boundary_root`).
 
+Format 9 (added 2026-11-28, `Certificates/SiphonCert.lean`): siphon certificates — branching proofs
+that every siphon containing a set contains the support of a given conservation law; soundness
+`SiphonCert.sound`; oracle `scripts/oracles/siphon_cert.py` emits Lean tactic proofs; accepted:
+the one-site futile cycle (`Design.fut_siphonCert`); rejected (no certificate exists): the
+Shinar–Feinberg networks (`Design.*_siphon_not_covered`).
+
 Format 8 (added 2026-11-27, `Certificates/RouthHurwitz5.lean`): Routh–Hurwitz for quintics and
 `5 × 5` matrices. Proof via the **Schwarz tridiagonal form**: for `b₁, …, b₅ > 0`, the eigenvector
 `(1, z, z² + b₅, …)` and the diagonal Lyapunov weights `P = diag(b₂b₃b₄b₅, …, b₂, 1)` give the
