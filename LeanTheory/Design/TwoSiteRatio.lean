@@ -33,7 +33,7 @@ The equal-totals case comes from the slice (`two_slice_three`), and `E_tot > F_t
 kinase–phosphatase symmetry `twoSwap`.
 
 Not formalized: the exact threshold `S_tot*(E_tot, F_tot) = inf_{r > ρ₁} −A(r)/B(r)` in closed
-form, and the upper bound "at most three".
+form. The upper bound "at most three" is `Design/TwoSiteCount` (`two_totals_atMostThree`).
 
 Label: exact, idealized; witness rates `twoK`.
 -/

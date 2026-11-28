@@ -247,3 +247,6 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.two_monostable_iff
 #print axioms LeanTheory.CRN.Design.two_totals_multistationary
 #print axioms LeanTheory.CRN.Design.twoQ_neg_mono
+#print axioms LeanTheory.CRN.Design.two_totals_atMostThree
+#print axioms LeanTheory.CRN.Design.quartic_five_roots
+#print axioms LeanTheory.CRN.Design.two_totals_exactly_three
