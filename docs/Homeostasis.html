@@ -766,14 +766,15 @@ theorem two_deficiency : twoNet.deficiency = 2</code></pre>
 
 <section>
   <p class="kicker">Q-2 &middot; Multisite phosphorylation</p>
-  <h2>Two-site phosphorylation is bistable</h2>
+  <h2>Two-site phosphorylation is bistable: exactly three steady states</h2>
   <div class="cols">
     <div>
       <ul class="pts" style="font-size: 0.6em">
         <li><strong>Three steady states in one class</strong> ($E = F = 3$, $S = 8$, rates $\kappa$ above): the two rational ones and a symmetric one $x = (s,s,s,e,e,2se,se,2se,se)$ with $9s^2 - 3s - 8 = 0$, $e(1+3s) = 3$, so $s^* = \tfrac{3+\sqrt{297}}{18} \approx 1.124$.</li>
         <li><strong>Outer states stable.</strong> Both restricted $6\times 6$ Jacobians have characteristic polynomial $\lambda^6 + \tfrac{73}{2}\lambda^5 + 474\lambda^4 + 2734\lambda^3 + 7274\lambda^2 + 7530\lambda + 324$; degree-6 Routh&ndash;Hurwitz on exact rationals.</li>
         <li><strong>Middle state unstable.</strong> On the symmetric branch $p(0) = -432e^2(s-1)(2e+3s+1) &lt; 0$ for $s &gt; 1$ and $p(1) &gt; 0$: by the IVT, a real eigenvalue in $(0,1)$.</li>
-        <li class="muted">Not formalized: no further steady states in the class (oracle finds three); nonlinear instability of the middle state.</li>
+        <li><strong>Exactly three.</strong> With the complexes eliminated, $F\cdot(E_{\rm tot} - F_{\rm tot}) = (E - F)(F - S_0E)$: either $E = F$ (the symmetric branch, one root) or $F = S_0E$, giving $S_1 = 1$, $S_0 + 1/S_0 = \tfrac52$, so $S_0 \in \{\tfrac12, 2\}$.</li>
+        <li class="muted">Not formalized: nonlinear instability of the middle state; basins of attraction.</li>
       </ul>
     </div>
     <div>
@@ -785,8 +786,9 @@ theorem two_deficiency : twoNet.deficiency = 2</code></pre>
     IsHurwitz (C * J twoX * B) ∧ IsHurwitz (C * J twoX' * B) ∧
     ¬ IsHurwitz (C * J (twoXm twoS twoE) * B)
 
-theorem twoRM_not_isHurwitz (hs : 1 &lt; s) (he : 0 &lt; e) :
-    ¬ IsHurwitz (twoRM s e)</code></pre>
+theorem two_class_steady (hy : IsPosSteadyState twoK y)
+    (hm : y - twoX ∈ S) :
+    y = twoX ∨ y = twoX' ∨ y = twoXm twoS twoE</code></pre>
       <p class="small mt">With <code class="inline">twoX_classStable</code>, <code class="inline">twoX'_classStable</code>: local exponential stability within the class for the two outer states.</p>
     </div>
   </div>
@@ -923,7 +925,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>Horn&rsquo;s theorem: a steady state for every weakly reversible deficiency-zero network &mdash; the Deficiency Zero Theorem is complete</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>ACR beyond deficiency one: independent unions; the linkage-class form of Shinar&ndash;Feinberg; coupled &delta; = 2 example</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site phosphorylation: multistationary (exact witness) and persistent</td><td>witness rates; all positive rates</td><td class="ok">verified</td></tr>
-<tr><td>Two-site bistability: two class-stable states, unstable symmetric middle state</td><td>witness rates</td><td class="ok">verified</td></tr>
+<tr><td>Two-site bistability: exactly three steady states in a class, two class-stable, one unstable</td><td>witness rates</td><td class="ok">verified</td></tr>
 <tr><td>A general ACR criterion (Q-1); monostability regions and <i>n</i> &ge; 3 sites (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Persistence via siphons (Angeli&ndash;De Leenheer&ndash;Sontag; siphon criterion &rArr; uniform persistence)</td><td>every network, bounded trajectories</td><td class="ok">verified</td></tr>
 <tr><td>Siphon certificates: futile cycle persistent; ACR networks fail the criterion (boundary equilibria)</td><td>all positive rates</td><td class="ok">verified</td></tr>

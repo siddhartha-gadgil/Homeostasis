@@ -37,9 +37,12 @@ Coordinates on the stoichiometric subspace (rank 6, three conservation laws `two
 `two_proj`). Membership in the stoichiometric subspace is exactly the vanishing of the three
 totals (`two_mem_of_cons`).
 
+**Exactly three** (`two_class_steady`, `two_class_trichotomy`): eliminating the complexes, `F`
+times the difference of the enzyme totals factors as `(E − F)(F − S₀E)`, and each factor leads to
+the states above (`two_class_cases`).
+
 What is **not** formalized: nonlinear instability of the middle state (only linear instability —
-an eigenvalue with positive real part — is proved), and that the class contains no further
-positive steady states (the oracle finds exactly three).
+an eigenvalue with positive real part — is proved) and the basins of attraction.
 
 Label: exact, idealized; witness rates `twoK`.
 -/
@@ -435,5 +438,117 @@ theorem two_bistable :
   · rw [two_restrict, twoR_twoX]; exact twoR1_isHurwitz
   · rw [two_restrict, twoR_twoX']; exact twoR2_isHurwitz
   · rw [two_restrict, twoR_twoXm]; exact twoRM_not_isHurwitz h1 twoE_pos
+
+/-! ### Exactly three steady states in the class -/
+
+/-- **Case analysis of the steady-state equations in the class** (pure algebra). With the
+complexes determined by the free species (`e5`–`e8`), the flux balances `g0`, `g2` and the totals
+`E = F = 3`, `S = 8`, the difference of the two enzyme totals times `F` factors as
+`(E − F)(F − S₀E) = 0`. `E = F` forces the symmetric branch and `9s² − 3s − 8 = 0`; `F = S₀E`
+forces `S₁ = 1` and `S₀ + 1/S₀ = 5/2`. -/
+theorem two_class_cases {y0 y1 y2 y3 y4 y5 y6 y7 y8 : ℝ} (p0 : 0 < y0) (p3 : 0 < y3)
+    (p4 : 0 < y4) (e5 : y5 = 2 * y0 * y3) (e6 : y6 = y1 * y3) (e7 : y7 = 2 * y2 * y4)
+    (e8 : y8 = y1 * y4) (g0 : y0 * y3 = y1 * y4) (g2 : y1 * y3 = y2 * y4)
+    (cE : y3 + y5 + y6 = 3) (cF : y4 + y7 + y8 = 3)
+    (cS : y0 + y1 + y2 + y5 + y6 + y7 + y8 = 8) :
+    (y0 = 1 / 2 ∧ y1 = 1 ∧ y2 = 2 ∧ y3 = 1 ∧ y4 = 1 / 2) ∨
+      (y0 = 2 ∧ y1 = 1 ∧ y2 = 1 / 2 ∧ y3 = 1 / 2 ∧ y4 = 1) ∨
+      (y0 = twoS ∧ y1 = twoS ∧ y2 = twoS ∧ y3 = twoE ∧ y4 = twoE) := by
+  have h1 : y3 - y4 + y0 * y3 - y1 * y3 = 0 := by
+    linear_combination cE - cF - e5 - e6 + e7 + e8 - 2 * g2 - g0
+  have h2 : (y3 - y4) * (y4 - y0 * y3) = 0 := by linear_combination y4 * h1 - y3 * g0
+  rcases mul_eq_zero.mp h2 with hA | hB
+  · -- the symmetric branch `E = F`
+    have hA : y3 = y4 := sub_eq_zero.mp hA
+    have hy1 : y1 = y0 := by
+      have : (y1 - y0) * y3 = 0 := by linear_combination -g0 + y1 * hA
+      linarith [(mul_eq_zero.mp this).resolve_right p3.ne']
+    have hy2 : y2 = y0 := by
+      have : (y2 - y1) * y3 = 0 := by linear_combination -g2 + y2 * hA
+      linarith [(mul_eq_zero.mp this).resolve_right p3.ne']
+    have hE : y3 * (1 + 3 * y0) = 3 := by linear_combination cE - e5 - e6 - y3 * hy1
+    have hS : 3 * y0 + 6 * y0 * y3 = 8 := by
+      linear_combination cS - e5 - e6 - e7 - e8 - (1 + y3 + y4) * hy1 - (1 + 2 * y4) * hy2
+        + 3 * y0 * hA
+    have hq : 9 * y0 ^ 2 - 3 * y0 - 8 = 0 := by
+      linear_combination (1 + 3 * y0) * hS - 6 * y0 * hE
+    have hs := twoS_bounds.1
+    have hy0 : y0 = twoS := by
+      have : (y0 - twoS) * (9 * y0 + 9 * twoS - 3) = 0 := by
+        linear_combination hq - twoS_quad
+      linarith [(mul_eq_zero.mp this).resolve_right (by linarith)]
+    have hy3 : y3 = twoE := by
+      rw [twoE, ← hy0, eq_div_iff (by linarith)]
+      exact hE
+    exact Or.inr (Or.inr ⟨hy0, hy1.trans hy0, hy2.trans hy0, hy3, hA ▸ hy3⟩)
+  · -- the branch `F = S₀ E`
+    have hB : y4 = y0 * y3 := sub_eq_zero.mp hB
+    have hy1 : y1 = 1 := by
+      have : (y1 - 1) * y4 = 0 := by linear_combination -g0 - hB
+      linarith [(mul_eq_zero.mp this).resolve_right p4.ne']
+    have hy2' : y2 * y4 = y3 := by linear_combination -g2 + y3 * hy1
+    have hp : y0 * y2 = 1 := by
+      have : y3 * (y0 * y2 - 1) = 0 := by linear_combination hy2' - y2 * hB
+      linarith [(mul_eq_zero.mp this).resolve_left p3.ne']
+    have hE : y3 * (2 + 2 * y0) = 3 := by linear_combination cE - e5 - e6 - y3 * hy1
+    have hS : y0 + y2 = 5 / 2 := by
+      linear_combination cS - e5 - e6 - e7 - e8 - (1 + y3 + y4) * hy1 - 2 * hy2' - hB
+        - (3 / 2) * hE
+    have hq : (2 * y0 - 1) * (y0 - 2) = 0 := by linear_combination 2 * y0 * hS - 2 * hp
+    rcases mul_eq_zero.mp hq with h | h
+    · have hy0 : y0 = 1 / 2 := by linarith
+      rw [hy0] at hp hE hB
+      have hy3 : y3 = 1 := by linarith
+      refine Or.inl ⟨hy0, hy1, by linarith, hy3, by rw [hB, hy3]; norm_num⟩
+    · have hy0 : y0 = 2 := by linarith
+      rw [hy0] at hp hE hB
+      have hy3 : y3 = 1 / 2 := by linarith
+      refine Or.inr (Or.inl ⟨hy0, hy1, by linarith, hy3, by rw [hB, hy3]; norm_num⟩)
+
+/-- **The class of `twoX` contains exactly three positive steady states** at the witness rates:
+`twoX`, `twoX'` and the symmetric state `twoXm s* e*`. -/
+theorem two_class_steady {y : Fin 9 → ℝ} (hy : twoNet.IsPosSteadyState twoK y)
+    (hm : y - twoX ∈ twoNet.stoichSubspace) :
+    y = twoX ∨ y = twoX' ∨ y = twoXm twoS twoE := by
+  have h := hy.2
+  rw [two_field] at h
+  have f0 := congrFun h 0
+  have f2 := congrFun h 2
+  have f5 := congrFun h 5
+  have f6 := congrFun h 6
+  have f7 := congrFun h 7
+  have f8 := congrFun h 8
+  norm_num [twoK] at f0 f2 f5 f6 f7 f8
+  obtain ⟨c1, c2, c3⟩ := two_cons_of_mem hm
+  norm_num [twoX] at c1 c2 c3
+  have e5 : y 5 = 2 * y 0 * y 3 := by linarith
+  have e6 : y 6 = y 1 * y 3 := by linarith
+  have e7 : y 7 = 2 * y 2 * y 4 := by linarith
+  have e8 : y 8 = y 1 * y 4 := by linarith
+  rcases two_class_cases (hy.1 0) (hy.1 3) (hy.1 4) e5 e6 e7 e8 (by linarith) (by linarith)
+    (by linarith) (by linarith) (by linarith) with
+    ⟨a0, a1, a2, a3, a4⟩ | ⟨a0, a1, a2, a3, a4⟩ | ⟨a0, a1, a2, a3, a4⟩
+  · left
+    funext i
+    fin_cases i <;> norm_num [twoX, a0, a1, a2, a3, a4, e5, e6, e7, e8]
+  · right; left
+    funext i
+    fin_cases i <;> norm_num [twoX', a0, a1, a2, a3, a4, e5, e6, e7, e8]
+  · right; right
+    funext i
+    fin_cases i <;> simp [twoXm, a0, a1, a2, a3, a4, e5, e6, e7, e8]
+
+/-- **Exactly three positive steady states, two stable and one unstable**: a positive steady state
+in the class of `twoX` is a stable one (`twoX`, `twoX'`, restricted Jacobian Hurwitz) or the
+symmetric middle state (restricted Jacobian not Hurwitz). -/
+theorem two_class_trichotomy {y : Fin 9 → ℝ} (hy : twoNet.IsPosSteadyState twoK y)
+    (hm : y - twoX ∈ twoNet.stoichSubspace) :
+    ((y = twoX ∨ y = twoX') ∧ IsHurwitz (twoC * twoNet.massActionJacobian twoK y * twoB)) ∨
+      (y = twoXm twoS twoE ∧ ¬ IsHurwitz (twoC * twoNet.massActionJacobian twoK y * twoB)) := by
+  obtain ⟨-, -, -, -, -, -, -, -, h1, h2, h3⟩ := two_bistable
+  rcases two_class_steady hy hm with rfl | rfl | rfl
+  · exact Or.inl ⟨Or.inl rfl, h1⟩
+  · exact Or.inl ⟨Or.inr rfl, h2⟩
+  · exact Or.inr ⟨rfl, h3⟩
 
 end LeanTheory.CRN.Design

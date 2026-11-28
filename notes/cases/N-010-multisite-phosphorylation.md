@@ -15,7 +15,7 @@
 | Status | active: 2-site multistationarity, persistence and **bistability verified** (2026-11-28) |
 | Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3), (4) open |
 | Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean` |
-| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz` |
+| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy` |
 | Audit evidence | not audited |
 | Last updated | 2026-11-28 — bistability compiled |
 
@@ -40,7 +40,7 @@ emptiness certificate parametrized by the region.
 | 2-site system has deficiency 2 | **compiled** `Design.two_deficiency` |
 | Bistability at the witness rates: the class `E = F = 3`, `S = 8` has three positive steady states; the two rational ones are locally exponentially stable in the class, the symmetric middle one has a positive real eigenvalue | **compiled** `Design.two_bistable`, `twoX_classStable`, `twoX'_classStable` |
 | Every symmetric steady state `(s,s,s,e,e,2se,se,2se,se)` with `s > 1` is linearly unstable at the witness rates | **compiled** `Design.twoRM_not_isHurwitz` |
-| The class contains exactly three positive steady states | numerical observation (oracle); not formalized |
+| The class contains exactly three positive steady states, two stable and one unstable | **compiled** `Design.two_class_steady`, `Design.two_class_trichotomy` |
 | The middle state is nonlinearly unstable | not formalized (only linear instability) |
 
 ## Difficulty, barriers and readiness
@@ -89,6 +89,14 @@ restricted Jacobian is `twoR x`, linear in `x`.
   by the intermediate value theorem there is an eigenvalue in `(0, 1)`. Hence every symmetric
   steady state with `s > 1` is linearly unstable, in particular the middle state.
 
-Open: that there are no further positive steady states in the class (needs a root count, e.g. a
-resultant or Sturm certificate); nonlinear instability of the middle state; a certified monostable
-region; `n ≥ 3`.
+**Exact count** (`two_class_steady`, `two_class_trichotomy`). No resultant or Sturm certificate is
+needed: at a steady state `S₀E = 2S₀E`, `S₁E = S₁E`, `S₂F = 2S₂F`, `S₁F = S₁F` (as monomials), and
+the flux balances give `S₀E = S₁F` and `S₁E = S₂F`. Multiplying the difference of the two enzyme
+totals by `F` factors it as `(E − F)(F − S₀E) = 0`:
+
+- `E = F` forces `S₀ = S₁ = S₂`, then `e(1 + 3s) = 3`, `9s² − 3s − 8 = 0`: one positive root;
+- `F = S₀E` forces `S₁ = 1`, `S₀S₂ = 1` and `S₀ + S₂ = 5/2`: `S₀ ∈ {½, 2}`, the two rational states.
+
+So the class has exactly three positive steady states: two locally exponentially stable, one
+linearly unstable. Open: nonlinear instability of the middle state; global behaviour (basins);
+a certified monostable region; `n ≥ 3`.

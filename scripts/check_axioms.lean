@@ -232,3 +232,5 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.twoX_classStable
 #print axioms LeanTheory.CRN.Design.twoX'_classStable
 #print axioms LeanTheory.CRN.Design.twoRM_not_isHurwitz
+#print axioms LeanTheory.CRN.Design.two_class_steady
+#print axioms LeanTheory.CRN.Design.two_class_trichotomy
