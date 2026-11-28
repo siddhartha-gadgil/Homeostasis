@@ -209,3 +209,11 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.hasACR_of_partDeficiency
 #print axioms LeanTheory.CRN.ReactionNetwork.hasACR_of_deficiency_one'
 #print axioms LeanTheory.CRN.Sanity.uNet_hasACR_direct
+#print axioms LeanTheory.CRN.ReactionNetwork.massActionField_eq_zero_on_face
+#print axioms LeanTheory.CRN.ReactionNetwork.massActionField_pos_of_not_isSiphon
+#print axioms LeanTheory.CRN.ReactionNetwork.isSiphon_zeroSet_of_omegaLimit
+#print axioms LeanTheory.CRN.ReactionNetwork.isPos_of_omegaLimit
+#print axioms LeanTheory.CRN.ReactionNetwork.isPersistent_of_siphon
+#print axioms LeanTheory.CRN.ReactionNetwork.bounded_of_pos_conservationLaw
+#print axioms LeanTheory.CRN.Sanity.isoNet_persistent
+#print axioms LeanTheory.CRN.Sanity.acrNet_siphon_not_covered

@@ -186,7 +186,7 @@
   <div class="cols">
     <div>
       <div class="card"><h3>G-1 &middot; An auditable kernel</h3><p>Networks, deficiency, mass action, CME; homeostasis notions as separate predicates with sanity checks.</p></div>
-      <div class="card" style="margin-top: 8px"><h3>G-2 &middot; Structural theorems</h3><p>Determinant formula (done); Shinar&ndash;Feinberg (done); Deficiency Zero, with Horn and Birch (done); persistence; RPA topology.</p></div>
+      <div class="card" style="margin-top: 8px"><h3>G-2 &middot; Structural theorems</h3><p>Determinant formula (done); Shinar&ndash;Feinberg (done); Deficiency Zero, with Horn and Birch (done); persistence via siphons (done); RPA topology.</p></div>
       <div class="card" style="margin-top: 8px"><h3>G-3 &middot; Oracles + small verifiers</h3><p>Cofactors, SOS, Lyapunov, Positivstellensatz, siphons, Foster&ndash;Lyapunov drift.</p></div>
       <div class="card" style="margin-top: 8px"><h3>G-4 &middot; Case studies</h3><p>EnvZ&ndash;OmpR, IDHKP&ndash;IDH, antithetic feedback, extinction; next, multisite phosphorylation, dilution.</p></div>
     </div>
@@ -702,6 +702,39 @@ theorem envz_classStable_unit_all (hxs : envzNet.IsPosSteadyState (fun _ => 1) x
   </div>
 </section>
 
+<section>
+  <p class="kicker">Persistence (N-012)</p>
+  <h2>Siphons keep trajectories off the boundary</h2>
+  <div class="cols">
+    <div>
+      <p class="small">A <strong>siphon</strong> $Z$: every reaction producing a species of $Z$ consumes one. Its face $\{x_Z = 0\}$ is invariant.</p>
+      <ul class="pts" style="font-size: 0.6em">
+        <li><strong>Angeli&ndash;De Leenheer&ndash;Sontag:</strong> for a bounded positive trajectory, the zero set of every $\omega$-limit point $p$ is a siphon. Otherwise some absent species has $f_i(p) > 0$, so $f_i > c$ near $p$; with bounded speed the trajectory spends time $\tau$ near $p$ before each visit, and $x_i(t_n) \ge c\tau \not\to 0$. (No $\omega$-limit invariance needed.)</li>
+        <li><strong>Siphon criterion:</strong> if every nonempty siphon contains the support of a conservation law $w \ge 0$, then $\langle w, x(t)\rangle$ is constant and positive, so no $\omega$-limit point lies on the boundary, and $x_i(t) \ge \varepsilon > 0$ for all $t$.</li>
+      </ul>
+      <p class="xsmall muted">Sanity: $A \rightleftharpoons B$ is persistent; in $A + B \to 2B,\ B \to A$ the siphon $\{B\}$ supports no conservation law, and $B$ can indeed die out (total below $\kappa_1/\kappa_0$; not formalized).</p>
+    </div>
+    <div>
+<pre class="lean xs"><code>def IsSiphon (Z : ι → Prop) : Prop :=
+  ∀ r, (∃ i, Z i ∧ 0 < N.complex (N.tgt r) i) →
+    ∃ j, Z j ∧ 0 < N.complex (N.src r) j
+
+theorem isSiphon_zeroSet_of_omegaLimit (hk : ∀ r, 0 < k r)
+    (hx : N.MassActionTrajectory k x) (h0 : IsPos (x 0))
+    (hM : ∀ t, 0 ≤ t → ‖x t‖ ≤ M) (ht : Tendsto t atTop atTop)
+    (hp : Tendsto (fun n => x (t n)) atTop (𝓝 p)) :
+    N.IsSiphon fun i => p i = 0
+
+theorem isPersistent_of_siphon (hk : ∀ r, 0 < k r)
+    (hx : N.MassActionTrajectory k x) (h0 : IsPos (x 0))
+    (hM : ∀ t, 0 ≤ t → ‖x t‖ ≤ M)
+    (hsiph : ∀ Z, N.IsSiphon Z → (∃ i, Z i) → ∃ w, N.IsConservationLaw w ∧
+      (∀ i, 0 ≤ w i) ∧ (∃ i, 0 < w i) ∧ ∀ i, 0 < w i → Z i) :
+    ∃ ε > 0, ∀ s, 0 ≤ s → ∀ i, ε ≤ x s i</code></pre>
+    </div>
+  </div>
+</section>
+
 <!-- ============================ PART 3 ============================ -->
 <section class="divider" data-background-color="#0b1220">
   <p class="kicker">Part 3</p>
@@ -833,7 +866,8 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>Horn&rsquo;s theorem: a steady state for every weakly reversible deficiency-zero network &mdash; the Deficiency Zero Theorem is complete</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>ACR beyond deficiency one: independent unions; the linkage-class form of Shinar&ndash;Feinberg; coupled &delta; = 2 example</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>A general ACR criterion (Q-1); multisite phosphorylation (Q-2)</td><td></td><td class="open">open</td></tr>
-<tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and persistence (Q-8)</td><td></td><td class="open">open</td></tr>
+<tr><td>Persistence via siphons (Angeli&ndash;De Leenheer&ndash;Sontag; siphon criterion &rArr; uniform persistence)</td><td>every network, bounded trajectories</td><td class="ok">verified</td></tr>
+<tr><td>Dilution bounds (Q-3); low copy numbers (Q-4); continuous-time CME and stochastic persistence (Q-8)</td><td></td><td class="open">open</td></tr>
 </table>
   <p class="small mt"><a href="index.html">Website</a> &middot; <a href="https://github.com/siddhartha-gadgil/Homeostasis">Repository</a> &middot; <a href="LeanTheory.html">LeanTheory</a></p>
 </section>
