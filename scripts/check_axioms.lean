@@ -234,3 +234,8 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.twoRM_not_isHurwitz
 #print axioms LeanTheory.CRN.Design.two_class_steady
 #print axioms LeanTheory.CRN.Design.two_class_trichotomy
+#print axioms LeanTheory.CRN.Design.two_slice_existsUnique
+#print axioms LeanTheory.CRN.Design.two_slice_classStable
+#print axioms LeanTheory.CRN.Design.two_slice_three
+#print axioms LeanTheory.CRN.Design.two_slice_sym_unstable
+#print axioms LeanTheory.CRN.Design.twoRM_isHurwitz

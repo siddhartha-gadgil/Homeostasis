@@ -12,10 +12,10 @@
 | Dependency requirement | compiled mass-action field and compatibility classes; compiled certificate checkers with soundness |
 | Produces | (1) exact 2-site model from the sources; (2) a certified multistationarity witness: explicit rational `k`, totals and ≥2 (≥3) positive steady states in one class, each enclosed by a rational box with a certified unique zero (interval Newton / Krawczyk via `Certificates/Contraction.lean`, `RadiiPolynomial.lean`); (3) a certified monostable region; (4) for `n ≥ 3`, a research brief on the boundary |
 | Difficulty | (2) moderate; (3) hard; (4) research |
-| Status | active: 2-site multistationarity, persistence and **bistability verified** (2026-11-28) |
-| Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3), (4) open |
-| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean` |
-| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy` |
+| Status | active: 2-site multistationarity, persistence, bistability and a **certified monostable region verified** (2026-11-28) |
+| Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3) done on the slice `E_tot = F_tot` at the witness rates; (4) open |
+| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean` |
+| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable` |
 | Audit evidence | not audited |
 | Last updated | 2026-11-28 — bistability compiled |
 
@@ -40,6 +40,10 @@ emptiness certificate parametrized by the region.
 | 2-site system has deficiency 2 | **compiled** `Design.two_deficiency` |
 | Bistability at the witness rates: the class `E = F = 3`, `S = 8` has three positive steady states; the two rational ones are locally exponentially stable in the class, the symmetric middle one has a positive real eigenvalue | **compiled** `Design.two_bistable`, `twoX_classStable`, `twoX'_classStable` |
 | Every symmetric steady state `(s,s,s,e,e,2se,se,2se,se)` with `s > 1` is linearly unstable at the witness rates | **compiled** `Design.twoRM_not_isHurwitz` |
+| ... and with `s < 1` is Hurwitz (all Hurwitz determinants have positive coefficients) | **compiled** `Design.twoRM_isHurwitz` |
+| Monostable region: at the witness rates, every class with `E_tot = F_tot = c`, `S_tot = σ ≤ 3 + 3c/2` has exactly one positive steady state, locally exponentially stable in its class when `σ < 3 + 3c/2` | **compiled** `Design.two_slice_existsUnique`, `Design.two_slice_classStable` |
+| For `σ > 3 + 3c/2` exactly three positive steady states, the symmetric one unstable (pitchfork at `σ = 3 + 3c/2`) | **compiled** `Design.two_slice_three`, `Design.two_slice_sym_unstable` |
+| Monostability for all totals under the rate condition `K₁a₂b₁ ≥ K₂a₁b₂`, `K₁(a₂ + b₁) ≥ K₂(a₁ + b₂)` | observation (Jacobian determinant of the totals map has nonnegative coefficients); not formalized — the sign-vector injectivity test fails |
 | The class contains exactly three positive steady states, two stable and one unstable | **compiled** `Design.two_class_steady`, `Design.two_class_trichotomy` |
 | The middle state is nonlinearly unstable | not formalized (only linear instability) |
 
@@ -100,3 +104,30 @@ totals by `F` factors it as `(E − F)(F − S₀E) = 0`:
 So the class has exactly three positive steady states: two locally exponentially stable, one
 linearly unstable. Open: nonlinear instability of the middle state; global behaviour (basins);
 a certified monostable region; `n ≥ 3`.
+
+## Certified monostable region (2026-11-28, `LeanTheory/Design/TwoSiteMonostable.lean`)
+
+**General rates (oracle, not formalized).** Parametrize steady states by `(S₀, E, F)` with
+`S₁ = K₁S₀E/F`, `S₂ = K₂S₁E/F` (`a₁, a₂, b₁, b₂` the binding constants, `K₁, K₂` the effective
+site equilibrium constants). In log coordinates the Jacobian determinant of the totals map has 15
+monomials; the only possibly-negative coefficients are multiples of `K₂a₁b₂ − K₁a₂b₁` and
+`K₂(a₁ + b₂) − K₁(a₂ + b₁)`. So under `K₁a₂b₁ ≥ K₂a₁b₂` and `K₁(a₂ + b₁) ≥ K₂(a₁ + b₂)` every steady
+state is nondegenerate (no fold bifurcations) — the known catalytic-constant condition
+(Conradi–Mincheva type; not checked against the source). Turning this into uniqueness needs degree
+theory, which Lean/Mathlib lacks; the Cauchy–Binet sign-vector injectivity test (expand
+`T(p′) − T(p) = V diag(μ) A δ` over the 7 monomials) **fails**: two terms, `−K₁K₂b₂` and `−K₁K₂a₁`,
+are negative for all rates. Barrier recorded.
+
+**Exact slice (compiled).** At the witness rates `twoK` and totals `E_tot = F_tot = c`,
+`S_tot = σ` (`TwoSlice c σ`, a union of compatibility classes by `TwoSlice.of_sub_mem`), the
+factorization `(E − F)(F − S₀E) = 0` classifies everything:
+
+| Region | Positive steady states | Stability |
+| --- | --- | --- |
+| `σ < 3 + 3c/2` | exactly one (symmetric, `s < 1`) | locally exponentially stable in its class |
+| `σ = 3 + 3c/2` | exactly one (`s = 1`, `a₆ = 0`) | not decided (degenerate) |
+| `σ > 3 + 3c/2` | exactly three | symmetric one linearly unstable; outer two stable at `c = 3, σ = 8` only |
+
+`σ − (3 + 3c/2) = (s − 1)(3 + 3e/2)` on the symmetric branch (`two_slice_threshold`), so the
+threshold is a pitchfork. Open: stability of the asymmetric states for general `(c, σ)`
+(their restricted Jacobians depend on `r`, `c`); slices with `E_tot ≠ F_tot`; other rates.

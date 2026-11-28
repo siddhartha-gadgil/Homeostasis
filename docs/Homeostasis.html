@@ -193,7 +193,7 @@
     <div>
       <ul class="pts" style="font-size: 0.6em">
         <li><strong>Q-1</strong> ACR beyond deficiency one: necessary and sufficient conditions? (First result: independent unions.)</li>
-        <li><strong>Q-2</strong> <i>n</i>-site phosphorylation: certify monostability vs multistationarity; global stability. (2-site multistationarity and bistability proved.)</li>
+        <li><strong>Q-2</strong> <i>n</i>-site phosphorylation: certify monostability vs multistationarity; global stability. (2-site multistationarity, bistability and a monostable region proved.)</li>
         <li><strong>Q-3</strong> Sharp bounds on lost robustness under growth dilution.</li>
         <li><strong>Q-4</strong> Which homeostatic networks survive at low copy numbers?</li>
         <li><strong>Q-5</strong> One certificate template for siphons, toric Lyapunov functions and drift.</li>
@@ -794,6 +794,34 @@ theorem two_class_steady (hy : IsPosSteadyState twoK y)
   </div>
 </section>
 
+<section>
+  <p class="kicker">Q-2 &middot; Multisite phosphorylation</p>
+  <h2>A certified monostable region</h2>
+  <div class="cols">
+    <div>
+      <ul class="pts" style="font-size: 0.6em">
+        <li><strong>Slice</strong> (witness rates): classes with $E_{\rm tot} = F_{\rm tot} = c$, $S_{\rm tot} = \sigma$. The factorization $(E-F)(F-S_0E) = 0$ splits steady states into the symmetric branch (one state, always) and $S_1 = 1$, $S_0 + 1/S_0 = \sigma - 1 - \tfrac{3c}{2}$ (needs $\sigma \ge 3 + \tfrac{3c}{2}$).</li>
+        <li><strong>Monostable</strong> for $\sigma \le 3 + \tfrac{3c}{2}$: exactly one steady state; for $\sigma &lt; 3 + \tfrac{3c}{2}$ it is locally exponentially stable in its class &mdash; on the symmetric branch $\Delta_2,\dots,\Delta_5$ have positive coefficients and $a_6 = 432e^2(1-s)(2e+3s+1)$.</li>
+        <li><strong>Pitchfork</strong>: $\sigma - (3 + \tfrac{3c}{2}) = (s-1)(3 + \tfrac{3e}{2})$; beyond it, exactly three states, the middle one unstable.</li>
+        <li class="muted">General rates (oracle): the Jacobian of the totals map is nonsingular when $K_1a_2b_1 \ge K_2a_1b_2$ and $K_1(a_2+b_1) \ge K_2(a_1+b_2)$; uniqueness from this needs degree theory &mdash; not formalized.</li>
+      </ul>
+    </div>
+    <div>
+<pre class="lean xs"><code>theorem two_slice_existsUnique (hc : 0 &lt; c) (hσ : 0 &lt; σ)
+    (hσc : σ ≤ 3 + 3 * c / 2) : ∃! y, TwoSlice c σ y
+
+theorem two_slice_classStable (hσ : σ &lt; 3 + 3 * c / 2)
+    (hy : TwoSlice c σ y) : ∃ δ > 0, ∃ κ > 0, ∃ K > 0, …
+
+theorem two_slice_three (hc : 0 &lt; c) (hσ : 3 + 3 * c / 2 &lt; σ) :
+    … three pairwise distinct states ∧
+    ∀ y, TwoSlice c σ y → y = twoSym c σ ∨
+      y = twoBr c (twoRp c σ) ∨ y = twoBr c (twoRm c σ)</code></pre>
+      <p class="small mt">The bistable witness class is $c = 3$, $\sigma = 8 &gt; 7.5$.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============================ PART 3 ============================ -->
 <section class="divider" data-background-color="#0b1220">
   <p class="kicker">Part 3</p>
@@ -926,6 +954,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>ACR beyond deficiency one: independent unions; the linkage-class form of Shinar&ndash;Feinberg; coupled &delta; = 2 example</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site phosphorylation: multistationary (exact witness) and persistent</td><td>witness rates; all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site bistability: exactly three steady states in a class, two class-stable, one unstable</td><td>witness rates</td><td class="ok">verified</td></tr>
+<tr><td>Two-site monostable region: one stable state iff $S_{\rm tot} &lt; 3 + \tfrac32 c$ on the slice $E_{\rm tot} = F_{\rm tot} = c$</td><td>witness rates</td><td class="ok">verified</td></tr>
 <tr><td>A general ACR criterion (Q-1); monostability regions and <i>n</i> &ge; 3 sites (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Persistence via siphons (Angeli&ndash;De Leenheer&ndash;Sontag; siphon criterion &rArr; uniform persistence)</td><td>every network, bounded trajectories</td><td class="ok">verified</td></tr>
 <tr><td>Siphon certificates: futile cycle persistent; ACR networks fail the criterion (boundary equilibria)</td><td>all positive rates</td><td class="ok">verified</td></tr>
