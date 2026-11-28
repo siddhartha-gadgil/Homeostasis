@@ -244,3 +244,6 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.two_slice_bistable
 #print axioms LeanTheory.CRN.Design.two_totals_existsUnique
 #print axioms LeanTheory.CRN.Design.twoH_pos
+#print axioms LeanTheory.CRN.Design.two_monostable_iff
+#print axioms LeanTheory.CRN.Design.two_totals_multistationary
+#print axioms LeanTheory.CRN.Design.twoQ_neg_mono

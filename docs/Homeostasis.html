@@ -824,21 +824,20 @@ theorem two_slice_three (hc : 0 &lt; c) (hσ : 3 + 3 * c / 2 &lt; σ) :
 
 <section>
   <p class="kicker">Q-2 &middot; Multisite phosphorylation</p>
-  <h2>Unequal enzyme totals</h2>
+  <h2>Unequal enzyme totals: the ratio 2 is sharp</h2>
   <div class="cols">
     <div>
       <ul class="pts" style="font-size: 0.6em">
         <li><strong>Reduction.</strong> With $r = E/F$: $S_1 = rS_0$, $S_2 = r^2S_0$; eliminating $S_0, F$ gives $S_0\,r\,G(r) = F_{\rm tot}r - E_{\rm tot}$ with $G = (2E_{\rm tot} - F_{\rm tot})r + (E_{\rm tot} - 2F_{\rm tot})$, and a quartic $Q(r) = A(r) + S_{\rm tot}B(r)$, $B = -2r(r-1)G$.</li>
         <li><strong>$F_{\rm tot} \ge 2E_{\rm tot}$:</strong> $G &lt; 0$, so feasibility is $r \in (0, E_{\rm tot}/F_{\rm tot})$. Two roots force $(r-s)H(r,s) = Q(r)B(s) - Q(s)B(r) = 0$, but $H &gt; 0$ there: after $F_{\rm tot} = E_{\rm tot}(2+m)$, $r = \tfrac{u}{(1+u)(2+m)}$ its numerator has <em>175 positive coefficients</em>. Existence: $Q(0) &gt; 0 &gt; Q(E_{\rm tot}/F_{\rm tot})$.</li>
         <li><strong>Symmetry</strong> $S_0 \leftrightarrow S_2$, $E \leftrightarrow F$ covers $E_{\rm tot} \ge 2F_{\rm tot}$.</li>
-        <li class="muted">Ratios in $(\tfrac12, 2)$: one or three steady states (numerics: multistationary at large $S_{\rm tot}$); exact boundary not formalized.</li>
+        <li><strong>Sharp.</strong> For $E_{\rm tot} &lt; F_{\rm tot} &lt; 2E_{\rm tot}$: $Q(\rho_1) &gt; 0$ at $\rho_1 = \tfrac{2F_{\rm tot}-E_{\rm tot}}{2E_{\rm tot}-F_{\rm tot}}$ and $B &lt; 0$ beyond it, so for large $S_{\rm tot}$ the IVT gives three steady states. Threshold $S_{\rm tot}^*$: 16.0 at ratio 1.25, 52.5 at 1.5, 2149 at 1.9.</li>
       </ul>
     </div>
     <div>
-<pre class="lean xs"><code>theorem two_totals_existsUnique
-    (hE : 0 &lt; Et) (hF : 0 &lt; Ft) (hS : 0 &lt; St)
-    (h : 2 * Et ≤ Ft ∨ 2 * Ft ≤ Et) :
-    ∃! y, TwoTotals Et Ft St y
+<pre class="lean xs"><code>theorem two_monostable_iff (hE : 0 &lt; Et) (hF : 0 &lt; Ft) :
+    (∀ St, 0 &lt; St → ∃! y, TwoTotals Et Ft St y) ↔
+      (2 * Et ≤ Ft ∨ 2 * Ft ≤ Et)
 
 theorem twoH_pos (hE : 0 &lt; Et) (hF : 2 * Et ≤ Ft)
     (hr : 0 &lt; r) (hrE : Ft * r &lt; Et)
@@ -981,7 +980,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>ACR beyond deficiency one: independent unions; the linkage-class form of Shinar&ndash;Feinberg; coupled &delta; = 2 example</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site phosphorylation: multistationary (exact witness) and persistent</td><td>witness rates; all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site bistability: exactly three steady states in a class, two class-stable, one unstable</td><td>witness rates</td><td class="ok">verified</td></tr>
-<tr><td>Two-site, unequal enzyme totals: monostable whenever one total is at least twice the other</td><td>witness rates; all $S_{\rm tot}$</td><td class="ok">verified</td></tr>
+<tr><td>Two-site, unequal enzyme totals: monostable for all $S_{\rm tot}$ <em>iff</em> one total is at least twice the other</td><td>witness rates; all $S_{\rm tot}$</td><td class="ok">verified</td></tr>
 <tr><td>Two-site monostable region: one stable state iff $S_{\rm tot} &lt; 3 + \tfrac32 c$ on the slice $E_{\rm tot} = F_{\rm tot} = c$; bistable (two stable, one unstable) beyond</td><td>witness rates</td><td class="ok">verified</td></tr>
 <tr><td>A general ACR criterion (Q-1); monostability regions and <i>n</i> &ge; 3 sites (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Persistence via siphons (Angeli&ndash;De Leenheer&ndash;Sontag; siphon criterion &rArr; uniform persistence)</td><td>every network, bounded trajectories</td><td class="ok">verified</td></tr>
