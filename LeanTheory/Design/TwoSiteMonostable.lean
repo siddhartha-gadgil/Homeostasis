@@ -36,8 +36,9 @@ asymmetric states are born from it. The witness class of `Design/TwoSitePhosphor
 (`c = 3`, `σ = 8 > 7.5`) lies on the multistationary side.
 
 The two asymmetric states are stable for all `(c, σ)` beyond the threshold:
-`Design/TwoSiteOuterStability` (`two_slice_bistable`). Not formalized: classes with
-`E_tot ≠ F_tot`, other rate constants.
+`Design/TwoSiteOuterStability` (`two_slice_bistable`). Classes with `E_tot ≠ F_tot`: monostable when
+one enzyme total is at least twice the other (`Design/TwoSiteUnequal`); the rest and other rate
+constants are not formalized.
 
 Label: exact, idealized; witness rates `twoK`, all classes with `E_tot = F_tot`.
 -/

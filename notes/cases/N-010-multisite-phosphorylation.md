@@ -14,8 +14,8 @@
 | Difficulty | (2) moderate; (3) hard; (4) research |
 | Status | active: 2-site multistationarity, persistence, bistability and a **certified monostable region verified** (2026-11-28) |
 | Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3) done on the slice `E_tot = F_tot` at the witness rates; (4) open |
-| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean`, `Design/TwoSiteOuterStability.lean` |
-| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable`, `two_slice_outer_classStable`, `two_slice_bistable` |
+| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean`, `Design/TwoSiteOuterStability.lean`, `Design/TwoSiteUnequal.lean` |
+| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable`, `two_slice_outer_classStable`, `two_slice_bistable`; `two_totals_existsUnique` |
 | Audit evidence | not audited |
 | Last updated | 2026-11-28 — bistability compiled |
 
@@ -44,6 +44,8 @@ emptiness certificate parametrized by the region.
 | Monostable region: at the witness rates, every class with `E_tot = F_tot = c`, `S_tot = σ ≤ 3 + 3c/2` has exactly one positive steady state, locally exponentially stable in its class when `σ < 3 + 3c/2` | **compiled** `Design.two_slice_existsUnique`, `Design.two_slice_classStable` |
 | For `σ > 3 + 3c/2` exactly three positive steady states, the symmetric one unstable (pitchfork at `σ = 3 + 3c/2`) | **compiled** `Design.two_slice_three`, `Design.two_slice_sym_unstable` |
 | For `σ > 3 + 3c/2` the two asymmetric states are locally exponentially stable in their class: bistability throughout the region | **compiled** `Design.two_slice_outer_classStable`, `Design.two_slice_bistable` |
+| Unequal enzyme totals: if `F_tot ≥ 2E_tot` or `E_tot ≥ 2F_tot`, exactly one positive steady state for every `S_tot > 0` (witness rates) | **compiled** `Design.two_totals_existsUnique` |
+| For `E_tot < F_tot < 2E_tot`, multistationary at large `S_tot` (e.g. ratio 1.5 from `S_tot ≈ 52`) | numerical observation; not formalized |
 | Monostability for all totals under the rate condition `K₁a₂b₁ ≥ K₂a₁b₂`, `K₁(a₂ + b₁) ≥ K₂(a₁ + b₂)` | observation (Jacobian determinant of the totals map has nonnegative coefficients); not formalized — the sign-vector injectivity test fails |
 | The class contains exactly three positive steady states, two stable and one unstable | **compiled** `Design.two_class_steady`, `Design.two_class_trichotomy` |
 | The middle state is nonlinearly unstable | not formalized (only linear instability) |
@@ -141,3 +143,23 @@ determinants with 20, 56, 109, 168 terms, all with positive coefficients. Hence 
 are locally exponentially stable within their class for every `c > 0`, `σ > 3 + 3c/2`
 (`two_slice_outer_classStable`), and `two_slice_bistable`: two stable states and one unstable in
 every class of the slice beyond the threshold.
+
+## Unequal enzyme totals (2026-11-28, `LeanTheory/Design/TwoSiteUnequal.lean`)
+
+At the witness rates a steady state is `(S₀, F, r)` with `r = E/F`, `S₁ = rS₀`, `S₂ = r²S₀`. Eliminating
+`S₀` and `F` gives the feasibility relation `S₀ r G(r) = F_tot r − E_tot`,
+`G = (2E_tot − F_tot) r + (E_tot − 2F_tot)`, and a quartic `Q(r) = A(r) + S_tot B(r)` with
+`B = −2r(r − 1)G` (cofactor identity checked by `linear_combination`). Endpoint values:
+`Q(0) = 2E_tot`, `Q(1) = −9(E_tot − F_tot)²`, `Q(E_tot/F_tot) = −4E_tot S_tot (E_tot − F_tot)²(E_tot + F_tot)/F_tot³`.
+
+- **`F_tot ≥ 2E_tot`**: `G < 0`, so feasibility is exactly `r ∈ (0, E_tot/F_tot)`. Two roots would give
+  `(r − s)H(r, s) = Q(r)B(s) − Q(s)B(r) = 0`; after `F_tot = E_tot(2 + m)`, `r = u/((1 + u)(2 + m))`,
+  the numerator of `H` has 175 positive coefficients, so `H > 0`. Existence by the IVT. The
+  kinase–phosphatase symmetry `twoSwap` covers `E_tot ≥ 2F_tot`. Result
+  `two_totals_existsUnique`.
+- **`E_tot < F_tot < 2E_tot`**: feasible set `(0, E_tot/F_tot) ∪ (ρ₁, ∞)`, `ρ₁ = (2F_tot − E_tot)/(2E_tot − F_tot)`,
+  with `Q(ρ₁) > 0`: one root in the first piece, an even number in the second — numerically 0 or 2,
+  i.e. 1 or 3 steady states. The precise boundary is a discriminant condition; not formalized.
+
+Open: the exact multistationarity boundary for ratios in `(1/2, 2)`; stability of the unique state for
+unequal totals; other rates.

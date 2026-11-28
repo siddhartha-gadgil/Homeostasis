@@ -73,6 +73,7 @@ public import LeanTheory.Design.TwoSiteBistability
 public import LeanTheory.Design.TwoSiteMonostable
 public import LeanTheory.Design.TwoSiteOuterStability
 public import LeanTheory.Design.TwoSitePhosphorylation
+public import LeanTheory.Design.TwoSiteUnequal
 public import LeanTheory.Design.ShinarFeinbergApplications
 public import LeanTheory.Elaborate
 public import LeanTheory.Kernel.CME

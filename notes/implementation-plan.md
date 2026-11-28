@@ -113,7 +113,7 @@ Questions may be primary research outputs or auxiliary prerequisites.
 | `N-007` | [deterministic/N-007-infinitesimal-homeostasis](deterministic/N-007-infinitesimal-homeostasis.md) | G-2, Q-3, Q-7 | (a) Mathlib only; (b) N-003 | moderate | **verified** (`LeanTheory.Theory.Homeostasis.DeterminantFormula`) | Optional: IFT branch existence; block factorization `C-GSF` |
 | `N-008` | [cases/N-008-envz-ompr](cases/N-008-envz-ompr.md) | G-4, G-2 | N-002, N-003, N-011 (or N-006) | moderate | **verified** (all positive rates: ACR value, nontrivial ACR, steady-state family, `δ = 1`; class stability at unit rates; Fig. 2B ATP model and IDHKP–IDH Fig. 3 likewise verified, `δ = 1`; IDHKP–IDH class stability for all rates and all positive steady states; Figs. 2B and 2D class stability at unit rates for every positive steady state, via 5×5 / 6×6 Routh–Hurwitz) | Parametric class stability (Q-11); dilution (Q-3) |
 | `N-009` | [cases/N-009-dilution-bounds](cases/N-009-dilution-bounds.md) | Q-3, G-4 | N-008, N-007, N-002, N-011 | research | exploratory; blocked on model choice (X-10) | User chooses synthesis model and input |
-| `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | **active**: futile cycle persistent; 2-site multistationarity (exact witness), persistence, `δ = 2`, **bistability** with an **exact count** (exactly three positive steady states in the class: two class-stable, one unstable) compiled; **certified monostable region** on the slice `E_tot = F_tot` (exactly one, class-stable, for `σ < 3 + 3c/2`; exactly three beyond, two class-stable and one unstable) | General-rate monostability (needs degree theory; sign-vector injectivity fails); slices with `E_tot ≠ F_tot`; `n ≥ 3` |
+| `N-010` | [cases/N-010-multisite-phosphorylation](cases/N-010-multisite-phosphorylation.md) | Q-2, G-4, G-3 | N-002, N-003, N-011, N-012, N-017 | moderate–research | **active**: futile cycle persistent; 2-site multistationarity (exact witness), persistence, `δ = 2`, **bistability** with an **exact count** (exactly three positive steady states in the class: two class-stable, one unstable) compiled; **certified monostable region** on the slice `E_tot = F_tot` (exactly one, class-stable, for `σ < 3 + 3c/2`; exactly three beyond, two class-stable and one unstable); **monostable for unequal totals** when one enzyme total is at least twice the other | General-rate monostability (needs degree theory; sign-vector injectivity fails); exact boundary for enzyme ratios in `(1/2, 2)`; `n ≥ 3` |
 | `N-011` | [certificates/N-011-polynomial-certificates](certificates/N-011-polynomial-certificates.md) | G-3, Q-5, Q-2 | Mathlib, template certificates | moderate | **verified** (formats 1–4, CRN bridge, cofactor oracle) | Injectivity / Jacobian-sign format; SOS oracle |
 | `N-012` | [deterministic/N-012-persistence](deterministic/N-012-persistence.md) | G-2, Q-5 | N-001, N-002 | hard | **verified**: siphon criterion (ω-limit zero sets are siphons; covered siphons ⇒ uniform persistence); siphon certificates (format 9); futile cycle persistent; the source's ACR networks fail the criterion (uncovered siphons, boundary equilibria) | Endotactic persistence; trajectory-level non-persistence in low-total classes |
 | `N-013` | [stochastic/N-013-cme-kernel](stochastic/N-013-cme-kernel.md) | G-1, Q-8 | N-001 | moderate | **verified** (algebraic layer: `LeanTheory.Kernel.CME`) | Prove `IsStationaryDistribution ⇒ IsGenStationaryFor` for finite support; process layer (Q-8) |
@@ -535,6 +535,13 @@ the physical model.
   (`r`-scaled restricted Jacobian `twoSB`, degree-6 Routh–Hurwitz with positive-coefficient Hurwitz
   determinants, `isHurwitz_of_smul`); `two_slice_bistable`. Build clean, axiom audit passed for
   8147 declarations.
+
+- **2026-11-28 — Unequal enzyme totals (work unit, N-010, Q-2).** New
+  `Design/TwoSiteUnequal.lean`: reduction of steady states to a quartic in `r = E/F` (feasibility
+  relation, cofactor identity), uniqueness of the feasible root when `F_tot ≥ 2E_tot` via a cross
+  certificate `H` (175 positive coefficients after substitution), existence by the IVT, and the
+  kinase–phosphatase symmetry; `two_totals_existsUnique`. Build clean, axiom audit passed for 8286
+  declarations.
 
 ## 12. Implementation and workstation log
 

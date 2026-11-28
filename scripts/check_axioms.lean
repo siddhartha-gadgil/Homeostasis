@@ -242,3 +242,5 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.twoSB_isHurwitz
 #print axioms LeanTheory.CRN.Design.two_slice_outer_classStable
 #print axioms LeanTheory.CRN.Design.two_slice_bistable
+#print axioms LeanTheory.CRN.Design.two_totals_existsUnique
+#print axioms LeanTheory.CRN.Design.twoH_pos
