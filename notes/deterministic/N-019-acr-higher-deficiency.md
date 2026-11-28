@@ -13,7 +13,7 @@
 | Produces | literature map, examples, conjectures; test networks; possibly an algebraic criterion (steady-state ideal contains `x_S − c`, or a binomial / linear-invariant criterion) |
 | Difficulty | research |
 | Status | active (first general result compiled 2026-11-27) |
-| Implementation status | partial: independent unions (`Theory/CRN/Union.lean`) |
+| Implementation status | partial: independent unions (`Theory/CRN/Union.lean`); linkage-class form (`Theory/CRN/LinkageClassACR.lean`) |
 | Implementation evidence | none |
 | Lean evidence | none |
 | Audit evidence | not audited |
@@ -40,6 +40,7 @@ dynamically equivalent networks.
 | Ideal-membership cofactor identity ⇒ ACR | **compiled** `ReactionNetwork.hasACR_of_cofactor` (N-011); oracle `scripts/oracles/crn_cofactor.py` |
 | ACR is inherited by independent unions (`S₀ ⊓ S₁ = ⊥`); deficiencies add | **compiled** `hasACR_union`, `deficiency_union` |
 | Shinar–Feinberg in a deficiency-one module ⇒ ACR of the union, at any deficiency | **compiled** `hasACR_union_of_deficiency_one` |
+| Linkage-class form: a part `P` (union of linkage classes) with `S_P ∩ S_{P^c} = 0` and `δ_P ≤ 1` containing a nonterminal pair differing in `s` ⇒ ACR in `s` | **compiled** `hasACR_of_partDeficiency`; part-deficiency count `finrank_edgeSpanOn_inf_ker_le`; recovers Shinar–Feinberg (`hasACR_of_deficiency_one'`) |
 | A coupled deficiency-two network with nontrivial ACR (`A + B → 2B`, `B → A`, `A + C → A + D`, `D → C`) | **compiled** `Sanity.uNet_deficiency`, `Sanity.uNet_hasACRNontrivial` |
 
 ## Difficulty, barriers and readiness
@@ -72,3 +73,26 @@ the field (e.g. `f₀(x) ∈ S₀ ∩ S₁` with a dimension count as in Shinar�
 linkage-class form of the deficiency-one theorem (Feinberg's independence condition `δ = Σ δ_L`
 with the nonterminal pair in a class of deficiency `≤ 1`), (iii) complex-linear invariants (Karp et
 al.).
+
+## Linkage-class form (2026-11-28, `LeanTheory/Theory/CRN/LinkageClassACR.lean`)
+
+For a set `P` of complexes closed under reactions: `E_P` = span of edge vectors of reactions
+leaving `P` (`edgeSpanOn`), `S_P = Y(E_P)` = span of their reaction vectors (`stoichOn`,
+`stoichOn_eq_span`).
+
+- `hasACR_of_partDeficiency`: if `S_P ∩ S_{P^c} = 0`, `dim(E_P ∩ ker Y) ≤ 1`, and `P` contains two
+  distinct nonterminal complexes differing only in `s`, then ACR in `s` for all positive rates.
+  Proof: mask `ψ` to `P` (`maskOn`); `A_k(ψ|_P) ∈ E_P` and, by independence, `∈ ker Y` at a steady
+  state; then the Shinar–Feinberg dependence and kernel lemma; the finish is factored out as
+  `eq_of_cross_dependence`.
+- `finrank_edgeSpanOn_inf_ker_le`: `dim(E_P ∩ ker Y) ≤ n_P − ℓ_P − s_P` (the part deficiency), with
+  `ℓ_P` from a labelling with representatives; `E_P` is spanned by the spanning-forest vectors
+  `e_c − e_{rep(c)}` (`finrank_edgeSpanOn_le`). Only this inequality is needed.
+- `hasACR_of_deficiency_one'`: `P` = all complexes recovers Shinar–Feinberg (consistency check).
+- `Sanity.uNet_hasACR_direct`: applied **directly** to the deficiency-two network
+  `A + B → 2B, B → A, A + C → A + D, D → C` with `P` = the first module (`δ_P ≤ 4 − 2 − 1`).
+
+Relation to the union theorem: mathematically equivalent (a network is the union of its part `P`
+and the complement), but this form works on a given network without rebuilding it. Next for Q-1:
+pairs whose classes are not stoichiometrically independent of the rest (a dimension count on the
+projection of `S_P ∩ S_{P^c}`), and complex-linear invariants.

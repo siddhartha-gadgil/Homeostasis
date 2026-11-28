@@ -205,3 +205,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.ReactionNetwork.hasACR_union_of_deficiency_one
 #print axioms LeanTheory.CRN.Sanity.uNet_deficiency
 #print axioms LeanTheory.CRN.Sanity.uNet_hasACRNontrivial
+#print axioms LeanTheory.CRN.ReactionNetwork.finrank_edgeSpanOn_inf_ker_le
+#print axioms LeanTheory.CRN.ReactionNetwork.hasACR_of_partDeficiency
+#print axioms LeanTheory.CRN.ReactionNetwork.hasACR_of_deficiency_one'
+#print axioms LeanTheory.CRN.Sanity.uNet_hasACR_direct

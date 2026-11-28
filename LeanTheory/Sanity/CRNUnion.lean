@@ -6,6 +6,7 @@ Authors: LeanTheory contributors
 module
 
 public import LeanTheory.Theory.CRN.Union
+public import LeanTheory.Theory.CRN.LinkageClassACR
 
 /-!
 # ACR at deficiency two: a coupled example (notes N-019, Q-1)
@@ -26,6 +27,9 @@ value of `A`. The stoichiometric subspaces `span{B − A}` and `span{D − C}` a
   `modNet` via Shinar–Feinberg, `hasACR_union_of_deficiency_one`);
 * `uNet_hasACRNontrivial`: positive steady states exist and are not unique, so this ACR is
   nontrivial; the value is `x_A = κ₁/κ₀`.
+* `uNet_hasACR_direct`: the same ACR from the **linkage-class form** of Shinar–Feinberg applied to
+  `uNet` itself, with `P` = the complexes of the first module (`δ_P ≤ 4 − 2 − 1 = 1`, and the
+  reactions leaving `P` and its complement have independent stoichiometric subspaces).
 -/
 
 @[expose] public section
@@ -33,7 +37,7 @@ noncomputable section
 
 namespace LeanTheory.CRN.Sanity
 
-open ReactionNetwork Relation
+open ReactionNetwork Relation Module
 
 /-- `A + B → 2B`, `B → A` on the species `A, B, C, D`. -/
 def modNet : ReactionNetwork (Fin 4) (Fin 4) (Fin 2) where
@@ -222,5 +226,80 @@ theorem uNet_hasACRNontrivial {k : Fin 2 ⊕ Fin 2 → ℝ} (hk : ∀ r, 0 < k r
     fun h => ?_⟩
   have := congrFun h 1
   simp [uSteady] at this
+
+/-- The part `P` = complexes of the first module. -/
+def uP : Fin 4 ⊕ Fin 4 → Prop := fun c => c.isLeft = true
+
+instance : DecidablePred uP := fun c => inferInstanceAs (Decidable (c.isLeft = true))
+
+/-- **ACR in `A` at deficiency two, directly from the linkage-class form** of the Shinar–Feinberg
+theorem applied to `uNet` (no decomposition into separate networks). -/
+theorem uNet_hasACR_direct {k : Fin 2 ⊕ Fin 2 → ℝ} (hk : ∀ r, 0 < k r) : uNet.HasACR k 0 := by
+  have hsP : uNet.stoichOn uP ≤ modNet.stoichSubspace := by
+    rw [stoichOn_eq_span, Submodule.span_le]
+    rintro _ ⟨⟨r, hr⟩, rfl⟩
+    rcases r with r | r
+    · change (modNet.union catNet mod_cat_disjoint).reactionVector (Sum.inl r) ∈ _
+      rw [union_reactionVector]
+      exact modNet.reactionVector_mem_stoichSubspace r
+    · simp [uP, uNet, union] at hr
+  have hsQ : uNet.stoichOn (fun c => ¬ uP c) ≤ catNet.stoichSubspace := by
+    rw [stoichOn_eq_span, Submodule.span_le]
+    rintro _ ⟨⟨r, hr⟩, rfl⟩
+    rcases r with r | r
+    · simp [uP, uNet, union] at hr
+    · change (modNet.union catNet mod_cat_disjoint).reactionVector (Sum.inr r) ∈ _
+      rw [union_reactionVector]
+      exact catNet.reactionVector_mem_stoichSubspace r
+  have hind : uNet.stoichOn uP ⊓ uNet.stoichOn (fun c => ¬ uP c) = ⊥ := by
+    rw [eq_bot_iff, ← mod_cat_independent]
+    exact inf_le_inf hsP hsQ
+  -- the part deficiency: `4 − 2 − s_P ≤ 1`
+  have hcount := uNet.finrank_edgeSpanOn_inf_ker_le uP
+    (Sum.elim ![0, 0, 1, 1] ![2, 2, 3, 3] : Fin 4 ⊕ Fin 4 → Fin 4)
+    ![Sum.inl 0, Sum.inl 2, Sum.inr 0, Sum.inr 2]
+    (by rintro (r | r) <;> fin_cases r <;> simp [uNet, union, modNet, catNet])
+    (by intro a; fin_cases a <;> rfl)
+    (by rintro (r | r) <;> simp [uP, uNet, union])
+  have hcardP : (Finset.univ.filter uP).card = 4 := by rfl
+  have hcardL : (Finset.univ.filter fun a =>
+      uP ((![Sum.inl 0, Sum.inl 2, Sum.inr 0, Sum.inr 2] : Fin 4 → Fin 4 ⊕ Fin 4) a)).card = 2 := by
+    rfl
+  have hs : 1 ≤ finrank ℝ (uNet.stoichOn uP) := by
+    by_contra h
+    have h0 : finrank ℝ (uNet.stoichOn uP) = 0 := by omega
+    have hbot := Submodule.finrank_eq_zero.mp h0
+    have hmem : uNet.reactionVector (Sum.inl 0) ∈ uNet.stoichOn uP := by
+      rw [stoichOn_eq_span]
+      exact Submodule.subset_span ⟨⟨Sum.inl 0, by simp [uP, uNet, union]⟩, rfl⟩
+    rw [hbot, Submodule.mem_bot] at hmem
+    change (modNet.union catNet mod_cat_disjoint).reactionVector (Sum.inl 0) = 0 at hmem
+    rw [union_reactionVector] at hmem
+    have := congrFun hmem 0
+    norm_num [reactionVector, complexVec, modNet] at this
+  rw [hcardP, hcardL] at hcount
+  have hK : finrank ℝ (uNet.edgeSpanOn uP ⊓ LinearMap.ker uNet.complexMap :
+      Submodule ℝ (Fin 4 ⊕ Fin 4 → ℝ)) ≤ 1 := by
+    have : (finrank ℝ (uNet.edgeSpanOn uP ⊓ LinearMap.ker uNet.complexMap :
+        Submodule ℝ (Fin 4 ⊕ Fin 4 → ℝ)) : ℤ) ≤ 1 := by
+      have := (Nat.cast_le (α := ℤ)).mpr hs
+      push_cast at hcount this
+      linarith
+    exact_mod_cast this
+  have hsink1 : ∀ r, uNet.src r ≠ Sum.inl 1 := by
+    rintro (r | r) <;> fin_cases r <;> simp [uNet, union, modNet, catNet]
+  have hsink3 : ∀ r, uNet.src r ≠ Sum.inl 3 := by
+    rintro (r | r) <;> fin_cases r <;> simp [uNet, union, modNet, catNet]
+  refine uNet.hasACR_of_partDeficiency uP hk hind hK (y := Sum.inl 0) (y' := Sum.inl 2)
+    (not_isTerminal_of_reaches_sink
+      (ReflTransGen.single ⟨Sum.inl 0, by simp [uNet, union, modNet],
+        by simp [uNet, union, modNet]⟩)
+      hsink1 (by simp))
+    (not_isTerminal_of_reaches_sink
+      (ReflTransGen.single ⟨Sum.inl 1, by simp [uNet, union, modNet],
+        by simp [uNet, union, modNet]⟩)
+      hsink3 (by simp)) rfl rfl (by simp) ?_
+  intro i hi
+  fin_cases i <;> simp [uNet, union, modNet] at hi ⊢
 
 end LeanTheory.CRN.Sanity
