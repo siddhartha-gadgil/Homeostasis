@@ -12,12 +12,12 @@
 | Dependency requirement | compiled mass-action field and compatibility classes; compiled certificate checkers with soundness |
 | Produces | (1) exact 2-site model from the sources; (2) a certified multistationarity witness: explicit rational `k`, totals and ≥2 (≥3) positive steady states in one class, each enclosed by a rational box with a certified unique zero (interval Newton / Krawczyk via `Certificates/Contraction.lean`, `RadiiPolynomial.lean`); (3) a certified monostable region; (4) for `n ≥ 3`, a research brief on the boundary |
 | Difficulty | (2) moderate; (3) hard; (4) research |
-| Status | active: 2-site multistationarity witness and persistence **verified** (2026-11-28) |
+| Status | active: 2-site multistationarity, persistence and **bistability verified** (2026-11-28) |
 | Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3), (4) open |
-| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean` |
-| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency` |
+| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean` |
+| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz` |
 | Audit evidence | not audited |
-| Last updated | 2026-11-27 — seeded |
+| Last updated | 2026-11-28 — bistability compiled |
 
 ## Purpose and scope
 
@@ -38,6 +38,10 @@ emptiness certificate parametrized by the region.
 | 2-site distributive phosphorylation is multistationary (two distinct positive steady states in one class, exact rational witness) | **compiled** `Design.two_multistationary` |
 | 2-site system persistent for all positive rates | **compiled** `Design.two_persistent` (siphon certificate) |
 | 2-site system has deficiency 2 | **compiled** `Design.two_deficiency` |
+| Bistability at the witness rates: the class `E = F = 3`, `S = 8` has three positive steady states; the two rational ones are locally exponentially stable in the class, the symmetric middle one has a positive real eigenvalue | **compiled** `Design.two_bistable`, `twoX_classStable`, `twoX'_classStable` |
+| Every symmetric steady state `(s,s,s,e,e,2se,se,2se,se)` with `s > 1` is linearly unstable at the witness rates | **compiled** `Design.twoRM_not_isHurwitz` |
+| The class contains exactly three positive steady states | numerical observation (oracle); not formalized |
+| The middle state is nonlinearly unstable | not formalized (only linear instability) |
 
 ## Difficulty, barriers and readiness
 
@@ -67,3 +71,24 @@ steady states `(½, 1, 2, 1, ½, 1, 1, 2, ½)` and `(2, 1, ½, ½, 1, 2, ½, 1, 
 Persistent and multistationary: the siphon criterion keeps trajectories off the boundary but does
 not give uniqueness. Open: a third steady state and the stability pattern (bistability), a
 certified monostable region (Q-2), `n ≥ 3`.
+
+## Bistability (2026-11-28, `LeanTheory/Design/TwoSiteBistability.lean`)
+
+Coordinates on the stoichiometric subspace keep `(S₁, S₂, S₀E, S₁E, S₂F, S₁F)`; the stoichiometric
+subspace is exactly the kernel of the three totals (`two_mem_of_cons`). At the witness rates the
+restricted Jacobian is `twoR x`, linear in `x`.
+
+- **Stable states.** `twoR twoX` and `twoR twoX'` are exact rational matrices with the same
+  characteristic polynomial `λ⁶ + 73/2 λ⁵ + 474 λ⁴ + 2734 λ³ + 7274 λ² + 7530 λ + 324`; its Hurwitz
+  determinants are positive (format 8, degree 6), so both states are locally exponentially stable
+  within the class.
+- **Middle state.** The symmetric family `x = (s, s, s, e, e, 2se, se, 2se, se)` is a steady state
+  for all `s, e > 0`; the class condition gives `e(1 + 3s) = 3`, `9s² − 3s − 8 = 0`, so
+  `s* = (3 + √297)/18 ≈ 1.124`. The characteristic polynomial of the restricted Jacobian has
+  constant term `−432 e²(s − 1)(2e + 3s + 1)` (negative iff `s > 1`) and positive value at `λ = 1`;
+  by the intermediate value theorem there is an eigenvalue in `(0, 1)`. Hence every symmetric
+  steady state with `s > 1` is linearly unstable, in particular the middle state.
+
+Open: that there are no further positive steady states in the class (needs a root count, e.g. a
+resultant or Sturm certificate); nonlinear instability of the middle state; a certified monostable
+region; `n ≥ 3`.

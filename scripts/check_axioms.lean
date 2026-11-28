@@ -228,3 +228,7 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.two_multistationary
 #print axioms LeanTheory.CRN.Design.two_persistent
 #print axioms LeanTheory.CRN.Design.two_deficiency
+#print axioms LeanTheory.CRN.Design.two_bistable
+#print axioms LeanTheory.CRN.Design.twoX_classStable
+#print axioms LeanTheory.CRN.Design.twoX'_classStable
+#print axioms LeanTheory.CRN.Design.twoRM_not_isHurwitz

@@ -69,6 +69,7 @@ public import LeanTheory.Design.EnvZStabilityAll
 public import LeanTheory.Design.FutileCycle
 public import LeanTheory.Design.IDHKP
 public import LeanTheory.Design.IDHKPStability
+public import LeanTheory.Design.TwoSiteBistability
 public import LeanTheory.Design.TwoSitePhosphorylation
 public import LeanTheory.Design.ShinarFeinbergApplications
 public import LeanTheory.Elaborate

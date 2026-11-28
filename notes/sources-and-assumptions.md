@@ -59,7 +59,7 @@ citation has been checked.
 | `C-AL` | RPA (for any size network, structural/generic sense) requires Opposer or Balancer modules | PT | S-AL18 | Exact notion of "RPA" and genericity TBD |
 | `C-BGK` | Antithetic integral feedback: if the closed-loop CME is ergodic with finite first moments, the stationary mean of the output equals `μ/θ` independent of other parameters | PT | S-BGK16 | Ergodicity conditions are hypotheses, not consequences |
 | `C-AEJ` | For a class of deficiency-one ACR networks (conservative, satisfying the SF hypotheses and further conditions), the stochastic model reaches an absorbing boundary set almost surely: the ACR value is not a stationary property of the CME | PT | S-AEJ14 | Exact hypotheses TBD |
-| `C-WS` | Distributive `n`-site phosphorylation admits multistationarity; bounds on the number of steady states | PT | S-WS08 | Do not quote the bounds before checking |
+| `C-WS` | Distributive `n`-site phosphorylation admits multistationarity; bounds on the number of steady states | PT | S-WS08 | Do not quote the bounds before checking. For `n = 2`, multistationarity and bistability are now independently compiled at explicit rates (`Design.two_multistationary`, `Design.two_bistable`); the bounds remain unchecked |
 | `C-CFMW` | Explicit parameter regions for multistationarity in the 2-site system | PT | S-CFMW17 | Region description TBD |
 
 ## 4. User ideas
