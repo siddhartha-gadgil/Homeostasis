@@ -29,6 +29,8 @@ to the factor `r⁻²` (`twoKs_swap`).
 `two_totals_classStable`: **whenever one enzyme total is at least twice the other, the unique
 steady state is locally exponentially stable within its class.**
 
+The converse (`K ≤ 0` ⇒ not Hurwitz) is `Design/TwoSiteInstability` (`twoRS_isHurwitz_iff`).
+
 Label: exact, idealized; witness rates `twoK`.
 -/
 

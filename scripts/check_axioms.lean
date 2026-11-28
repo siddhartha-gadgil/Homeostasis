@@ -252,3 +252,5 @@ run_cmd do
 #print axioms LeanTheory.CRN.Design.two_totals_exactly_three
 #print axioms LeanTheory.CRN.Design.twoRS_isHurwitz
 #print axioms LeanTheory.CRN.Design.two_totals_classStable
+#print axioms LeanTheory.CRN.Design.two_totals_isHurwitz_iff
+#print axioms LeanTheory.CRN.Design.twoRS_not_isHurwitz
