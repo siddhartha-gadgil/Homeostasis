@@ -14,8 +14,8 @@
 | Difficulty | (2) moderate; (3) hard; (4) research |
 | Status | active: 2-site multistationarity, persistence, bistability and a **certified monostable region verified** (2026-11-28) |
 | Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3) done on the slice `E_tot = F_tot` at the witness rates; (4) open |
-| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean`, `Design/TwoSiteOuterStability.lean`, `Design/TwoSiteUnequal.lean`, `Design/TwoSiteRatio.lean`, `Design/TwoSiteCount.lean`, `Design/TwoSiteStability.lean`, `Design/TwoSiteInstability.lean` |
-| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable`, `two_slice_outer_classStable`, `two_slice_bistable`; `two_totals_existsUnique`; `two_monostable_iff`, `two_totals_multistationary`; `two_totals_atMostThree`, `two_totals_exactly_three`; `twoRS_isHurwitz`, `two_totals_classStable_of_K`, `two_totals_classStable`; `twoRS_isHurwitz_iff`, `two_totals_isHurwitz_iff` |
+| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean`, `Design/TwoSiteOuterStability.lean`, `Design/TwoSiteUnequal.lean`, `Design/TwoSiteRatio.lean`, `Design/TwoSiteCount.lean`, `Design/TwoSiteStability.lean`, `Design/TwoSiteInstability.lean`, `Design/TwoSiteMiddle.lean` |
+| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable`, `two_slice_outer_classStable`, `two_slice_bistable`; `two_totals_existsUnique`; `two_monostable_iff`, `two_totals_multistationary`; `two_totals_atMostThree`, `two_totals_exactly_three`; `twoRS_isHurwitz`, `two_totals_classStable_of_K`, `two_totals_classStable`; `twoRS_isHurwitz_iff`, `two_totals_isHurwitz_iff`; `two_totals_middle_unstable`, `two_totals_middle_unstable'` |
 | Audit evidence | not audited |
 | Last updated | 2026-11-28 — bistability compiled |
 
@@ -51,7 +51,7 @@ emptiness certificate parametrized by the region.
 | **Stability criterion for every steady state**: with `(S₀, r, F)` coordinates, `Δ₂…Δ₅` have positive coefficients and `a₆ = 144F²K`; `K > 0` ⇒ locally exponentially stable in the class | **compiled** `Design.twoRS_isHurwitz`, `Design.two_totals_classStable_of_K` |
 | Unique state stable when one enzyme total is at least twice the other | **compiled** `Design.two_totals_classStable` |
 | **Hurwitz iff `K > 0`** at every positive steady state (any totals); `K < 0` gives a positive real eigenvalue, `K = 0` a zero eigenvalue | **compiled** `Design.twoRS_isHurwitz_iff`, `Design.two_totals_isHurwitz_iff`, `Design.twoRS_not_isHurwitz` |
-| In multistationary classes the middle state (by `r`) has `K < 0`, the outer two `K > 0` (e.g. `E_tot = 1, F_tot = 1.5, S_tot = 80`: `K ≈ 157, −10819, 48213`) | numerical observation; not formalized for unequal totals |
+| **In every class with three steady states, ordered by `r = E/F`, the outer two are stable and the middle one unstable** (unequal totals; equal totals by `two_slice_bistable`) | **compiled** `Design.two_totals_middle_unstable`, `Design.two_totals_middle_unstable'` |
 | Threshold `S_tot*`: 6.46 (ratio 1.05), 8.24 (1.1), 16.0 (1.25), 52.5 (1.5), 289 (1.75), 2149 (1.9), with `E_tot = 1` | numerical observation (minimizing `−A/B` on `(ρ₁, ∞)`) |
 | Monostability for all totals under the rate condition `K₁a₂b₁ ≥ K₂a₁b₂`, `K₁(a₂ + b₁) ≥ K₂(a₁ + b₂)` | observation (Jacobian determinant of the totals map has nonnegative coefficients); not formalized — the sign-vector injectivity test fails |
 | The class contains exactly three positive steady states, two stable and one unstable | **compiled** `Design.two_class_steady`, `Design.two_class_trichotomy` |
@@ -192,6 +192,14 @@ decided by the sign of `K` alone; `K` is swap-invariant up to `r⁻²`. `F_tot �
 Hence **Hurwitz iff `K > 0`** for every positive steady state with any totals
 (`two_totals_isHurwitz_iff`).
 
-Open: that `K` alternates in sign along the three states of a multistationary class (numerically:
-middle unstable, outer stable; expected via `sign K = sign Q′(r)`); a closed form for `S_tot*`; the
-count at `S_tot = S_tot*`; nonlinear instability; other rates.
+**Middle state unstable** (`Design/TwoSiteMiddle.lean`). With the totals written in `(a, r, F)`,
+`G(r)·K = (r + 1)·Q′(r)` is a polynomial identity (`twoKs_mul_G`), so the sign of `K` is the sign of
+`G·Q′` at the root. Three feasible roots `s₁ < s₂ < s₃` and the infeasible root `r₀` in the gap are
+all four roots; Vieta (`quartic_vieta`, from "a cubic with four roots vanishes") gives
+`Q′(sᵢ) = 2F_tot ∏_{j≠i}(sᵢ − xⱼ)`. The sign `Q(E_tot/F_tot) < 0` forces an odd number of feasible
+roots below `E_tot/F_tot`: one (`s₁ < ρ₀ < r₀ < ρ₁ < s₂ < s₃`) or three (`s₃ < ρ₀ < r₀`). In both
+cases `K(s₁) > 0`, `K(s₂) < 0`, `K(s₃) > 0`. `E_tot > F_tot` by the swap, which preserves the sign of
+`K` and reverses the order.
+
+Open: a closed form for `S_tot*`; the count at `S_tot = S_tot*`; nonlinear instability and basins;
+other rates; `n ≥ 3`.

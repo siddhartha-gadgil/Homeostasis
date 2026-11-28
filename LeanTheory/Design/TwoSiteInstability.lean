@@ -20,7 +20,8 @@ is stable when `K(a, r, F) > 0`. Here we prove the converse (`twoRS_isHurwitz_if
 
 So for every positive steady state with any totals, **the restricted Jacobian is Hurwitz if and
 only if `K > 0`** (`two_totals_isHurwitz_iff`), and `K < 0` means linear instability within the
-class. Nonlinear instability is not formalized.
+class. Nonlinear instability is not formalized. In a class with three steady states the middle
+one has `K < 0` (`Design/TwoSiteMiddle`).
 
 Label: exact, idealized; witness rates `twoK`; all totals.
 -/

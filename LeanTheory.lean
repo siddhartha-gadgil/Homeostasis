@@ -72,6 +72,7 @@ public import LeanTheory.Design.IDHKPStability
 public import LeanTheory.Design.TwoSiteBistability
 public import LeanTheory.Design.TwoSiteCount
 public import LeanTheory.Design.TwoSiteInstability
+public import LeanTheory.Design.TwoSiteMiddle
 public import LeanTheory.Design.TwoSiteMonostable
 public import LeanTheory.Design.TwoSiteOuterStability
 public import LeanTheory.Design.TwoSitePhosphorylation
