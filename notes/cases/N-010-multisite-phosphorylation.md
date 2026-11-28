@@ -14,8 +14,8 @@
 | Difficulty | (2) moderate; (3) hard; (4) research |
 | Status | active: 2-site multistationarity, persistence, bistability and a **certified monostable region verified** (2026-11-28) |
 | Implementation status | (1), (2) done for `n = 2` (exact rational witness); (3) done on the slice `E_tot = F_tot` at the witness rates; (4) open |
-| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean` |
-| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable` |
+| Implementation evidence | `Design/FutileCycle.lean`, `Design/TwoSitePhosphorylation.lean`, `Design/TwoSiteBistability.lean`, `Design/TwoSiteMonostable.lean`, `Design/TwoSiteOuterStability.lean` |
+| Lean evidence | `fut_persistent`; `two_multistationary`, `two_persistent`, `two_deficiency`; `two_bistable`, `twoX_classStable`, `twoX'_classStable`, `twoRM_not_isHurwitz`, `two_class_steady`, `two_class_trichotomy`; `two_slice_existsUnique`, `two_slice_classStable`, `two_slice_three`, `two_slice_sym_unstable`, `two_slice_outer_classStable`, `two_slice_bistable` |
 | Audit evidence | not audited |
 | Last updated | 2026-11-28 — bistability compiled |
 
@@ -43,6 +43,7 @@ emptiness certificate parametrized by the region.
 | ... and with `s < 1` is Hurwitz (all Hurwitz determinants have positive coefficients) | **compiled** `Design.twoRM_isHurwitz` |
 | Monostable region: at the witness rates, every class with `E_tot = F_tot = c`, `S_tot = σ ≤ 3 + 3c/2` has exactly one positive steady state, locally exponentially stable in its class when `σ < 3 + 3c/2` | **compiled** `Design.two_slice_existsUnique`, `Design.two_slice_classStable` |
 | For `σ > 3 + 3c/2` exactly three positive steady states, the symmetric one unstable (pitchfork at `σ = 3 + 3c/2`) | **compiled** `Design.two_slice_three`, `Design.two_slice_sym_unstable` |
+| For `σ > 3 + 3c/2` the two asymmetric states are locally exponentially stable in their class: bistability throughout the region | **compiled** `Design.two_slice_outer_classStable`, `Design.two_slice_bistable` |
 | Monostability for all totals under the rate condition `K₁a₂b₁ ≥ K₂a₁b₂`, `K₁(a₂ + b₁) ≥ K₂(a₁ + b₂)` | observation (Jacobian determinant of the totals map has nonnegative coefficients); not formalized — the sign-vector injectivity test fails |
 | The class contains exactly three positive steady states, two stable and one unstable | **compiled** `Design.two_class_steady`, `Design.two_class_trichotomy` |
 | The middle state is nonlinearly unstable | not formalized (only linear instability) |
@@ -126,8 +127,17 @@ factorization `(E − F)(F − S₀E) = 0` classifies everything:
 | --- | --- | --- |
 | `σ < 3 + 3c/2` | exactly one (symmetric, `s < 1`) | locally exponentially stable in its class |
 | `σ = 3 + 3c/2` | exactly one (`s = 1`, `a₆ = 0`) | not decided (degenerate) |
-| `σ > 3 + 3c/2` | exactly three | symmetric one linearly unstable; outer two stable at `c = 3, σ = 8` only |
+| `σ > 3 + 3c/2` | exactly three | symmetric one linearly unstable; outer two locally exponentially stable in their class (all `c`, `σ`) |
 
 `σ − (3 + 3c/2) = (s − 1)(3 + 3e/2)` on the symmetric branch (`two_slice_threshold`), so the
-threshold is a pitchfork. Open: stability of the asymmetric states for general `(c, σ)`
-(their restricted Jacobians depend on `r`, `c`); slices with `E_tot ≠ F_tot`; other rates.
+threshold is a pitchfork. Open: slices with `E_tot ≠ F_tot`; other rates; nonlinear instability
+of the middle state and basins of attraction.
+
+**Outer states (2026-11-28, `Design/TwoSiteOuterStability.lean`).** On the asymmetric branch
+(`S₀ = r`, `S₁ = 1`, `S₂ = 1/r`, `E = c/(2 + 2r)`) the restricted Jacobian has `1/r` entries; `r` times
+it, `twoSB r E`, is polynomial, and scaling by `r > 0` preserves the Hurwitz property. Its
+characteristic polynomial has `b₆ = 288E²(r − 1)²(r + 1)²r⁵` (positive iff `r ≠ 1`) and Hurwitz
+determinants with 20, 56, 109, 168 terms, all with positive coefficients. Hence both outer states
+are locally exponentially stable within their class for every `c > 0`, `σ > 3 + 3c/2`
+(`two_slice_outer_classStable`), and `two_slice_bistable`: two stable states and one unstable in
+every class of the slice beyond the threshold.

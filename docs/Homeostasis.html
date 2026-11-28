@@ -802,7 +802,7 @@ theorem two_class_steady (hy : IsPosSteadyState twoK y)
       <ul class="pts" style="font-size: 0.6em">
         <li><strong>Slice</strong> (witness rates): classes with $E_{\rm tot} = F_{\rm tot} = c$, $S_{\rm tot} = \sigma$. The factorization $(E-F)(F-S_0E) = 0$ splits steady states into the symmetric branch (one state, always) and $S_1 = 1$, $S_0 + 1/S_0 = \sigma - 1 - \tfrac{3c}{2}$ (needs $\sigma \ge 3 + \tfrac{3c}{2}$).</li>
         <li><strong>Monostable</strong> for $\sigma \le 3 + \tfrac{3c}{2}$: exactly one steady state; for $\sigma &lt; 3 + \tfrac{3c}{2}$ it is locally exponentially stable in its class &mdash; on the symmetric branch $\Delta_2,\dots,\Delta_5$ have positive coefficients and $a_6 = 432e^2(1-s)(2e+3s+1)$.</li>
-        <li><strong>Pitchfork</strong>: $\sigma - (3 + \tfrac{3c}{2}) = (s-1)(3 + \tfrac{3e}{2})$; beyond it, exactly three states, the middle one unstable.</li>
+        <li><strong>Pitchfork</strong>: $\sigma - (3 + \tfrac{3c}{2}) = (s-1)(3 + \tfrac{3e}{2})$; beyond it, exactly three states: the middle one unstable, the two outer ones <em>stable for all $c, \sigma$</em> ($r$ times the restricted Jacobian is polynomial, $b_6 = 288E^2(r-1)^2(r+1)^2r^5$, Hurwitz determinants with positive coefficients).</li>
         <li class="muted">General rates (oracle): the Jacobian of the totals map is nonsingular when $K_1a_2b_1 \ge K_2a_1b_2$ and $K_1(a_2+b_1) \ge K_2(a_1+b_2)$; uniqueness from this needs degree theory &mdash; not formalized.</li>
       </ul>
     </div>
@@ -817,7 +817,7 @@ theorem two_slice_three (hc : 0 &lt; c) (hσ : 3 + 3 * c / 2 &lt; σ) :
     … three pairwise distinct states ∧
     ∀ y, TwoSlice c σ y → y = twoSym c σ ∨
       y = twoBr c (twoRp c σ) ∨ y = twoBr c (twoRm c σ)</code></pre>
-      <p class="small mt">The bistable witness class is $c = 3$, $\sigma = 8 &gt; 7.5$.</p>
+      <p class="small mt">The bistable witness class is $c = 3$, $\sigma = 8 &gt; 7.5$. <code class="inline">two_slice_bistable</code>: beyond the threshold, two class-stable states and one unstable, in every class of the slice.</p>
     </div>
   </div>
 </section>
@@ -954,7 +954,7 @@ theorem massAction_infinitesimalHomeostasis_iff_det
 <tr><td>ACR beyond deficiency one: independent unions; the linkage-class form of Shinar&ndash;Feinberg; coupled &delta; = 2 example</td><td>every network, all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site phosphorylation: multistationary (exact witness) and persistent</td><td>witness rates; all positive rates</td><td class="ok">verified</td></tr>
 <tr><td>Two-site bistability: exactly three steady states in a class, two class-stable, one unstable</td><td>witness rates</td><td class="ok">verified</td></tr>
-<tr><td>Two-site monostable region: one stable state iff $S_{\rm tot} &lt; 3 + \tfrac32 c$ on the slice $E_{\rm tot} = F_{\rm tot} = c$</td><td>witness rates</td><td class="ok">verified</td></tr>
+<tr><td>Two-site monostable region: one stable state iff $S_{\rm tot} &lt; 3 + \tfrac32 c$ on the slice $E_{\rm tot} = F_{\rm tot} = c$; bistable (two stable, one unstable) beyond</td><td>witness rates</td><td class="ok">verified</td></tr>
 <tr><td>A general ACR criterion (Q-1); monostability regions and <i>n</i> &ge; 3 sites (Q-2)</td><td></td><td class="open">open</td></tr>
 <tr><td>Persistence via siphons (Angeli&ndash;De Leenheer&ndash;Sontag; siphon criterion &rArr; uniform persistence)</td><td>every network, bounded trajectories</td><td class="ok">verified</td></tr>
 <tr><td>Siphon certificates: futile cycle persistent; ACR networks fail the criterion (boundary equilibria)</td><td>all positive rates</td><td class="ok">verified</td></tr>

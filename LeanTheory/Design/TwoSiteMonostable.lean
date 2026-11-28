@@ -35,8 +35,9 @@ The threshold `σ = 3 + 3c/2` is a pitchfork: the symmetric state crosses `s = 1
 asymmetric states are born from it. The witness class of `Design/TwoSitePhosphorylation`
 (`c = 3`, `σ = 8 > 7.5`) lies on the multistationary side.
 
-Not formalized: stability of the two asymmetric states for general `(c, σ)` (proved only for
-`c = 3`, `σ = 8`), classes with `E_tot ≠ F_tot`, other rate constants.
+The two asymmetric states are stable for all `(c, σ)` beyond the threshold:
+`Design/TwoSiteOuterStability` (`two_slice_bistable`). Not formalized: classes with
+`E_tot ≠ F_tot`, other rate constants.
 
 Label: exact, idealized; witness rates `twoK`, all classes with `E_tot = F_tot`.
 -/
